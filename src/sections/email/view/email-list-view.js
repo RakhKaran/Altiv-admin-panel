@@ -54,8 +54,7 @@ const STATUS_OPTIONS = [
 
 const TABLE_HEAD = [
    { id: 'email', label: 'Email' },
-  
-  { id: '', width: 88 },
+ 
 ];
 
 const defaultFilters = {

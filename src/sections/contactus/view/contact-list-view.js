@@ -64,8 +64,6 @@ const TABLE_HEAD = [
    { id: 'email', label: 'Email' },
    { id: 'subject', label: 'Subjects' },
    { id: 'message', label: 'Messages' },
-  
-  { id: '', width: 88 },
 ];
 
 const defaultFilters = {

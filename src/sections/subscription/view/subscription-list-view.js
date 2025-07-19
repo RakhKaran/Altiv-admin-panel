@@ -57,7 +57,7 @@ const TABLE_HEAD = [
   {id:'paymentMethod', label:'Payment Method'},
   { id: 'paymentType', label: 'Payment Type?', width: 80 },
   {id:'expiryDate', label:'Expiry Date'},
-  { id: '', width: 88 },
+ 
 ];
 
 const defaultFilters = {
