@@ -176,5 +176,36 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
+  plan: {
+      root: `${ROOTS.DASHBOARD}/plan`,
+      new: `${ROOTS.DASHBOARD}/plan/new`,
+      list: `${ROOTS.DASHBOARD}/plan/list`,
+      edit: (id) => `${ROOTS.DASHBOARD}/plan/${id}/edit`,
+      view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
+    },
+
+     subscription: {
+      root: `${ROOTS.DASHBOARD}/subscription`,
+      // new: `${ROOTS.DASHBOARD}/plan/new`,
+      list: `${ROOTS.DASHBOARD}/subscription/list`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/plan/${id}/edit`,
+      // view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
+    },
+ email: {
+      root: `${ROOTS.DASHBOARD}/email`,
+      // new: `${ROOTS.DASHBOARD}/plan/new`,
+      list: `${ROOTS.DASHBOARD}/email/list`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/plan/${id}/edit`,
+      // view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
+    },
+
+     contact: {
+      root: `${ROOTS.DASHBOARD}/contact`,
+      // new: `${ROOTS.DASHBOARD}/plan/new`,
+      list: `${ROOTS.DASHBOARD}/contact/list`,
+      // edit: (id) => `${ROOTS.DASHBOARD}/plan/${id}/edit`,
+      // view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
+    },
+
   },
 };

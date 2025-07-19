@@ -50,4 +50,27 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
+
+ plan: {
+  list: '/plans',
+  filterList: (filter) => `/plans?${filter}`,
+  details: (id) => `/plans/${id}`,
+},
+
+subscriptions: {
+  list: '/subscriptions',
+  filterList: (filter) => `/subscriptions?${filter}`,
+  details: (id) => `/subscriptions/${id}`,
+},
+
+email: {
+  list: '/wait-lists',
+  filterList: (filter) => `/wait-lists?${filter}`,
+  details: (id) => `/wait-lists/${id}`,
+},
+contact: {
+  list: '/contact-uses',
+  filterList: (filter) => `/contact-uses?${filter}`,
+  details: (id) => `/contact-uses/${id}`,
+},
 };

@@ -46,6 +46,22 @@ const JobDetailsPage = lazy(() => import('src/pages/dashboard/job/details'));
 const JobListPage = lazy(() => import('src/pages/dashboard/job/list'));
 const JobCreatePage = lazy(() => import('src/pages/dashboard/job/new'));
 const JobEditPage = lazy(() => import('src/pages/dashboard/job/edit'));
+// Plan
+const PlanListPage = lazy(() => import('src/pages/dashboard/plan/list'));
+const PlanCreatePage = lazy(() => import('src/pages/dashboard/plan/new'));
+const PlanEditPage = lazy(() => import('src/pages/dashboard/plan/edit'));
+// const PlanViewPage = lazy(() => import('src/pages/dashboard/plan/details'));
+
+// Subscriptions
+
+const SubscriptionListPage = lazy(()=> import('src/pages/dashboard/subscription/list'));
+
+// Email
+const EmailListPage = lazy(()=> import ('src/pages/dashboard/email/list'));
+
+// ContactUs
+const ContactListPage = lazy(()=> import('src/pages/dashboard/contact/list'));
+
 // TOUR
 const TourDetailsPage = lazy(() => import('src/pages/dashboard/tour/details'));
 const TourListPage = lazy(() => import('src/pages/dashboard/tour/list'));
@@ -144,6 +160,50 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <JobEditPage /> },
         ],
       },
+      { 
+       path: 'plan',
+        children: [
+          { element: <PlanListPage />, index: true },
+          { path: 'list', element: <PlanListPage /> },
+          { path: 'new', element: <PlanCreatePage /> },
+          { path: ':id/edit', element: <PlanEditPage /> },
+          // { path: ':id/view', element: <PlanViewPage /> },
+        ]
+      },
+
+      { 
+       path: 'subscription',
+        children: [
+          { element: <SubscriptionListPage />, index: true },
+          { path: 'list', element: <SubscriptionListPage /> },
+          // { path: 'new', element: <PlanCreatePage /> },
+          // { path: ':id/edit', element: <PlanEditPage /> },
+          // { path: ':id/view', element: <PlanViewPage /> },
+        ]
+      },
+
+      { 
+       path: 'email',
+        children: [
+          { element: <EmailListPage />, index: true },
+          { path: 'list', element: <EmailListPage /> },
+          // { path: 'new', element: <PlanCreatePage /> },
+          // { path: ':id/edit', element: <PlanEditPage /> },
+          // { path: ':id/view', element: <PlanViewPage /> },
+        ]
+      },
+
+      { 
+       path: 'contact',
+        children: [
+          { element: <ContactListPage />, index: true },
+          { path: 'list', element: <ContactListPage /> },
+          // { path: 'new', element: <PlanCreatePage /> },
+          // { path: ':id/edit', element: <PlanEditPage /> },
+          // { path: ':id/view', element: <PlanViewPage /> },
+        ]
+      },
+
       {
         path: 'tour',
         children: [
