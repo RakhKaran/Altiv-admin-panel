@@ -1,14 +1,10 @@
+import { useState } from 'react'; // ✅ Add this line
 import PropTypes from 'prop-types';
 // @mui
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
+import {
+  Button, Avatar, Tooltip, MenuItem, TableRow, TableCell,
+  IconButton, ListItemText, Checkbox
+} from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -16,19 +12,16 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
-//
-import UserQuickEditForm from './user-quick-edit-form';
+import { format } from 'date-fns';
+import UserViewResume from './view/view-resume';
 
-// ----------------------------------------------------------------------
-
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, status, email, phoneNumber } = row;
+export default function UserTableRow({ row, selected, onViewRow, onSelectRow, onDeleteRow, onEditRow, quickEdit, handleQuickEditRow, userId }) {
+  const { fullName, avatar, email, phoneNumber, permissions, createdAt, isActive } = row;
 
   const confirm = useBoolean();
-
-  const quickEdit = useBoolean();
-
   const popover = usePopover();
+  const [openResume, setOpenResume] = useState(false);
+
 
   return (
     <>
@@ -37,58 +30,87 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={name} src={avatarUrl} sx={{ mr: 2 }} />
 
-          <ListItemText
-            primary={name}
-            secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{ component: 'span', color: 'text.disabled' }}
-          />
-        </TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
 
         <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (status === 'active' && 'success') ||
-              (status === 'pending' && 'warning') ||
-              (status === 'banned' && 'error') ||
-              'default'
-            }
-          >
-            {status}
-          </Label>
+          {fullName}
+          <br />
+          <ListItemText secondary={email} />
         </TableCell>
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell>{email}</TableCell>
+        <TableCell>{phoneNumber}</TableCell>
+
+        <TableCell>{permissions}</TableCell>
+
+        <TableCell>{createdAt ? format(new Date(createdAt), 'dd/MM/yyyy') : 'N/A'}</TableCell>
+
+        <TableCell>
+          <Label 
+          variant="soft"
+          color={(isActive && 'success') || (!isActive && 'error') || 'default'}
+          >
+            {isActive ? 'Active' : 'Inactive'}
+          </Label>
+        </TableCell>
+        <TableCell>
+          <Tooltip title="View">
+            <IconButton onClick={onViewRow}>
+              <Iconify icon="carbon:view-filled" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+
+        <TableCell>
           <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+            <IconButton onClick={handleQuickEditRow}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
           </Tooltip>
+        </TableCell>
 
+
+        <TableCell>
+          <Tooltip title="View Resume">
+            <IconButton onClick={() => setOpenResume(true)}>
+              <Iconify icon="mdi:file-document-outline" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+
+        {openResume && (
+          <UserViewResume
+            open={openResume}
+            onClose={() => setOpenResume(false)}
+            userId={row.id}
+          />
+          )}
+
+
+        <TableCell align="right">
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
 
-      <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
+      {/* Popover Menu */}
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
         sx={{ width: 140 }}
       >
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            popover.onClose();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Edit
+        </MenuItem>
+
         <MenuItem
           onClick={() => {
             confirm.onTrue();
@@ -99,37 +121,34 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
         </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:pen-bold" />
-          Edit
-        </MenuItem>
       </CustomPopover>
 
+      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
+        title="Delete User"
+        content="Are you sure you want to delete this user?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Delete
           </Button>
         }
+
+
       />
     </>
   );
 }
 
 UserTableRow.propTypes = {
+  row: PropTypes.object.isRequired,
+  handleQuickEditRow: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
+  onViewRow: PropTypes.func.isRequired,
+  onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  row: PropTypes.object,
-  selected: PropTypes.bool,
+  quickEdit: PropTypes.func,
+  userId: PropTypes.string,
 };

@@ -117,11 +117,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
+  const register = useCallback(async (email, password, fullName, lastName) => {
     const data = {
       email,
       password,
-      firstName,
+      fullName,
       lastName,
     };
 

@@ -21,7 +21,6 @@ import {
   _jobTitles,
   _taskNames,
   _postTitles,
-  _firstNames,
   _fullAddress,
   _companyNames,
   _productNames,
@@ -49,8 +48,6 @@ export const _mock = {
   phoneNumber: (index) => _phoneNumbers[index],
   fullAddress: (index) => _fullAddress[index],
   // Name
-  firstName: (index) => _firstNames[index],
-  lastName: (index) => _lastNames[index],
   fullName: (index) => _fullNames[index],
   companyName: (index) => _companyNames[index],
   // Number

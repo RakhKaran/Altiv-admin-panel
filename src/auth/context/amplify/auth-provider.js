@@ -99,13 +99,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
+  const register = useCallback(async (email, password, fullName, lastName) => {
     await Auth.signUp({
       username: email,
       password,
       attributes: {
         email,
-        given_name: firstName,
+        given_name: fullName,
         family_name: lastName,
       },
     });

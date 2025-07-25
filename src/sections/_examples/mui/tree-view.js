@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
-import TreeView from '@mui/lab/TreeView';
-import TreeItem, { treeItemClasses } from '@mui/lab/TreeItem';
+import { TreeView, TreeItem, treeItemClasses } from '@mui/x-tree-view';
+
 import { alpha, styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -34,9 +34,9 @@ const StyledTreeItem = styled((props) => <TreeItem {...props} />)(({ theme }) =>
   },
 }));
 
-StyledTreeItem.propTypes = {
-  theme: PropTypes.object,
-};
+// StyledTreeItem.propTypes = {
+//   theme: PropTypes.object,
+// };
 
 // ----------------------------------------------------------------------
 

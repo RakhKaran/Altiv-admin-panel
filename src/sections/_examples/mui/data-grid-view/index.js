@@ -32,7 +32,7 @@ const _dataGrid = [...Array(20)].map((_, index) => {
     isAdmin: _mock.boolean(index),
     lastName: _mock.lastName(index),
     rating: _mock.number.rating(index),
-    firstName: _mock.firstName(index),
+    fullName: _mock.fullName(index),
     performance: _mock.number.percent(index),
   };
 });

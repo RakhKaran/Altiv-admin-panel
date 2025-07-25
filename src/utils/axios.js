@@ -1,6 +1,7 @@
 import axios from 'axios';
 // config
 import { HOST_API } from 'src/config-global';
+import UserTableFiltersResult from 'src/sections/user/user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ export const endpoints = {
   auth: {
     me: '/me',
     login: '/login',
-    register: '/register',
+    register: '/register', // post
   },
   mail: {
     list: '/api/mail/list',
@@ -49,5 +50,15 @@ export const endpoints = {
     list: '/api/product/list',
     details: '/api/product/details',
     search: '/api/product/search',
+  },
+   user: {
+    list: '/api/users/list',
+    filterList: (filter) => `/api/users/list?${filter}`,
+    details: (id) => `/api/users/${id}`, // patch
+    search: '/api/user/search',
+    delete:(id)=>`/user/${id}`
+  },
+  resume: {
+  details: (id) => `/resumes/${id}`
   },
 };

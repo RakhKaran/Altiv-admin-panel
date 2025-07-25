@@ -14,7 +14,7 @@ const columns = [
     width: 120,
   },
   {
-    field: 'firstName',
+    field: 'fullName',
     headerName: 'First name',
     width: 160,
     editable: true,
@@ -39,7 +39,7 @@ const columns = [
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     flex: 1,
-    valueGetter: (params) => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    valueGetter: (params) => `${params.row.fullName || ''} ${params.row.lastName || ''}`,
   },
   {
     field: 'action',
