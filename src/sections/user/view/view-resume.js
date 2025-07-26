@@ -14,7 +14,7 @@ import Iconify from 'src/components/iconify';
 import { useGetResumesByUserId } from 'src/api/user';
 
 export default function UserViewResume({ open, onClose, userId }) {
-  const { resumes, resumesLoading } = useGetResumesByUserId(userId);  // comment added
+  const { resumes, resumesLoading } = useGetResumesByUserId(userId);
   const resumeData = resumes?.[0]; // assuming one resume per user
 
   return (
