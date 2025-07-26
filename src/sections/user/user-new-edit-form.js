@@ -32,7 +32,7 @@ import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
 import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
 
 import { IconButton, InputAdornment, MenuItem, TextField } from '@mui/material';
-// import axiosInstance, { endpoints } from 'src/utils/axios';
+import axiosInstance, { endpoints } from 'src/utils/axios';
 import { useBoolean } from 'src/hooks/use-boolean';
 // import { _fullNames } from 'src/_mock';
 

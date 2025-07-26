@@ -33,7 +33,7 @@ export const endpoints = {
   auth: {
     me: '/me',
     login: '/login',
-    register: '/register', // post
+    register: '/register',
   },
   mail: {
     list: '/api/mail/list',
@@ -41,25 +41,53 @@ export const endpoints = {
     labels: '/api/mail/labels',
   },
   post: {   //  Blogs enpoints 
-      list: '/blogs',
-  filterList: (filter) => `/blogs?${filter}`,
-  details: (slug) => `/blogs/slug/${slug}`,
+    list: '/blogs',
+    filterList: (filter) => `/blogs?${filter}`,
+    details: (slug) => `/blogs/slug/${slug}`,
   },
   product: {
     list: '/api/product/list',
     details: '/api/product/details',
     search: '/api/product/search',
   },
-   user: {
+
+  plan: {
+    list: '/plans',
+    filterList: (filter) => `/plans?${filter}`,
+    details: (id) => `/plans/${id}`,
+  },
+
+  subscriptions: {
+    list: '/subscriptions',
+    filterList: (filter) => `/subscriptions?${filter}`,
+    details: (id) => `/subscriptions/${id}`,
+  },
+
+  email: {
+    list: '/wait-lists',
+    filterList: (filter) => `/wait-lists?${filter}`,
+    details: (id) => `/wait-lists/${id}`,
+  },
+  contact: {
+    list: '/contact-uses',
+    filterList: (filter) => `/contact-uses?${filter}`,
+    details: (id) => `/contact-uses/${id}`,
+  },
+  user: {
     list: '/api/users/list',
     filterList: (filter) => `/api/users/list?${filter}`,
     details: (id) => `/api/users/${id}`, // patch
     search: '/api/user/search',
-    delete:(id)=>`/user/${id}`
+    delete: (id) => `/user/${id}`
   },
   resume: {
-  details: (id) => `/resumes/${id}`
+    details: (id) => `/resumes/${id}`
   },
+  comments: {
+    list: '/comments',
+    filterList: (filter) => `/comments/${filter}`,
+  details: (blogId) => `/comments/${ blogId }`,
+},
+
+
 };
-
-

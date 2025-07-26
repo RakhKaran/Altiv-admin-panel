@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -67,17 +67,23 @@ const defaultFilters = {
 
 export default function SubscriptionListView() {
   const table = useTable();
-
+  const [tableData, setTableData] = useState([]);
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { subscriptions = [] } = useGetSubscriptions();
+  const { subscriptions } = useGetSubscriptions();
 
   const [filters, setFilters] = useState(defaultFilters);
 
+  useEffect(() => {
+    if(subscriptions){
+      setTableData(subscriptions);
+    }
+  },[subscriptions]);
+
   const dataFiltered = applyFilter({
-    inputData: subscriptions,
+    inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -108,11 +114,11 @@ export default function SubscriptionListView() {
 
   const handleDeleteRows = useCallback(() => {
     table.onUpdatePageDeleteRows({
-      totalRows: subscriptions.length,
+      totalRows: tableData.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, subscriptions.length, table]);
+  }, [dataFiltered.length, dataInPage.length, tableData.length, table]);
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -168,7 +174,7 @@ export default function SubscriptionListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={subscriptions.length}
+              rowCount={tableData.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
@@ -190,13 +196,13 @@ export default function SubscriptionListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={subscriptions.length}
+                  rowCount={tableData.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      subscriptions.map((row) => row.id)
+                      tableData.map((row) => row.id)
                     )
                   }
                   showCheckbox={false}
@@ -221,7 +227,7 @@ export default function SubscriptionListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, subscriptions.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
                   />
 
                   <TableNoData notFound={notFound} />
