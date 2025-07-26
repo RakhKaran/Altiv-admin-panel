@@ -13,25 +13,30 @@ import Select from '@mui/material/Select';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
-export default function UserTableToolbar({ filters, onFilters,roleOptions,}) {
+export default function UserTableToolbar({ filters, onFilters, roleOptions, }) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
     (event) => onFilters('name', event.target.value),
     [onFilters]
 
-    
+
   );
 
   const handleFilterRole = useCallback(
     (event) => {
-      const value = Array.isArray(event.target.value)
-        ? event.target.value
-        : event.target.value.split(',');
-      onFilters('permissions', value);
+      const value = event.target.value;
+
+      if (value === '') {
+        onFilters('permissions', []);
+      } else {
+        onFilters('permissions', [value]);
+      }
     },
     [onFilters]
   );
+
+
 
   return (
     <>
@@ -39,20 +44,21 @@ export default function UserTableToolbar({ filters, onFilters,roleOptions,}) {
         <FormControl sx={{ width: { xs: '100%', md: 200 } }}>
           <InputLabel>Role</InputLabel>
           <Select
-            multiple
-            value={filters.permissions}
+            value={filters.permissions[0] || ''}
             onChange={handleFilterRole}
             input={<OutlinedInput label="Role" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            
           >
+            <MenuItem value="">
+              All Users
+            </MenuItem>
+
             {(roleOptions || []).map((opt) => (
               <MenuItem key={opt} value={opt}>
-                <Checkbox checked={filters.permissions.includes(opt)} size="small" />
                 {opt}
               </MenuItem>
             ))}
           </Select>
+
         </FormControl>
 
         <Stack direction="row" spacing={1} alignItems="center" sx={{ flexGrow: 1 }}>

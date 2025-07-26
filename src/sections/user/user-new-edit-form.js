@@ -234,7 +234,7 @@ export default function UserNewEditForm({ currentUser }) {
             >
               <RHFTextField name="fullName" label="Full Name" />
               <RHFTextField name="email" label="Email" />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="phoneNumber" label="Phone Number" type="number" />
 
               {/* <RHFTextField name="password" label="Password" type="password" /> */}
 

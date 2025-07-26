@@ -68,6 +68,12 @@ const defaultFilters = {
   isActive: 'all',
 };
 
+const role = {
+  admin: 'Admin',
+  customer: 'Customer',
+};
+
+
  const USER_STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
   { value: '1', label: 'Active' },
@@ -252,8 +258,7 @@ export default function UserListView() {
           <UserTableToolbar
             filters={filters}
             onFilters={handleFilters}
-            //
-            // roleOptions={_roles}
+            roleOptions={Object.values(role)}
           />
 
           {canReset && (
@@ -425,7 +430,7 @@ function applyFilter({ inputData, comparator, filters }) {
         user.permissions.some((userRole) => {
           console.log(userRole);
           const mappedRole = roleMapping[userRole];
-          console.log('Mapped Role:', mappedRole); // Check the mapped role
+          console.log('Mapped Role:', mappedRole); 
           return mappedRole && permissions.includes(mappedRole);
         })
     );
