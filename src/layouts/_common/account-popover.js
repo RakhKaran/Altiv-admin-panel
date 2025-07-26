@@ -42,9 +42,7 @@ const OPTIONS = [
 export default function AccountPopover() {
   const router = useRouter();
 
-  const { user } = useMockedUser();
-
-  const { logout } = useAuthContext();
+  const { user, logout } = useAuthContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -85,8 +83,8 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
-          alt={user?.displayName}
+          src={user?.avatar?.fileUrl}
+          alt={user?.fullName}
           sx={{
             width: 36,
             height: 36,
@@ -98,7 +96,7 @@ export default function AccountPopover() {
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.fullName}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
