@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect, useReducer, useCallback, useMemo } from 'react';
 // utils
-import axios, { endpoints } from 'src/utils/axios';
 //
 import { AuthContext } from './auth-context';
 import { isValidToken, setSession } from './utils';
+import axios from 'axios';
+import { endpoints } from 'src/utils/axios';
 
 // ----------------------------------------------------------------------
 
