@@ -10,7 +10,7 @@ import { LoadingScreen } from 'src/components/loading-screen';
 // ----------------------------------------------------------------------
 
 // OVERVIEW
-const IndexPage = lazy(() => import('src/pages/dashboard/app'));
+const IndexPage = lazy(() => import('src/pages/dashboard/analytics'));
 const OverviewEcommercePage = lazy(() => import('src/pages/dashboard/ecommerce'));
 const OverviewAnalyticsPage = lazy(() => import('src/pages/dashboard/analytics'));
 const OverviewBankingPage = lazy(() => import('src/pages/dashboard/banking'));
@@ -53,13 +53,13 @@ const PlanEditPage = lazy(() => import('src/pages/dashboard/plan/edit'));
 
 // Subscriptions
 
-const SubscriptionListPage = lazy(()=> import('src/pages/dashboard/subscription/list'));
+const SubscriptionListPage = lazy(() => import('src/pages/dashboard/subscription/list'));
 
 // Email
-const EmailListPage = lazy(()=> import ('src/pages/dashboard/email/list'));
+const EmailListPage = lazy(() => import('src/pages/dashboard/email/list'));
 
 // ContactUs
-const ContactListPage = lazy(()=> import('src/pages/dashboard/contact/list'));
+const ContactListPage = lazy(() => import('src/pages/dashboard/contact/list'));
 
 // TOUR
 const TourDetailsPage = lazy(() => import('src/pages/dashboard/tour/details'));
@@ -94,11 +94,7 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <IndexPage />, index: true },
-      { path: 'ecommerce', element: <OverviewEcommercePage /> },
-      { path: 'analytics', element: <OverviewAnalyticsPage /> },
-      { path: 'banking', element: <OverviewBankingPage /> },
-      { path: 'booking', element: <OverviewBookingPage /> },
-      { path: 'file', element: <OverviewFilePage /> },
+      { path: 'profile', element: <UserAccountPage /> },
       {
         path: 'user',
         children: [
@@ -159,39 +155,38 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <JobEditPage /> },
         ],
       },
-      { 
-       path: 'plan',
+      {
+        path: 'plan',
         children: [
           { element: <PlanListPage />, index: true },
           { path: 'list', element: <PlanListPage /> },
           { path: 'new', element: <PlanCreatePage /> },
           { path: ':id/edit', element: <PlanEditPage /> },
-          
-        ]
+        ],
       },
 
-      { 
-       path: 'subscription',
+      {
+        path: 'subscription',
         children: [
           { element: <SubscriptionListPage />, index: true },
           { path: 'list', element: <SubscriptionListPage /> },
-        ]
+        ],
       },
 
-      { 
-       path: 'email',
+      {
+        path: 'email',
         children: [
           { element: <EmailListPage />, index: true },
           { path: 'list', element: <EmailListPage /> },
-        ]
+        ],
       },
 
-      { 
-       path: 'contact',
+      {
+        path: 'contact',
         children: [
           { element: <ContactListPage />, index: true },
           { path: 'list', element: <ContactListPage /> },
-        ]
+        ],
       },
 
       {

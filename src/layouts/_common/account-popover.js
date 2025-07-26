@@ -29,7 +29,7 @@ const OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: paths.dashboard.user.account,
+    linkTo: paths.dashboard.profile,
   },
   // {
   //   label: 'Settings',
