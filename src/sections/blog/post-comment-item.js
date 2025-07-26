@@ -16,7 +16,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, hasReply }) {
+export default function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, hasReply, handleReply }) {
   const reply = useBoolean();
 
   console.log("namw and data.", name, avatarUrl, message, tagUser, postedAt, hasReply  )
@@ -64,18 +64,6 @@ export default function PostCommentItem({ name, avatarUrl, message, tagUser, pos
           </Box>
         )}
       </Stack>
-
-      {!hasReply && (
-        <Button
-          size="small"
-          color={reply.value ? 'primary' : 'inherit'}
-          startIcon={<Iconify icon="solar:pen-bold" width={16} />}
-          onClick={reply.onToggle}
-          sx={{ right: 0, position: 'absolute' }}
-        >
-          Reply
-        </Button>
-      )}
     </ListItem>
   );
 }
@@ -87,4 +75,5 @@ PostCommentItem.propTypes = {
   name: PropTypes.string,
   postedAt: PropTypes.string,
   tagUser: PropTypes.string,
+  handleReply: PropTypes.func
 };

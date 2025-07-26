@@ -25,6 +25,8 @@ import Iconify from 'src/components/iconify';
 import Markdown from 'src/components/markdown';
 import EmptyContent from 'src/components/empty-content';
 //
+import axiosInstance from 'src/utils/axios';
+
 import PostDetailsHero from '../post-details-hero';
 import PostCommentList from '../post-comment-list';
 import PostCommentForm from '../post-comment-form';
@@ -39,16 +41,28 @@ export default function PostDetailsView() {
   const { title } = params;
 
   const [publish, setPublish] = useState('');
-
+  const [commentsData, setCommentsData]= useState([]);
   const { post, postLoading, postError } = useGetPost(`${title}`);
 
   const handleChangePublish = useCallback((newValue) => {
     setPublish(newValue);
   }, []);
 
+  const fetchComments = async(blogId) => {
+    try{
+      const response = await axiosInstance.get(`comments/${blogId}`);
+      if(response.data){
+        setCommentsData(response.data?.data)
+      }
+    }catch(error){
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     if (post) {
       setPublish(post?.publish);
+      fetchComments(post.id);
     }
   }, [post]);
 
@@ -148,15 +162,15 @@ export default function PostDetailsView() {
           <Typography variant="h4">Comments</Typography>
 
           <Typography variant="subtitle2" sx={{ color: 'text.disabled' }}>
-            ({post.comments.length})
+            ({commentsData?.length})
           </Typography>
         </Stack>
 
-        <PostCommentForm />
+        {/* <PostCommentForm /> */}
 
         <Divider sx={{ mt: 5, mb: 2 }} />
 
-        <PostCommentList comments={post.comments} />
+        <PostCommentList comments={commentsData} />
       </Stack>
     </>
   );

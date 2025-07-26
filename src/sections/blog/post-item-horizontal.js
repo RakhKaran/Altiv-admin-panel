@@ -98,7 +98,7 @@ export default function PostItemHorizontal({ post }) {
               direction="row"
               sx={{ typography: 'caption', color: 'text.disabled' }}
             >
-              <Stack direction="row" alignItems="center">
+              {/* <Stack direction="row" alignItems="center">
                 <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
                 {fShortenNumber(totalComments)}
               </Stack>
@@ -106,12 +106,12 @@ export default function PostItemHorizontal({ post }) {
               <Stack direction="row" alignItems="center">
                 <Iconify icon="solar:eye-bold" width={16} sx={{ mr: 0.5 }} />
                 {fShortenNumber(totalViews)}
-              </Stack>
+              </Stack> */}
 
-              <Stack direction="row" alignItems="center">
+              {/* <Stack direction="row" alignItems="center">
                 <Iconify icon="solar:share-bold" width={16} sx={{ mr: 0.5 }} />
                 {fShortenNumber(totalShares)}
-              </Stack>
+              </Stack> */}
             </Stack>
           </Stack>
         </Box>
@@ -154,7 +154,7 @@ export default function PostItemHorizontal({ post }) {
           Edit
         </MenuItem>
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             popover.onClose();
           }}
@@ -162,7 +162,7 @@ export default function PostItemHorizontal({ post }) {
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
-        </MenuItem>
+        </MenuItem> */}
       </CustomPopover>
     </>
   );

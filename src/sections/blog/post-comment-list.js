@@ -3,88 +3,97 @@ import { useState } from 'react';
 // @mui
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Pagination from '@mui/material/Pagination';
 // components
+import axiosInstance from 'src/utils/axios';
 import PostCommentItem from './post-comment-item';
 
-// ----------------------------------------------------------------------
-
 export default function PostCommentList({ comments = [] }) {
-  const [isVisible, setIsVisible] = useState(0); 
-  const [isView, setIsView] = useState(false);    
+  // Track which comment replies are visible (by comment ID)
+  const [visibleReplies, setVisibleReplies] = useState({});
 
-  console.log("Comments.:" , comments)
+  // Store replies data for each comment by ID
+  const [repliesDataMap, setRepliesDataMap] = useState({});
 
-  const handleToggleReplies = (index) => {
-    if (isVisible === index) {
-  
-      setIsView((prev) => !prev);
-    } else {
-      
-      setIsVisible(index);
-      setIsView(true);
+  const handleToggleReplies = async (commentId) => {
+    // Toggle visibility
+    setVisibleReplies((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
+
+    // Fetch replies only if not already fetched
+    if (!repliesDataMap[commentId]) {
+      try {
+        const response = await axiosInstance.get(`/comment-replies/${commentId}`);
+        if (response.data?.data) {
+          setRepliesDataMap((prev) => ({
+            ...prev,
+            [commentId]: response.data.data,
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch replies:', error);
+      }
     }
   };
 
   return (
     <>
       {comments
-        .filter((c) => c.isParentComment) 
-        .map((comment, index) => {
+        .filter((c) => c.isParentComment)
+        .map((comment) => {
           const {
             id,
             comment: commentText,
             createdAt,
             user = {},
-            repliesCount = [],
+            repliesCount,
           } = comment;
 
-          const hasReplies = repliesCount.length > 0;
+          const isRepliesVisible = visibleReplies[id];
+          const replies = repliesDataMap[id] || [];
 
           return (
             <Box key={id} sx={{ mb: 3 }}>
               <PostCommentItem
                 name={user.fullName || 'NA'}
-                comment={commentText}
+                message={commentText}
                 createdAt={createdAt}
+                handleReply={() => handleToggleReplies(id)}
               />
-              {hasReplies && (
+
+              {repliesCount > 0 && (
                 <Button
                   size="small"
-                  onClick={() => handleToggleReplies(index)}
+                  onClick={() => handleToggleReplies(id)}
                   sx={{ ml: 6, mb: 1 }}
                 >
-                  {isVisible === index && isView
+                  {isRepliesVisible
                     ? 'Hide replies'
-                    : `View replies (${repliesCount.length})`}
+                    : `View replies (${repliesCount})`}
                 </Button>
               )}
 
-              {/* Replies */}
-              {isVisible === index && isView &&
-                repliesCount.map((reply) => {
-                  const replyUser = reply.user || {};
-                  return (
-                    <PostCommentItem
-                      key={reply.id}
-                      name={replyUser.fullName || 'Anonymous'}
-                      comment={reply.comment}
-                      createdAt={reply.createdAt}
-                      avatarUrl={replyUser.avatarUrl || ''}
-                      tagUser={reply.tagUser}
-                      hasReply
-                    />
-                  );
-                })}
+              {/* Render replies if visible */}
+              {isRepliesVisible &&
+                replies.map((reply) => (
+                  <PostCommentItem
+                    key={reply.id}
+                    name={reply.user?.fullName || 'Anonymous'}
+                    message={reply?.comment}
+                    createdAt={reply.createdAt}
+                    avatarUrl={reply.user?.avatarUrl || ''}
+                    hasReply
+                  />
+                ))}
             </Box>
           );
         })}
-
-      <Pagination count={8} sx={{ my: 5, mx: 'auto', width: 'fit-content' }} />
     </>
   );
 }
 
 PostCommentList.propTypes = {
-  comments: PropTypes.array,
+  comments: PropTypes.array.isRequired,
 };
+

@@ -176,9 +176,9 @@ const applyFilter = ({ inputData, filters, sortBy }) => {
     inputData = orderBy(inputData, ['createdAt'], ['asc']);
   }
 
-  if (sortBy === 'popular') {
-    inputData = orderBy(inputData, ['totalViews'], ['desc']);
-  }
+  // if (sortBy === 'popular') {
+  //   inputData = orderBy(inputData, ['totalViews'], ['desc']);
+  // }
 
   if (publish !== 'all') {
     inputData = inputData.filter((post) => post.publish === publish);
