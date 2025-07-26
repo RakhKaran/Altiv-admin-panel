@@ -36,9 +36,6 @@ import axiosInstance, { endpoints } from 'src/utils/axios';
 import { useBoolean } from 'src/hooks/use-boolean';
 // import { _fullNames } from 'src/_mock';
 
-
-import axiosInstance, { endpoints }  from 'src/utils/axios';
-
 const PERMISSION_OPTIONS = [
   { value: 'admin', label: 'Admin' },
   { value: 'customer', label: 'Customer' },
@@ -50,7 +47,7 @@ export default function UserNewEditForm({ currentUser }) {
 
   const password = useBoolean();
 
-  const NewUserSchema = Yup.object().shape({
+  const UserSchema = Yup.object().shape({
     fullName: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phoneNumber: Yup.string().required('Phone number is required'),
@@ -63,12 +60,8 @@ export default function UserNewEditForm({ currentUser }) {
     avatar: Yup.mixed().nullable(),
     profileDescription: Yup.string(),
 
-    password: currentUser
-      ? Yup.string()
-      : Yup.string().required('Password is required'),
-    newPassword: currentUser
-      ? Yup.string()
-      : Yup.string().required('Confirm password is required'),
+    password: currentUser ? Yup.string() : Yup.string().required('Password is required'),
+    newPassword: currentUser ? Yup.string() : Yup.string().required('Confirm password is required'),
   });
 
   const defaultValues = useMemo(
@@ -98,8 +91,12 @@ export default function UserNewEditForm({ currentUser }) {
   const {
     setValue,
     handleSubmit,
+    reset,
+    watch,
     formState: { isSubmitting },
   } = methods;
+
+  const values = watch();
 
   // const handleDrop = useCallback((field) => (acceptedFiles) => {
   //   const file = acceptedFiles[0];
@@ -109,10 +106,8 @@ export default function UserNewEditForm({ currentUser }) {
   //   setValue(field, newFile, { shouldValidate: true });
   // }, [setValue]);
 
-
-
   const onSubmit = handleSubmit(async (formData) => {
-    console.log("Submit Triggered");
+    console.log('Submit Triggered');
     try {
       console.info('DATA', formData);
 
@@ -129,11 +124,11 @@ export default function UserNewEditForm({ currentUser }) {
         dob: formData.dob,
         profileDescription: formData.profileDescription,
         isDeleted: false,
-        isActive: true
+        isActive: true,
       };
       if (formData.avatar) {
         inputData.avatar = {
-          fileUrl: formData.avatar
+          fileUrl: formData.avatar,
         };
       }
 
@@ -149,15 +144,17 @@ export default function UserNewEditForm({ currentUser }) {
         enqueueSnackbar('User ID not found for update.', { variant: 'error' });
       }
 
-
       reset();
       router.push(paths.dashboard.user.list);
     } catch (error) {
       console.error(error);
-      console.log("error generating user..!")
-      enqueueSnackbar(typeof error === 'string' ? error : error?.error?.message || 'something went wrong', {
-        variant: 'error',
-      });
+      console.log('error generating user..!');
+      enqueueSnackbar(
+        typeof error === 'string' ? error : error?.error?.message || 'something went wrong',
+        {
+          variant: 'error',
+        }
+      );
     }
   });
 
@@ -186,11 +183,10 @@ export default function UserNewEditForm({ currentUser }) {
   }, [currentUser, defaultValues, reset]);
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit} >
+    <FormProvider methods={methods} onSubmit={onSubmit}>
       <Card sx={{ pt: 10, pb: 5, px: 3 }}>
         <Grid container spacing={3}>
           <Grid xs={12} md={4}>
-
             {currentUser && (
               <Label
                 color={(values.isActive && 'success') || (!values.isActive && 'error') || 'warning'}
@@ -199,7 +195,6 @@ export default function UserNewEditForm({ currentUser }) {
                 {values.isActive ? 'Active' : 'Non-Active'}
               </Label>
             )}
-
 
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
@@ -223,11 +218,8 @@ export default function UserNewEditForm({ currentUser }) {
                 }
               />
             </Box>
-
           </Grid>
         </Grid>
-
-
 
         <Grid xs={12} md={8}>
           <Card sx={{ p: 3 }}>
@@ -244,19 +236,15 @@ export default function UserNewEditForm({ currentUser }) {
               <RHFTextField name="email" label="Email" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
 
-
               {/* <RHFTextField name="password" label="Password" type="password" /> */}
-
 
               <RHFTextField name="state" label="State/Region" />
               <RHFTextField name="city" label="City" />
               <RHFTextField name="fullAddress" label="address" />
               <RHFSelect fullWidth name="permissions" label="Role">
                 {[
-
                   { value: 'customer', name: 'Customer' },
                   { value: 'admin', name: 'Admin' },
-
                 ].map((option) => (
                   <MenuItem key={option.value} value={option.value}>
                     {option.name}
@@ -266,7 +254,6 @@ export default function UserNewEditForm({ currentUser }) {
               {/* <RHFTextField name="password" label="password" /> */}
 
               {!currentUser ? (
-
                 <>
                   <RHFTextField
                     name="password"
@@ -303,20 +290,17 @@ export default function UserNewEditForm({ currentUser }) {
                   />
                 </>
               ) : null}
-
-
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {isEdit ? 'Save Changes' : 'Create User'}
+                {currentUser ? 'Save Changes' : 'Create User'}
               </LoadingButton>
             </Stack>
           </Card>
         </Grid>
       </Card>
-
-    </FormProvider >
+    </FormProvider>
   );
 }
 

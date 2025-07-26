@@ -38,7 +38,6 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
-import { useGetUsers } from 'src/api/user';
 import { useAuthContext } from 'src/auth/hooks';
 // import { _roles, USER_STATUS_OPTIONS } from 'src/utils/constants';
 import UserTableRow from '../user-table-row';
