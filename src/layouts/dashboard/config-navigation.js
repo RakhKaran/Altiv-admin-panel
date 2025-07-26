@@ -22,8 +22,8 @@ const ICONS = {
   user: icon('ic_user'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
-  mail : icon('ic_mail'),
-  subscription: icon('ic_file')
+  mail: icon('ic_mail'),
+  subscription: icon('ic_file'),
 };
 
 // ----------------------------------------------------------------------
@@ -37,9 +37,7 @@ export function useNavData() {
       // ----------------------------------------------------------------------
       {
         subheader: t('overview'),
-        items: [
-          { title: t('analytics'), path: paths.dashboard.general.analytics, icon: ICONS.analytics },
-        ],
+        items: [{ title: t('Dashboard'), path: paths.dashboard.root, icon: ICONS.dashboard }],
       },
 
       // MANAGEMENT
@@ -57,31 +55,28 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.user.new },
             ],
           },
-            {
-            title: t('Plans'),
-            path: paths.dashboard.plan.root,
-            icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.plan.list },
-              { title: t('create'), path: paths.dashboard.plan.new },
-            ],
-          },
-           {
+          // {
+          //   title: t('Plans'),
+          //   path: paths.dashboard.plan.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: t('list'), path: paths.dashboard.plan.list },
+          //     { title: t('create'), path: paths.dashboard.plan.new },
+          //   ],
+          // },
+          {
             title: t('Subscriptions'),
             path: paths.dashboard.subscription.root,
             icon: ICONS.subscription,
-            children: [
-              { title: t('list'), path: paths.dashboard.subscription.list },
-            ],
+            children: [{ title: t('list'), path: paths.dashboard.subscription.list }],
           },
-                      {
+          {
             title: t('Blogs'),
             path: paths.dashboard.post.root,
             icon: ICONS.user,
             children: [
               { title: t('list'), path: paths.dashboard.post.list },
               { title: t('create'), path: paths.dashboard.post.new },
-            
             ],
           },
 
@@ -89,22 +84,15 @@ export function useNavData() {
             title: t('Wait List'),
             path: paths.dashboard.email.root,
             icon: ICONS.mail,
-            children: [
-              { title: t('list'), path: paths.dashboard.email.list },
-            ],
+            children: [{ title: t('list'), path: paths.dashboard.email.list }],
           },
 
-           {
+          {
             title: t('contact'),
             path: paths.dashboard.contact.root,
             icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.contact.list },
-
-            ],
+            children: [{ title: t('list'), path: paths.dashboard.contact.list }],
           },
-          
-
         ],
       },
     ],

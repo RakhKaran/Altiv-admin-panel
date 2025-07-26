@@ -50,13 +50,12 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-   { id: 'fullName', label: 'Full Name' },
-  { id: 'planName', label: 'Plan Name' },
+  { id: 'fullName', label: 'Full Name' },
+  { id: 'planData', label: 'Course' },
   { id: 'price', label: 'Price', width: 120 },
-  {id:'paymentMethod', label:'Payment Method'},
+  { id: 'paymentMethod', label: 'Payment Method' },
   { id: 'paymentType', label: 'Payment Type?', width: 80 },
-  {id:'expiryDate', label:'Expiry Date'},
- 
+  { id: 'expiryDate', label: 'Expiry Date' },
 ];
 
 const defaultFilters = {
@@ -92,18 +91,22 @@ export default function SubscriptionListView() {
   const canReset = !isEqual(defaultFilters, filters);
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const handleFilters = useCallback((name, value) => {
-    table.onResetPage();
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  }, [table]);
+  const handleFilters = useCallback(
+    (name, value) => {
+      table.onResetPage();
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    },
+    [table]
+  );
 
-  const handleDeleteRow = useCallback((id) => {
-    
-    table.onUpdatePageDeleteRow(dataInPage.length);
-  }, [dataInPage.length, table]);
+  const handleDeleteRow = useCallback(
+    (id) => {
+      table.onUpdatePageDeleteRow(dataInPage.length);
+    },
+    [dataInPage.length, table]
+  );
 
   const handleDeleteRows = useCallback(() => {
-
     table.onUpdatePageDeleteRows({
       totalRows: subscriptions.length,
       totalRowsInPage: dataInPage.length,
@@ -111,9 +114,12 @@ export default function SubscriptionListView() {
     });
   }, [dataFiltered.length, dataInPage.length, subscriptions.length, table]);
 
-  const handleFilterStatus = useCallback((event, newValue) => {
-    handleFilters('status', newValue);
-  }, [handleFilters]);
+  const handleFilterStatus = useCallback(
+    (event, newValue) => {
+      handleFilters('status', newValue);
+    },
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -129,7 +135,6 @@ export default function SubscriptionListView() {
             { name: 'Subscriptions', href: paths.dashboard.subscription.root },
             { name: 'List' },
           ]}
-
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -165,7 +170,10 @@ export default function SubscriptionListView() {
               numSelected={table.selected.length}
               rowCount={subscriptions.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, subscriptions.map((row) => row.id))
+                table.onSelectAllRows(
+                  checked,
+                  subscriptions.map((row) => row.id)
+                )
               }
               action={
                 <Tooltip title="Delete">
@@ -186,8 +194,12 @@ export default function SubscriptionListView() {
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, subscriptions.map((row) => row.id))
+                    table.onSelectAllRows(
+                      checked,
+                      subscriptions.map((row) => row.id)
+                    )
                   }
+                  showCheckbox={false}
                 />
 
                 <TableBody>
@@ -252,7 +264,7 @@ export default function SubscriptionListView() {
   );
 }
 
-// ---------------------------------------------------------------------- 
+// ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status } = filters;
@@ -269,7 +281,9 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter((subscriptions) =>
-       Object.values(subscriptions).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
+      Object.values(subscriptions).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
     );
   }
 
@@ -281,12 +295,3 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
-
-
-
-
-
-
-
-
-

@@ -9,36 +9,24 @@ import { format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
-export default function EmailTableRow({
-  row,
-  selected,
-  onSelectRow,
-}) {
-  const { email, createdAt} = row;
+export default function EmailTableRow({ row, selected, onSelectRow }) {
+  const { email, createdAt } = row;
 
-
-  
-  
- 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
-
       <TableCell>{email || '-'}</TableCell>
-     <TableCell>
-          <ListItemText
-            primary={format(new Date(createdAt), 'dd/MMM/yyyy')}
-            secondary={format(new Date(createdAt), 'p')}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
-        </TableCell>
+      <TableCell>
+        <ListItemText
+          primary={format(new Date(createdAt), 'dd/MMM/yyyy')}
+          secondary={format(new Date(createdAt), 'p')}
+          primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+          secondaryTypographyProps={{
+            mt: 0.5,
+            component: 'span',
+            typography: 'caption',
+          }}
+        />
+      </TableCell>
     </TableRow>
   );
 }
