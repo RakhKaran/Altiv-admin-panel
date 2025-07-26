@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import useSWR from 'swr';
 import { useMemo } from 'react';
 // utils
@@ -8,27 +9,56 @@ import { fetcher, endpoints } from 'src/utils/axios';
 export function useGetUsers() {
   const URL = endpoints.user.list;
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
 
-  const memoizedValue = useMemo(
-    () => ({
-      Users: data || [],
-      UsersLoading: isLoading,
-      UsersError: error,
-      UsersValidating: isValidating,
-      UsersEmpty: !isLoading && (!data || data.length === 0),
-    }),
-    [data, error, isLoading, isValidating]
-  );
 
-  return memoizedValue;
+  console.log(' API response data:', data);
+  const refreshUsers = () => {
+    // Use the `mutate` function to trigger a revalidation
+    mutate(URL);
+  };
+
+  return {
+    users: Array.isArray(data) ? data : [],
+    usersLoading: isLoading,
+    usersError: error,
+    usersValidating: isValidating,
+    usersEmpty: !isLoading && !data?.length,
+    refreshUsers, // Include the refresh function separately
+  };
+}
+
+export function useGetNotifications(filter) {
+  let URL;
+  if (filter) {
+    URL = endpoints.user.filterNotificationList(filter);
+  } else {
+    URL = endpoints.user.notifications;
+  }
+
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
+
+  const refreshNotifications = () => {
+    // Use the `mutate` function to trigger a revalidation
+    mutate(URL);
+  };
+
+  return {
+    notifications: data?.notifications || [],
+    unreadCount: data?.unreadCount || 0,
+    allCount: data?.allCount || 0,
+    notificationsLoading: isLoading,
+    notificationsError: error,
+    notificationsValidating: isValidating,
+    notificationsEmpty: !isLoading && !data?.notifications?.length,
+    refreshNotifications, // Include the refresh function separately
+  };
 }
 
 // ----------------------------------------------------------------------
 
-export function useGetUser(id) {
-  const URL = id ? endpoints.user.details(id) : null;
-
+export function useGetUser(userId) {
+  const URL = userId ? [endpoints.user.details(userId)] : null;
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
@@ -46,23 +76,60 @@ export function useGetUser(id) {
 
 // ----------------------------------------------------------------------
 
-export function useFilterUser(queryString) {
-  const URL = queryString ? endpoints.user.filterList(queryString) : null;
+export function UserTableFiltersResult(filter) {
+  let URL;
+  if (filter) {
+    URL = endpoints.user.filterList(filter);
+  } else {
+    URL = endpoints.user.list;
+  }
 
-  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher, {
-    keepPreviousData: true,
-  });
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
 
-  const memoizedValue = useMemo(
-    () => ({
-      filteredPlans: data || [],
-      filterLoading: isLoading,
-      filterError: error,
-      filterValidating: isValidating,
-      filterEmpty: !isLoading && (!data || data.length === 0),
-    }),
-    [data, error, isLoading, isValidating]
-  );
+  const refreshFilterUsers = () => {
+    // Use the `mutate` function to trigger a revalidation
+    mutate();
+  };
 
-  return memoizedValue;
+  return {
+    filteredUsers: data || [],
+    filteredUsersLoading: isLoading,
+    filteredUsersError: error,
+    filteredUsersValidating: isValidating,
+    filteredUsersEmpty: !isLoading && !data?.length,
+    refreshFilterUsers, // Include the refresh function separately
+  };
+}
+
+export function useGetDashboardCounts() {
+  const URL = endpoints.user.getDashboradCounts;
+
+  const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
+
+  const refreshDashboardCounts = () => {
+    // Use the `mutate` function to trigger a revalidation
+    mutate();
+  };
+
+  return {
+    dashboardCounts: data || [],
+    isLoading,
+    error,
+    isValidating,
+    refreshDashboardCounts,
+  };
+
+}
+
+export function useGetResumesByUserId(userId) {
+
+  const URL = userId ? endpoints.resume.details(userId) : null;
+
+  const { data, isLoading, error } = useSWR(URL, fetcher);
+
+  return {
+    resumes: data?.[0] || null, // assuming one resume per user
+    loading: isLoading,
+    error,
+  };
 }

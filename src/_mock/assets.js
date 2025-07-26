@@ -118,33 +118,6 @@ export const _fullNames = [
   'Mireya Conner',
 ];
 
-export const _firstNames = [
-  'Mossie',
-  'David',
-  'Ebba',
-  'Chester',
-  'Eula',
-  'Jaren',
-  'Boyd',
-  'Brady',
-  'Aida',
-  'Anastasia',
-  'Gregoria',
-  'Julianne',
-  'Ila',
-  'Elyssa',
-  'Lucio',
-  'Lewis',
-  'Jacinthe',
-  'Molly',
-  'Brown',
-  'Fritz',
-  'Keon',
-  'Ella',
-  'Ken',
-  'Whitney',
-];
-
 export const _lastNames = [
   'Carroll',
   'Simonis',

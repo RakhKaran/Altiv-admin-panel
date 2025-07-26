@@ -23,14 +23,14 @@ export default function ClassicRegisterView() {
   const password = useBoolean();
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name required'),
+    fullName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    firstName: '',
+    fullName: '',
     lastName: '',
     email: '',
     password: '',
@@ -89,7 +89,7 @@ export default function ClassicRegisterView() {
   const renderForm = (
     <Stack spacing={2.5}>
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-        <RHFTextField name="firstName" label="First name" />
+        <RHFTextField name="fullName" label="First name" />
         <RHFTextField name="lastName" label="Last name" />
       </Stack>
 

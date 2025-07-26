@@ -24,7 +24,7 @@ export default function ChatMessageItem({ message, participants, onOpenLightbox 
     currentUserId: user.id,
   });
 
-  const { firstName, avatarUrl } = senderDetails;
+  const { fullName, avatarUrl } = senderDetails;
 
   const { body, createdAt } = message;
 
@@ -40,7 +40,7 @@ export default function ChatMessageItem({ message, participants, onOpenLightbox 
         }),
       }}
     >
-      {!me && `${firstName},`} &nbsp;
+      {!me && `${fullName},`} &nbsp;
       {formatDistanceToNowStrict(new Date(createdAt), {
         addSuffix: true,
       })}
@@ -121,7 +121,7 @@ export default function ChatMessageItem({ message, participants, onOpenLightbox 
 
   return (
     <Stack direction="row" justifyContent={me ? 'flex-end' : 'unset'} sx={{ mb: 5 }}>
-      {!me && <Avatar alt={firstName} src={avatarUrl} sx={{ width: 32, height: 32, mr: 2 }} />}
+      {!me && <Avatar alt={fullName} src={avatarUrl} sx={{ width: 32, height: 32, mr: 2 }} />}
 
       <Stack alignItems="flex-end">
         {renderInfo}

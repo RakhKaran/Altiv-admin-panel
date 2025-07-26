@@ -1,6 +1,7 @@
 import axios from 'axios';
 // config
 import { HOST_API } from 'src/config-global';
+import UserTableFiltersResult from 'src/sections/user/user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ export const endpoints = {
   auth: {
     me: '/me',
     login: '/login',
-    register: '/register',
+    register: '/register', // post
   },
   mail: {
     list: '/api/mail/list',
@@ -49,42 +50,16 @@ export const endpoints = {
     details: '/api/product/details',
     search: '/api/product/search',
   },
-
- plan: {
-  list: '/plans',
-  filterList: (filter) => `/plans?${filter}`,
-  details: (id) => `/plans/${id}`,
-},
-
-subscriptions: {
-  list: '/subscriptions',
-  filterList: (filter) => `/subscriptions?${filter}`,
-  details: (id) => `/subscriptions/${id}`,
-},
-
-email: {
-  list: '/wait-lists',
-  filterList: (filter) => `/wait-lists?${filter}`,
-  details: (id) => `/wait-lists/${id}`,
-},
-contact: {
-  list: '/contact-uses',
-  filterList: (filter) => `/contact-uses?${filter}`,
-  details: (id) => `/contact-uses/${id}`,
-},
-
-user: {
-  list: '/api/users/list',
-  filterList: (filter) => `/api/users/?${filter}`,
-  details: (id) => `/api/users/${id}`,
-},
-comments: {
-  list: '/comments',
-  filterList: (filter) => `/comments/?${filter}`,
-  details: (blogId) => `/comments/${blogId}`,
-},
-
-
+   user: {
+    list: '/api/users/list',
+    filterList: (filter) => `/api/users/list?${filter}`,
+    details: (id) => `/api/users/${id}`, // patch
+    search: '/api/user/search',
+    delete:(id)=>`/user/${id}`
+  },
+  resume: {
+  details: (id) => `/resumes/${id}`
+  },
 };
 
 

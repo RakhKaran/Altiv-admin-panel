@@ -38,8 +38,9 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
+import { useGetUsers } from 'src/api/user';
 import { useAuthContext } from 'src/auth/hooks';
-import { _userList, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+// import { _roles, USER_STATUS_OPTIONS } from 'src/utils/constants';
 import UserTableRow from '../user-table-row';
 import UserTableToolbar from '../user-table-toolbar';
 import UserTableFiltersResult from '../user-table-filters-result';
@@ -47,22 +48,32 @@ import UserQuickEditForm from '../user-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
   { id: 'fullName', label: 'Full Name' },
-  { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  { id: 'permissions', label: 'Role', width: 180 },
-  { id: 'createdAt', label: 'Created At' },
-  { id: 'isActve', label: 'Status', width: 100 },
+  { id: 'email', label: 'Email'},
+  { id: 'phoneNumber', label: 'Phone Number'},
+  {id:'permissions', label:' Role '},
+  { id:'createdAt', label:'Created At'},
+  { id: 'isActive', label: 'Status'},
+  { id: '', label: 'View Events'},
+  {id: '', label:'Edit'},
+  {id:'',label:'Resume'},
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  role: [],
-  status: 'all',
+  permissions: [],
+  isActive: 'all',
 };
+
+ const USER_STATUS_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: '1', label: 'Active' },
+  { value: '0', label: 'Non-Active' },
+];
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +95,7 @@ export default function UserListView() {
 
   const [filters, setFilters] = useState(defaultFilters);
 
-  const { users, UsersLoading, usersEmpty, refreshUsers } = useGetUsers();
+  const { users, usersLoading, usersEmpty, refreshUsers } = useGetUsers();
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -159,7 +170,7 @@ export default function UserListView() {
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
-      handleFilters('status', newValue);
+      handleFilters('isActive', newValue);
     },
     [handleFilters]
   );
@@ -202,23 +213,23 @@ export default function UserListView() {
 
         <Card>
           <Tabs
-            value={filters.status}
+            value={filters.isActive}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {STATUS_OPTIONS.map((tab) => (
+            {USER_STATUS_OPTIONS.map((tab) => (
               <Tab
-                key={tab.value}
+                key={tab.value || tab.label}
                 iconPosition="end"
                 value={tab.value}
                 label={tab.label}
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.isActive) && 'filled') || 'soft'
                     }
                     color={
                       (tab.value === '1' && 'success') ||
@@ -230,6 +241,9 @@ export default function UserListView() {
                     {tab.value === '1' && tableData.filter((user) => user.isActive).length}
 
                     {tab.value === '0' && tableData.filter((user) => !user.isActive).length}
+                    {/* {tab.value === 'rejected' && tableData.filter((user) =>  user.status ==='rejected').length} */}
+
+
                   </Label>
                 }
               />
@@ -308,10 +322,10 @@ export default function UserListView() {
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
-                        handleQuickEditRow={(user) => {
-                          handleQuickEditRow(user);
-                        }}
-                        quickEdit={quickEdit}
+                        // handleQuickEditRow={(user) => {
+                        //   handleQuickEditRow(user);
+                        // }}
+                        handleQuickEditRow={() => handleQuickEditRow(row)}
                       />
                     ))}
 
@@ -380,13 +394,12 @@ export default function UserListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name,isActive,permissions} = filters;
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   const roleMapping = {
     admin: 'Admin',
-    initiator: 'Initiator',
-    validator: 'Validator',
-    viewer: 'Viewer',
+    customer: 'Customer',
+    
   };
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -402,11 +415,11 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => (status === '1' ? user.isActive : !user.isActive));
+  if (isActive !== 'all') {
+    inputData = inputData.filter((user) => (isActive === '1' ? user.isActive : !user.isActive));
   }
 
-  if (role.length) {
+  if (permissions.length) {
     inputData = inputData.filter(
       (user) =>
         user.permissions &&
@@ -414,7 +427,7 @@ function applyFilter({ inputData, comparator, filters }) {
           console.log(userRole);
           const mappedRole = roleMapping[userRole];
           console.log('Mapped Role:', mappedRole); // Check the mapped role
-          return mappedRole && role.includes(mappedRole);
+          return mappedRole && permissions.includes(mappedRole);
         })
     );
   }

@@ -134,7 +134,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   // REGISTER
-  const register = useCallback(async (email, password, firstName, lastName) => {
+  const register = useCallback(async (email, password, fullName, lastName) => {
     const newUser = await createUserWithEmailAndPassword(AUTH, email, password);
 
     await sendEmailVerification(newUser.user);
@@ -144,7 +144,7 @@ export function AuthProvider({ children }) {
     await setDoc(userProfile, {
       uid: newUser.user?.uid,
       email,
-      displayName: `${firstName} ${lastName}`,
+      displayName: `${fullName} ${lastName}`,
     });
   }, []);
 

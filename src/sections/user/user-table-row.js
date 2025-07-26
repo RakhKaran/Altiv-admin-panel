@@ -1,13 +1,10 @@
+import { useState } from 'react'; // ✅ Add this line
 import PropTypes from 'prop-types';
 // @mui
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import TableRow from '@mui/material/TableRow';
-import TableCell from '@mui/material/TableCell';
-import IconButton from '@mui/material/IconButton';
-import ListItemText from '@mui/material/ListItemText';
+import {
+  Button, Avatar, Tooltip, MenuItem, TableRow, TableCell,
+  IconButton, ListItemText, Checkbox
+} from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -16,31 +13,15 @@ import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { format } from 'date-fns';
+import UserViewResume from './view/view-resume';
 
-// ----------------------------------------------------------------------
-
-export default function UserTableRow({
-  row,
-  selected,
-  onEditRow,
-  onViewRow,
-  onSelectRow,
-  onDeleteRow,
-  quickEdit,
-  handleQuickEditRow,
-}) {
-  const {
- fullName,
-    permissions,
-    isActive,
-    email,
-    phoneNumber,
-    createdAt,
-  } = row;
+export default function UserTableRow({ row, selected, onViewRow, onSelectRow, onDeleteRow, onEditRow, quickEdit, handleQuickEditRow, userId }) {
+  const { fullName, avatar, email, phoneNumber, permissions, createdAt, isActive } = row;
 
   const confirm = useBoolean();
-
   const popover = usePopover();
+  const [openResume, setOpenResume] = useState(false);
+
 
   return (
     <>
@@ -49,79 +30,77 @@ export default function UserTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
 
-          <ListItemText
-            primary={fullName}
-            secondary={email}
-            primaryTypographyProps={{ typography: 'body2' }}
-            secondaryTypographyProps={{ component: 'span', color: 'text.disabled' }}
-          />
-        </TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{phoneNumber}</TableCell>
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{permissions.toString()}</TableCell>
 
         <TableCell>
-          <ListItemText
-            primary={format(new Date(createdAt), 'dd/MM/yyyy')}
-            secondary={format(new Date(createdAt), 'p')}
-            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
-            secondaryTypographyProps={{
-              mt: 0.5,
-              component: 'span',
-              typography: 'caption',
-            }}
-          />
+          {fullName}
+          <br />
+          <ListItemText secondary={email} />
         </TableCell>
 
+        <TableCell>{email}</TableCell>
+        <TableCell>{phoneNumber}</TableCell>
+
+        <TableCell>{permissions}</TableCell>
+
+        <TableCell>{createdAt ? format(new Date(createdAt), 'dd/MM/yyyy') : 'N/A'}</TableCell>
+
         <TableCell>
-          <Label
-            variant="soft"
-            color={(isActive && 'success') || (!isActive && 'error') || 'default'}
+          <Label 
+          variant="soft"
+          color={(isActive && 'success') || (!isActive && 'error') || 'default'}
           >
-            {isActive ? 'Active' : 'Non-Active'}
+            {isActive ? 'Active' : 'Inactive'}
           </Label>
         </TableCell>
-
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton
-              color={quickEdit.value ? 'inherit' : 'default'}
-              onClick={() => {
-                handleQuickEditRow(row);
-              }}
-            >
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip title="View" placement="top" arrow>
-            <IconButton
-              onClick={() => {
-                onViewRow();
-              }}
-            >
+        <TableCell>
+          <Tooltip title="View">
+            <IconButton onClick={onViewRow}>
               <Iconify icon="carbon:view-filled" />
             </IconButton>
           </Tooltip>
+        </TableCell>
 
+        <TableCell>
+          <Tooltip title="Quick Edit" placement="top" arrow>
+            <IconButton onClick={handleQuickEditRow}>
+              <Iconify icon="solar:pen-bold" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+
+
+        <TableCell>
+          <Tooltip title="View Resume">
+            <IconButton onClick={() => setOpenResume(true)}>
+              <Iconify icon="mdi:file-document-outline" />
+            </IconButton>
+          </Tooltip>
+        </TableCell>
+
+        {openResume && (
+          <UserViewResume
+            open={openResume}
+            onClose={() => setOpenResume(false)}
+            userId={row.id}
+          />
+          )}
+
+
+        <TableCell align="right">
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>
       </TableRow>
 
+      {/* Popover Menu */}
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
         sx={{ width: 140 }}
       >
-
         <MenuItem
           onClick={() => {
             onEditRow();
@@ -131,30 +110,45 @@ export default function UserTableRow({
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
+
+        <MenuItem
+          onClick={() => {
+            confirm.onTrue();
+            popover.onClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Delete
+        </MenuItem>
       </CustomPopover>
 
+      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
-        title="Delete"
-        content="Are you sure want to delete?"
+        title="Delete User"
+        content="Are you sure you want to delete this user?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Delete
           </Button>
         }
+
+
       />
     </>
   );
 }
 
 UserTableRow.propTypes = {
+  row: PropTypes.object.isRequired,
+  handleQuickEditRow: PropTypes.func.isRequired,
+  selected: PropTypes.bool,
+  onViewRow: PropTypes.func.isRequired,
+  onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
-  onViewRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
-  row: PropTypes.object,
-  selected: PropTypes.bool,
-  quickEdit: PropTypes.any,
-  handleQuickEditRow: PropTypes.func,
+  quickEdit: PropTypes.func,
+  userId: PropTypes.string,
 };

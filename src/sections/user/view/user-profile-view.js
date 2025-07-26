@@ -14,6 +14,7 @@ import { _userAbout, _userFeeds, _userFriends, _userGallery, _userFollowers } fr
 import Iconify from 'src/components/iconify';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import { useGetUser } from 'src/api/user';
 //
 import ProfileHome from '../profile-home';
 import ProfileCover from '../profile-cover';
