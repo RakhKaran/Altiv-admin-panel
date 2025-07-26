@@ -44,22 +44,21 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions, }) {
         <FormControl sx={{ width: { xs: '100%', md: 200 } }}>
           <InputLabel>Role</InputLabel>
           <Select
-            value={filters.permissions[0] || ''}
-            onChange={handleFilterRole}
+            multiple
+            value={filters.permissions}
+            onChange={(event) => onFilters('permissions', event.target.value)}
             input={<OutlinedInput label="Role" />}
+            renderValue={(selected) => selected.length === 0 ? 'All Roles' : selected.join(', ')}
           >
-            <MenuItem value="">
-              All Users
-            </MenuItem>
-
             {(roleOptions || []).map((opt) => (
               <MenuItem key={opt} value={opt}>
+                <Checkbox checked={filters.permissions.includes(opt)} />
                 {opt}
               </MenuItem>
             ))}
           </Select>
-
         </FormControl>
+
 
         <Stack direction="row" spacing={1} alignItems="center" sx={{ flexGrow: 1 }}>
           <TextField
