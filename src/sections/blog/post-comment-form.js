@@ -14,14 +14,12 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 export default function PostCommentForm() {
   const CommentSchema = Yup.object().shape({
     comment: Yup.string().required('Comment is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    fullName: Yup.string().required('Name is required'),
   });
 
   const defaultValues = {
     comment: '',
-    name: '',
-    email: '',
+    fullName: '',
   };
 
   const methods = useForm({

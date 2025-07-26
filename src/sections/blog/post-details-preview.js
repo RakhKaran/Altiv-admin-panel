@@ -12,7 +12,6 @@ import DialogActions from '@mui/material/DialogActions';
 import Markdown from 'src/components/markdown';
 import Scrollbar from 'src/components/scrollbar';
 import EmptyContent from 'src/components/empty-content';
-//
 import PostDetailsHero from './post-details-hero';
 
 // ----------------------------------------------------------------------
@@ -22,16 +21,14 @@ export default function PostDetailsPreview({
   coverUrl,
   content,
   description,
-  //
   open,
   isValid,
   onClose,
   onSubmit,
   isSubmitting,
 }) {
-  const hasContent = title || description || content || coverUrl;
-
-  const hasHero = title || coverUrl;
+  const hasContent = Boolean(title || description || content || coverUrl);
+  const hasHero = Boolean(title || coverUrl);
 
   return (
     <Dialog fullScreen open={open} onClose={onClose}>
@@ -62,17 +59,13 @@ export default function PostDetailsPreview({
           {hasHero && <PostDetailsHero title={title} coverUrl={coverUrl} />}
 
           <Container sx={{ mt: 5, mb: 10 }}>
-            <Stack
-              sx={{
-                maxWidth: 720,
-                mx: 'auto',
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 5 }}>
-                {description}
-              </Typography>
-
-              <Markdown children={content} />
+            <Stack sx={{ maxWidth: 720, mx: 'auto' }}>
+              {description && (
+                <Typography variant="h6" sx={{ mb: 5 }}>
+                  {description}
+                </Typography>
+              )}
+              {content && <Markdown>{content}</Markdown>}
             </Stack>
           </Container>
         </Scrollbar>
@@ -84,13 +77,13 @@ export default function PostDetailsPreview({
 }
 
 PostDetailsPreview.propTypes = {
-  content: PropTypes.string,
+  title: PropTypes.string,
   coverUrl: PropTypes.string,
+  content: PropTypes.string,
   description: PropTypes.string,
-  isSubmitting: PropTypes.bool,
+  open: PropTypes.bool,
   isValid: PropTypes.bool,
+  isSubmitting: PropTypes.bool,
   onClose: PropTypes.func,
   onSubmit: PropTypes.func,
-  open: PropTypes.bool,
-  title: PropTypes.string,
 };

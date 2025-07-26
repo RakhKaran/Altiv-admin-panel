@@ -39,11 +39,10 @@ export const endpoints = {
     details: '/api/mail/details',
     labels: '/api/mail/labels',
   },
-  post: {
-    list: '/api/post/list',
-    details: '/api/post/details',
-    latest: '/api/post/latest',
-    search: '/api/post/search',
+  post: {   //  Blogs enpoints 
+      list: '/blogs',
+  filterList: (filter) => `/blogs?${filter}`,
+  details: (slug) => `/blogs/slug/${slug}`,
   },
   product: {
     list: '/api/product/list',
@@ -73,4 +72,19 @@ contact: {
   filterList: (filter) => `/contact-uses?${filter}`,
   details: (id) => `/contact-uses/${id}`,
 },
+
+user: {
+  list: '/api/users/list',
+  filterList: (filter) => `/api/users/?${filter}`,
+  details: (id) => `/api/users/${id}`,
+},
+comments: {
+  list: '/comments',
+  filterList: (filter) => `/comments/?${filter}`,
+  details: (blogId) => `/comments/${blogId}`,
+},
+
+
 };
+
+

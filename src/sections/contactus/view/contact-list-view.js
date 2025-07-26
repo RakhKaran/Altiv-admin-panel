@@ -20,12 +20,6 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
 import { useGetContacts } from 'src/api/contact';
-// import { useGetEmails } from 'src/api/email';
-// import { useGetContacts } from 'src/api/chat';
-// import { useGetContactUss } from 'src/api/contact';
-// import { useGetPlans } from 'src/api/plan';
-// import { useGetSubscriptions } from 'src/api/subscriptions';
-// import { useGetContacts } from 'src/api/contact';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -48,15 +42,10 @@ import ContactTableRow from '../contact-table-row';
 import ContactTableToolbar from '../contact-table-toolbar';
 import ContactTableFiltersResult from '../contact-table-filters-result';
 
-
-
-
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
-  // { value: 'active', label: 'Active' },
-  // { value: 'inactive', label: 'Inactive' },
 ];
 
 const TABLE_HEAD = [
@@ -64,6 +53,7 @@ const TABLE_HEAD = [
    { id: 'email', label: 'Email' },
    { id: 'subject', label: 'Subjects' },
    { id: 'message', label: 'Messages' },
+   {id:'createdAt', label:'createdAt'}
 ];
 
 const defaultFilters = {
@@ -119,10 +109,6 @@ export default function ContactListView() {
     });
   }, [dataFiltered.length, dataInPage.length, contacts.length, table]);
 
-  // const handleEditRow = useCallback((id) => {
-  //   router.push(paths.dashboard.plan.edit(id));
-  // }, [router]);
-
   const handleFilterStatus = useCallback((event, newValue) => {
     handleFilters('status', newValue);
   }, [handleFilters]);
@@ -141,16 +127,6 @@ export default function ContactListView() {
             { name: 'Contact', href: paths.dashboard.contact.root },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     component={RouterLink}
-          //     href={paths.dashboard.plan.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="mingcute:add-line" />}
-          //   >
-          //     New Plan
-          //   </Button>
-          // }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -290,9 +266,10 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter((contacts) =>
-      contacts.name.toLowerCase().includes(name.toLowerCase())
+     Object.values(contacts).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
     );
   }
+
 
   if (status !== 'all') {
     inputData = inputData.filter((contacts) =>

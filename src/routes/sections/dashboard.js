@@ -50,7 +50,6 @@ const JobEditPage = lazy(() => import('src/pages/dashboard/job/edit'));
 const PlanListPage = lazy(() => import('src/pages/dashboard/plan/list'));
 const PlanCreatePage = lazy(() => import('src/pages/dashboard/plan/new'));
 const PlanEditPage = lazy(() => import('src/pages/dashboard/plan/edit'));
-// const PlanViewPage = lazy(() => import('src/pages/dashboard/plan/details'));
 
 // Subscriptions
 
@@ -167,7 +166,7 @@ export const dashboardRoutes = [
           { path: 'list', element: <PlanListPage /> },
           { path: 'new', element: <PlanCreatePage /> },
           { path: ':id/edit', element: <PlanEditPage /> },
-          // { path: ':id/view', element: <PlanViewPage /> },
+          
         ]
       },
 
@@ -176,9 +175,6 @@ export const dashboardRoutes = [
         children: [
           { element: <SubscriptionListPage />, index: true },
           { path: 'list', element: <SubscriptionListPage /> },
-          // { path: 'new', element: <PlanCreatePage /> },
-          // { path: ':id/edit', element: <PlanEditPage /> },
-          // { path: ':id/view', element: <PlanViewPage /> },
         ]
       },
 
@@ -187,9 +183,6 @@ export const dashboardRoutes = [
         children: [
           { element: <EmailListPage />, index: true },
           { path: 'list', element: <EmailListPage /> },
-          // { path: 'new', element: <PlanCreatePage /> },
-          // { path: ':id/edit', element: <PlanEditPage /> },
-          // { path: ':id/view', element: <PlanViewPage /> },
         ]
       },
 
@@ -198,9 +191,6 @@ export const dashboardRoutes = [
         children: [
           { element: <ContactListPage />, index: true },
           { path: 'list', element: <ContactListPage /> },
-          // { path: 'new', element: <PlanCreatePage /> },
-          // { path: ':id/edit', element: <PlanEditPage /> },
-          // { path: ':id/view', element: <PlanViewPage /> },
         ]
       },
 

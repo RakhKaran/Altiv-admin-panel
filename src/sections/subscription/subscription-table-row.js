@@ -19,18 +19,18 @@ export default function SubscriptionTableRow({
 
   const isExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
 
-  // ✅ Map payment method correctly
+  //  Map payment method correctly
   const paymentMethodLabel = {
     0: 'Stripe',
     1: 'Razorpay'
   }[paymentMethod] || '-';
 
-  // ✅ Detect recurring or one time
+  //  Detect recurring or one time
   const paymentTypeText = paymentType || '-';
   const isRecurring = paymentType?.toLowerCase().includes('recurring');
   const isOneTime = paymentType?.toLowerCase().includes('one time');
 
-  // ✅ Format expiry date based on plan type
+  //  Format expiry date based on plan type
   let formattedExpiry = '—';
   if (isRecurring && expiryDate) {
     const formattedDate = format(new Date(expiryDate), 'dd MMM yyyy');

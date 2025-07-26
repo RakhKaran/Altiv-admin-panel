@@ -4,9 +4,9 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hook';
@@ -22,6 +22,7 @@ import Image from 'src/components/image';
 import Iconify from 'src/components/iconify';
 import TextMaxLine from 'src/components/text-max-line';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { height, width } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -34,7 +35,6 @@ export default function PostItemHorizontal({ post }) {
 
   const {
     title,
-    author,
     publish,
     coverUrl,
     createdAt,
@@ -46,14 +46,14 @@ export default function PostItemHorizontal({ post }) {
 
   return (
     <>
-      <Stack component={Card} direction="row">
-        <Stack
-          sx={{
-            p: (theme) => theme.spacing(3, 3, 2, 3),
-          }}
-        >
-          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            <Label variant="soft" color={(publish === 'published' && 'info') || 'default'}>
+      <Card sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        minHeight: { md: 240 },
+      }}>
+        <Box sx={{ flexGrow: 1, p: 3, display: 'flex', flexDirection: 'column' }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
+            <Label variant="soft" color={publish === 'published' ? 'info' : 'default'}>
               {publish}
             </Label>
 
@@ -62,32 +62,41 @@ export default function PostItemHorizontal({ post }) {
             </Box>
           </Stack>
 
-          <Stack spacing={1} flexGrow={1}>
-            <Link color="inherit" component={RouterLink} href={paths.dashboard.post.details(title)}>
-              <TextMaxLine variant="subtitle2" line={2}>
-                {title}
-              </TextMaxLine>
-            </Link>
-
-            <TextMaxLine variant="body2" sx={{ color: 'text.secondary' }}>
-              {description}
+          <Link
+            color="inherit"
+            component={RouterLink}
+            href={paths.dashboard.post.details(title)}
+            sx={{ mb: 1 }}
+          >
+            <TextMaxLine variant="subtitle2" line={2}>
+              {title}
             </TextMaxLine>
-          </Stack>
+          </Link>
 
-          <Stack direction="row" alignItems="center">
+          <TextMaxLine
+            variant="body2"
+            line={2}
+            sx={{
+              color: 'text.secondary',
+              height: 40,
+              width: 200,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+         
+            }}
+          >
+            {description}
+          </TextMaxLine>
+
+          <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mt: 2 }}>
             <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
               <Iconify icon="eva:more-horizontal-fill" />
             </IconButton>
 
             <Stack
-              spacing={1.5}
-              flexGrow={1}
+              spacing={2}
               direction="row"
-              justifyContent="flex-end"
-              sx={{
-                typography: 'caption',
-                color: 'text.disabled',
-              }}
+              sx={{ typography: 'caption', color: 'text.disabled' }}
             >
               <Stack direction="row" alignItems="center">
                 <Iconify icon="eva:message-circle-fill" width={16} sx={{ mr: 0.5 }} />
@@ -105,19 +114,19 @@ export default function PostItemHorizontal({ post }) {
               </Stack>
             </Stack>
           </Stack>
-        </Stack>
+        </Box>
 
         {mdUp && (
-          <Box sx={{ width: 180, height: 240, position: 'relative', flexShrink: 0, p: 1 }}>
-            <Avatar
-              alt={author.name}
-              src={author.avatarUrl}
+          <Box sx={{ width: 180, height: 240, position: 'relative', flexShrink: 0 }}>
+            {/* <Avatar
+              alt={title.name}
+              src={coverUrl}
               sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
-            />
+            /> */}
             <Image alt={title} src={coverUrl} sx={{ height: 1, borderRadius: 1.5 }} />
           </Box>
         )}
-      </Stack>
+      </Card>
 
       <CustomPopover
         open={popover.open}
@@ -161,9 +170,8 @@ export default function PostItemHorizontal({ post }) {
 
 PostItemHorizontal.propTypes = {
   post: PropTypes.shape({
-    author: PropTypes.object,
     coverUrl: PropTypes.string,
-    createdAt: PropTypes.instanceOf(Date),
+    createdAt: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     description: PropTypes.string,
     publish: PropTypes.string,
     title: PropTypes.string,

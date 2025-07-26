@@ -15,13 +15,11 @@ import TableContainer from '@mui/material/TableContainer';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hook';
-import { RouterLink } from 'src/routes/components';
+
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
 import { useGetEmails } from 'src/api/email';
-// import { useGetPlans } from 'src/api/plan';
-// import { useGetSubscriptions } from 'src/api/subscriptions';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -48,12 +46,11 @@ import EmailTableFiltersResult from '../email-table-filters-result';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
-  // { value: 'active', label: 'Active' },
-  // { value: 'inactive', label: 'Inactive' },
 ];
 
 const TABLE_HEAD = [
    { id: 'email', label: 'Email' },
+   { id: 'createdAt', label: 'CreatedAt' },
  
 ];
 
@@ -109,10 +106,6 @@ export default function EmailListView() {
     });
   }, [dataFiltered.length, dataInPage.length, emails.length, table]);
 
-  // const handleEditRow = useCallback((id) => {
-  //   router.push(paths.dashboard.plan.edit(id));
-  // }, [router]);
-
   const handleFilterStatus = useCallback((event, newValue) => {
     handleFilters('status', newValue);
   }, [handleFilters]);
@@ -131,16 +124,7 @@ export default function EmailListView() {
             { name: 'Email', href: paths.dashboard.email.root },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     component={RouterLink}
-          //     href={paths.dashboard.plan.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="mingcute:add-line" />}
-          //   >
-          //     New Plan
-          //   </Button>
-          // }
+
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -280,7 +264,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter((emails) =>
-      emails.email.toLowerCase().includes(name.toLowerCase())
+      Object.values(emails).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
     );
   }
 
@@ -292,6 +276,11 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
+
+
+
+
+
 
 
 

@@ -30,6 +30,7 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
 } from 'src/components/hook-form';
+import axiosInstance from 'src/utils/axios';
 //
 import PostDetailsPreview from './post-details-preview';
 
@@ -50,10 +51,7 @@ export default function PostNewEditForm({ currentPost }) {
     content: Yup.string().required('Content is required'),
     coverUrl: Yup.mixed().nullable().required('Cover is required'),
     tags: Yup.array().min(2, 'Must have at least 2 tags'),
-    metaKeywords: Yup.array().min(1, 'Meta keywords is required'),
-    // not required
-    metaTitle: Yup.string(),
-    metaDescription: Yup.string(),
+    publish:Yup.string().required('Status is required i.e(publish or draft or unpublish)'),
   });
 
   const defaultValues = useMemo(
@@ -63,9 +61,7 @@ export default function PostNewEditForm({ currentPost }) {
       content: currentPost?.content || '',
       coverUrl: currentPost?.coverUrl || null,
       tags: currentPost?.tags || [],
-      metaKeywords: currentPost?.metaKeywords || [],
-      metaTitle: currentPost?.metaTitle || '',
-      metaDescription: currentPost?.metaDescription || '',
+      publish:currentPost?.publish || 'draft',
     }),
     [currentPost]
   );
@@ -86,38 +82,66 @@ export default function PostNewEditForm({ currentPost }) {
   const values = watch();
 
   useEffect(() => {
-    if (currentPost) {
+    if (currentPost && currentPost.title) {
+      console.log('Resetting with currentPost', currentPost);
       reset(defaultValues);
     }
   }, [currentPost, defaultValues, reset]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const inputData = {
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        coverUrl: data.coverUrl,
+        tags: data.tags,
+        publish:data.publish
+      };
+
+      if (!currentPost) {
+        await axiosInstance.post('/blogs', inputData);
+      } else {
+        await axiosInstance.patch(`/blogs/${currentPost.id}`, inputData);
+      }
+
       reset();
-      preview.onFalse();
-      enqueueSnackbar(currentPost ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.post.root);
-      console.info('DATA', data);
+      enqueueSnackbar(currentPost ? 'Blogs updated successfully!' : 'Blogs created successfully!');
+      router.push(paths.dashboard.post.list); 
     } catch (error) {
       console.error(error);
+      enqueueSnackbar(typeof error === 'string' ? error : error?.message || 'Something went wrong', {
+        variant: 'error',
+      });
     }
   });
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
+ const handleDrop = useCallback(
+  async (acceptedFiles) => {
+    const file = acceptedFiles[0];
 
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
 
-      if (file) {
-        setValue('coverUrl', newFile, { shouldValidate: true });
+      try {
+        const response = await axiosInstance.post('/files', formData); 
+        const imageUrl = response.data?.files[0]?.fileUrl;
+        
+
+        if (imageUrl) {
+          setValue('coverUrl', imageUrl, { shouldValidate: true });
+        } else {
+          enqueueSnackbar('Image upload failed: No URL returned.', { variant: 'error' });
+        }
+      } catch (error) {
+        console.error(error);
+        enqueueSnackbar('Image upload failed.', { variant: 'error' });
       }
-    },
-    [setValue]
-  );
+    }
+  },
+  [enqueueSnackbar, setValue]
+);
 
   const handleRemoveFile = useCallback(() => {
     setValue('coverUrl', null);
@@ -210,17 +234,17 @@ export default function PostNewEditForm({ currentPost }) {
               }
             />
 
-            <RHFTextField name="metaTitle" label="Meta title" />
+            {/* <RHFTextField name="metaTitle" label="Meta title" /> */}
 
-            <RHFTextField
+            {/* <RHFTextField
               name="metaDescription"
               label="Meta description"
               fullWidth
               multiline
               rows={3}
-            />
+            /> */}
 
-            <RHFAutocomplete
+            {/* <RHFAutocomplete
               name="metaKeywords"
               label="Meta keywords"
               placeholder="+ Keywords"
@@ -246,9 +270,9 @@ export default function PostNewEditForm({ currentPost }) {
                   />
                 ))
               }
-            />
+            /> */}
 
-            <FormControlLabel control={<Switch defaultChecked />} label="Enable comments" />
+            {/* <FormControlLabel control={<Switch defaultChecked />} label="Enable comments" /> */}
           </Stack>
         </Card>
       </Grid>
@@ -258,25 +282,24 @@ export default function PostNewEditForm({ currentPost }) {
   const renderActions = (
     <>
       {mdUp && <Grid md={4} />}
-      <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
+        <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
         <FormControlLabel
-          control={<Switch defaultChecked />}
+          control={
+            <Switch
+              checked={values.publish === 'published'}
+              onChange={(e) =>
+                setValue('publish', e.target.checked ? 'published' : 'draft', {
+                  shouldValidate: true,
+                })
+              }
+            />
+          }
           label="Publish"
           sx={{ flexGrow: 1, pl: 3 }}
         />
-
-        <Button color="inherit" variant="outlined" size="large" onClick={preview.onTrue}>
-          Preview
-        </Button>
-
-        <LoadingButton
-          type="submit"
-          variant="contained"
-          size="large"
-          loading={isSubmitting}
-          sx={{ ml: 2 }}
-        >
-          {!currentPost ? 'Create Post' : 'Save Changes'}
+        <Button variant="outlined" onClick={preview.onTrue}>Preview</Button>
+        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 2 }}>
+          {currentPost ? 'Save Changes' : 'Create Post'}
         </LoadingButton>
       </Grid>
     </>

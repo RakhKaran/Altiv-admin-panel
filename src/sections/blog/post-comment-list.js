@@ -1,40 +1,76 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 // @mui
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Pagination from '@mui/material/Pagination';
-//
+// components
 import PostCommentItem from './post-comment-item';
 
 // ----------------------------------------------------------------------
 
-export default function PostCommentList({ comments }) {
+export default function PostCommentList({ comments = [] }) {
+  const [isVisible, setIsVisible] = useState(0); 
+  const [isView, setIsView] = useState(false);    
+
+  console.log("Comments.:" , comments)
+
+  const handleToggleReplies = (index) => {
+    if (isVisible === index) {
+  
+      setIsView((prev) => !prev);
+    } else {
+      
+      setIsVisible(index);
+      setIsView(true);
+    }
+  };
+
   return (
     <>
-      <>
-        {comments.map((comment) => {
-          const { id, replyComment, name, users, message, avatarUrl, postedAt } = comment;
+      {comments
+        .filter((c) => c.isParentComment) 
+        .map((comment, index) => {
+          const {
+            id,
+            comment: commentText,
+            createdAt,
+            user = {},
+            repliesCount = [],
+          } = comment;
 
-          const hasReply = !!replyComment.length;
+          const hasReplies = repliesCount.length > 0;
 
           return (
-            <Box key={id}>
+            <Box key={id} sx={{ mb: 3 }}>
               <PostCommentItem
-                name={name}
-                message={message}
-                postedAt={postedAt}
-                avatarUrl={avatarUrl}
+                name={user.fullName || 'NA'}
+                comment={commentText}
+                createdAt={createdAt}
               />
-              {hasReply &&
-                replyComment.map((reply) => {
-                  const userReply = users.find((user) => user.id === reply.userId);
+              {hasReplies && (
+                <Button
+                  size="small"
+                  onClick={() => handleToggleReplies(index)}
+                  sx={{ ml: 6, mb: 1 }}
+                >
+                  {isVisible === index && isView
+                    ? 'Hide replies'
+                    : `View replies (${repliesCount.length})`}
+                </Button>
+              )}
 
+              {/* Replies */}
+              {isVisible === index && isView &&
+                repliesCount.map((reply) => {
+                  const replyUser = reply.user || {};
                   return (
                     <PostCommentItem
                       key={reply.id}
-                      name={userReply?.name || ''}
-                      message={reply.message}
-                      postedAt={reply.postedAt}
-                      avatarUrl={userReply?.avatarUrl || ''}
+                      name={replyUser.fullName || 'Anonymous'}
+                      comment={reply.comment}
+                      createdAt={reply.createdAt}
+                      avatarUrl={replyUser.avatarUrl || ''}
                       tagUser={reply.tagUser}
                       hasReply
                     />
@@ -43,9 +79,8 @@ export default function PostCommentList({ comments }) {
             </Box>
           );
         })}
-      </>
 
-      <Pagination count={8} sx={{ my: 5, mx: 'auto' }} />
+      <Pagination count={8} sx={{ my: 5, mx: 'auto', width: 'fit-content' }} />
     </>
   );
 }

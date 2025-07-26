@@ -12,13 +12,13 @@ export function useGetPosts() {
 
   const memoizedValue = useMemo(
     () => ({
-      posts: data?.posts || [],
+      posts: data || [],
       postsLoading: isLoading,
       postsError: error,
       postsValidating: isValidating,
-      postsEmpty: !isLoading && !data?.posts.length,
+      postsEmpty: !isLoading && (!data || data.length === 0),
     }),
-    [data?.posts, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -26,19 +26,19 @@ export function useGetPosts() {
 
 // ----------------------------------------------------------------------
 
-export function useGetPost(title) {
-  const URL = title ? [endpoints.post.details, { params: { title } }] : null;
+export function useGetPost(slug) {
+  const URL = slug ? endpoints.post.details(slug) : null;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(
     () => ({
-      post: data?.post,
+      post: data,
       postLoading: isLoading,
       postError: error,
       postValidating: isValidating,
     }),
-    [data?.post, error, isLoading, isValidating]
+    [data, error, isLoading, isValidating]
   );
 
   return memoizedValue;
@@ -57,7 +57,7 @@ export function useGetLatestPosts(title) {
       latestPostsLoading: isLoading,
       latestPostsError: error,
       latestPostsValidating: isValidating,
-      latestPostsEmpty: !isLoading && !data?.latestPosts.length,
+      latestPostsEmpty: !isLoading && !data?.latestPosts?.length,
     }),
     [data?.latestPosts, error, isLoading, isValidating]
   );
@@ -80,7 +80,7 @@ export function useSearchPosts(query) {
       searchLoading: isLoading,
       searchError: error,
       searchValidating: isValidating,
-      searchEmpty: !isLoading && !data?.results.length,
+      searchEmpty: !isLoading && !data?.results?.length,
     }),
     [data?.results, error, isLoading, isValidating]
   );

@@ -19,6 +19,8 @@ import Iconify from 'src/components/iconify';
 export default function PostCommentItem({ name, avatarUrl, message, tagUser, postedAt, hasReply }) {
   const reply = useBoolean();
 
+  console.log("namw and data.", name, avatarUrl, message, tagUser, postedAt, hasReply  )
+
   return (
     <ListItem
       sx={{

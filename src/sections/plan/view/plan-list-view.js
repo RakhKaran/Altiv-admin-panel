@@ -19,7 +19,7 @@ import { RouterLink } from 'src/routes/components';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
-import { useGetSubscriptions } from 'src/api/subscriptions';
+import { useGetPlans } from 'src/api/plan';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -38,25 +38,25 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
-import SubscriptionTableRow from '../subscription-table-row';
-import SubscriptionTableToolbar from '../subscription-table-toolbar';
-import SubscriptionTableFiltersResult from '../subscription-table-filters-result';
+import PlanTableRow from '../plan-table-row';
+import PlanTableToolbar from '../plan-table-toolbar';
+import PlanTableFiltersResult from '../plan-table-filters-result';
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
-  // { value: 'active', label: 'Active' },
-  // { value: 'inactive', label: 'Inactive' },
+  { value: 'active', label: 'Active' },
+  { value: 'inactive', label: 'Inactive' },
 ];
 
 const TABLE_HEAD = [
-   { id: 'fullName', label: 'Full Name' },
   { id: 'planName', label: 'Plan Name' },
   { id: 'price', label: 'Price', width: 120 },
-  {id:'paymentMethod', label:'Payment Method'},
-  { id: 'paymentType', label: 'Payment Type?', width: 80 },
-  {id:'expiryDate', label:'Expiry Date'},
- 
+  { id: 'paymentType', label: 'Payment Type', width: 160 },
+  { id: 'recurringPeriod', label: 'Period', width: 160 },
+  { id: 'isFreePlan', label: 'Free?', width: 80 },
+  { id: '', width: 88 },
 ];
 
 const defaultFilters = {
@@ -66,19 +66,18 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionListView() {
+export default function PlanListView() {
   const table = useTable();
-
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { subscriptions = [] } = useGetSubscriptions();
+  const { plans = [] } = useGetPlans();
 
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({
-    inputData: subscriptions,
+    inputData: plans,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -98,18 +97,20 @@ export default function SubscriptionListView() {
   }, [table]);
 
   const handleDeleteRow = useCallback((id) => {
-    
     table.onUpdatePageDeleteRow(dataInPage.length);
   }, [dataInPage.length, table]);
 
   const handleDeleteRows = useCallback(() => {
-
     table.onUpdatePageDeleteRows({
-      totalRows: subscriptions.length,
+      totalRows: plans.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, subscriptions.length, table]);
+  }, [dataFiltered.length, dataInPage.length, plans.length, table]);
+
+  const handleEditRow = useCallback((id) => {
+    router.push(paths.dashboard.plan.edit(id));
+  }, [router]);
 
   const handleFilterStatus = useCallback((event, newValue) => {
     handleFilters('status', newValue);
@@ -123,13 +124,22 @@ export default function SubscriptionListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Subscriptions List"
+          heading="Plan List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Subscriptions', href: paths.dashboard.subscription.root },
+            { name: 'Plans', href: paths.dashboard.plan.root },
             { name: 'List' },
           ]}
-
+          action={
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.plan.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New Plan
+            </Button>
+          }
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -147,10 +157,10 @@ export default function SubscriptionListView() {
             ))}
           </Tabs>
 
-          <SubscriptionTableToolbar filters={filters} onFilters={handleFilters} />
+          <PlanTableToolbar filters={filters} onFilters={handleFilters} />
 
           {canReset && (
-            <SubscriptionTableFiltersResult
+            <PlanTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               onResetFilters={handleResetFilters}
@@ -163,9 +173,9 @@ export default function SubscriptionListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={subscriptions.length}
+              rowCount={plans.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, subscriptions.map((row) => row.id))
+                table.onSelectAllRows(checked, plans.map((row) => row.id))
               }
               action={
                 <Tooltip title="Delete">
@@ -182,11 +192,11 @@ export default function SubscriptionListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={subscriptions.length}
+                  rowCount={plans.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, subscriptions.map((row) => row.id))
+                    table.onSelectAllRows(checked, plans.map((row) => row.id))
                   }
                 />
 
@@ -197,19 +207,19 @@ export default function SubscriptionListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <SubscriptionTableRow
+                      <PlanTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        // onEditRow={() => handleEditRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, subscriptions.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, plans.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -252,7 +262,7 @@ export default function SubscriptionListView() {
   );
 }
 
-// ---------------------------------------------------------------------- 
+// ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status } = filters;
@@ -268,14 +278,14 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter((subscriptions) =>
-       Object.values(subscriptions).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
+    inputData = inputData.filter((plan) =>
+      plan.planName.toLowerCase().includes(name.toLowerCase())
     );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((subscriptions) =>
-      status === 'active' ? !subscriptions.isDeleted : subscriptions.isDeleted
+    inputData = inputData.filter((plan) =>
+      status === 'active' ? !plan.isDeleted : plan.isDeleted
     );
   }
 

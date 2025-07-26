@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
+import ListItemText from '@mui/material/ListItemText';
 // utils
 import { format } from 'date-fns';
 
@@ -13,7 +14,7 @@ export default function EmailTableRow({
   selected,
   onSelectRow,
 }) {
-  const { email} = row;
+  const { email, createdAt} = row;
 
 
   
@@ -26,6 +27,18 @@ export default function EmailTableRow({
       </TableCell>
 
       <TableCell>{email || '-'}</TableCell>
+     <TableCell>
+          <ListItemText
+            primary={format(new Date(createdAt), 'dd/MMM/yyyy')}
+            secondary={format(new Date(createdAt), 'p')}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
+        </TableCell>
     </TableRow>
   );
 }

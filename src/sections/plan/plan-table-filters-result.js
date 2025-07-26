@@ -10,7 +10,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionTableFiltersResult({
+export default function PlanTableFiltersResult({
   filters,
   onFilters,
   onResetFilters,
@@ -23,33 +23,33 @@ export default function SubscriptionTableFiltersResult({
 
   return (
     <Stack spacing={1.5} {...other}>
-          <Box sx={{ typography: 'body2' }}>
-            <strong>{results}</strong>
-            <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
-              results found
-            </Box>
-          </Box>
-    
-          <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
-            {filters.name && (
-              <Block label="name:">
-                <Chip size="small" label={filters.name} onDelete={handleRemoveName} />
-              </Block>
-            )}
-    
-            <Button
-              color="error"
-              onClick={onResetFilters}
-              startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
-            >
-              Clear
-            </Button>
-          </Stack>
-          </Stack>
+      <Box sx={{ typography: 'body2' }}>
+        <strong>{results}</strong>
+        <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
+          results found
+        </Box>
+      </Box>
+
+      <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
+        {filters.name && (
+          <Block label="Name:">
+            <Chip size="small" label={filters.name} onDelete={handleRemoveName} />
+          </Block>
+        )}
+
+        <Button
+          color="error"
+          onClick={onResetFilters}
+          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+        >
+          Clear
+        </Button>
+      </Stack>
+    </Stack>
   );
 }
 
-SubscriptionTableFiltersResult.propTypes = {
+PlanTableFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,
@@ -90,3 +90,4 @@ Block.propTypes = {
   label: PropTypes.string,
   sx: PropTypes.object,
 };
+ 

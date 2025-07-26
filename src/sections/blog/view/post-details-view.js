@@ -115,7 +115,7 @@ export default function PostDetailsView() {
           </Stack>
 
           <Stack direction="row" alignItems="center">
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Checkbox
                   defaultChecked
@@ -127,9 +127,9 @@ export default function PostDetailsView() {
               }
               label={fShortenNumber(post.totalFavorites)}
               sx={{ mr: 1 }}
-            />
+            /> */}
 
-            <AvatarGroup
+            {/* <AvatarGroup
               sx={{
                 [`& .${avatarGroupClasses.avatar}`]: {
                   width: 32,
@@ -140,7 +140,7 @@ export default function PostDetailsView() {
               {post.favoritePerson.map((person) => (
                 <Avatar key={person.name} alt={person.name} src={person.avatarUrl} />
               ))}
-            </AvatarGroup>
+            </AvatarGroup> */}
           </Stack>
         </Stack>
 
