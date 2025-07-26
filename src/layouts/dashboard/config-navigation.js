@@ -55,15 +55,15 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.user.new },
             ],
           },
-          {
-            title: t('Plans'),
-            path: paths.dashboard.plan.root,
-            icon: ICONS.user,
-            children: [
-              { title: t('list'), path: paths.dashboard.plan.list },
-              { title: t('create'), path: paths.dashboard.plan.new },
-            ],
-          },
+          // {
+          //   title: t('Plans'),
+          //   path: paths.dashboard.plan.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: t('list'), path: paths.dashboard.plan.list },
+          //     { title: t('create'), path: paths.dashboard.plan.new },
+          //   ],
+          // },
           {
             title: t('Subscriptions'),
             path: paths.dashboard.subscription.root,

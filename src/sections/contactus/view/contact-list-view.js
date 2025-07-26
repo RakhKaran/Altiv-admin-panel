@@ -44,16 +44,14 @@ import ContactTableFiltersResult from '../contact-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
-   { id: 'name', label: 'Name' },
-   { id: 'email', label: 'Email' },
-   { id: 'subject', label: 'Subjects' },
-   { id: 'message', label: 'Messages' },
-   {id:'createdAt', label:'createdAt'}
+  { id: 'name', label: 'Name' },
+  { id: 'email', label: 'Email' },
+  { id: 'subject', label: 'Subjects' },
+  { id: 'message', label: 'Messages' },
+  { id: 'createdAt', label: 'createdAt' },
 ];
 
 const defaultFilters = {
@@ -70,8 +68,8 @@ export default function ContactListView() {
   const router = useRouter();
   const confirm = useBoolean();
 
-  const {contacts =[]} = useGetContacts();
-  console.log('data', contacts );
+  const { contacts = [] } = useGetContacts();
+  console.log('data', contacts);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -90,18 +88,22 @@ export default function ContactListView() {
   const canReset = !isEqual(defaultFilters, filters);
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const handleFilters = useCallback((name, value) => {
-    table.onResetPage();
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  }, [table]);
+  const handleFilters = useCallback(
+    (name, value) => {
+      table.onResetPage();
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    },
+    [table]
+  );
 
-  const handleDeleteRow = useCallback((id) => {
-    
-    table.onUpdatePageDeleteRow(dataInPage.length);
-  }, [dataInPage.length, table]);
+  const handleDeleteRow = useCallback(
+    (id) => {
+      table.onUpdatePageDeleteRow(dataInPage.length);
+    },
+    [dataInPage.length, table]
+  );
 
   const handleDeleteRows = useCallback(() => {
-
     table.onUpdatePageDeleteRows({
       totalRows: contacts.length,
       totalRowsInPage: dataInPage.length,
@@ -109,9 +111,12 @@ export default function ContactListView() {
     });
   }, [dataFiltered.length, dataInPage.length, contacts.length, table]);
 
-  const handleFilterStatus = useCallback((event, newValue) => {
-    handleFilters('status', newValue);
-  }, [handleFilters]);
+  const handleFilterStatus = useCallback(
+    (event, newValue) => {
+      handleFilters('status', newValue);
+    },
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -162,7 +167,10 @@ export default function ContactListView() {
               numSelected={table.selected.length}
               rowCount={contacts.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, contacts.map((row) => row.id))
+                table.onSelectAllRows(
+                  checked,
+                  contacts.map((row) => row.id)
+                )
               }
               action={
                 <Tooltip title="Delete">
@@ -183,8 +191,12 @@ export default function ContactListView() {
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, contacts.map((row) => row.id))
+                    table.onSelectAllRows(
+                      checked,
+                      contacts.map((row) => row.id)
+                    )
                   }
+                  showCheckbox={false}
                 />
 
                 <TableBody>
@@ -266,10 +278,11 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter((contacts) =>
-     Object.values(contacts).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
+      Object.values(contacts).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
     );
   }
-
 
   if (status !== 'all') {
     inputData = inputData.filter((contacts) =>
@@ -279,12 +292,3 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
-
-
-
-
-
-
-
-
-

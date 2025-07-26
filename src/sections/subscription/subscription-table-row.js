@@ -8,22 +8,19 @@ import { format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionTableRow({
-  row,
-  selected,
-  onSelectRow,
-}) {
+export default function SubscriptionTableRow({ row, selected, onSelectRow }) {
   const { planData = {}, user = {}, expiryDate, paymentMethod } = row;
-  const { planName, price, paymentType } = planData;
+  const { planName, price, paymentType, courses } = planData;
   const { fullName } = user;
 
   const isExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
 
   //  Map payment method correctly
-  const paymentMethodLabel = {
-    0: 'Stripe',
-    1: 'Razorpay'
-  }[paymentMethod] || '-';
+  const paymentMethodLabel =
+    {
+      0: 'Stripe',
+      1: 'Razorpay',
+    }[paymentMethod] || '-';
 
   //  Detect recurring or one time
   const paymentTypeText = paymentType || '-';
@@ -46,15 +43,11 @@ export default function SubscriptionTableRow({
 
   return (
     <TableRow hover selected={selected}>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onClick={onSelectRow} />
-      </TableCell>
-
       <TableCell>{fullName || '-'}</TableCell>
-      <TableCell>{planName || '-'}</TableCell>
+      <TableCell>{courses?.courseName || '-'}</TableCell>
       <TableCell>{price !== undefined ? price : '-'}</TableCell>
       <TableCell>{paymentMethodLabel}</TableCell>
-      <TableCell>{paymentTypeText}</TableCell> 
+      <TableCell>{paymentTypeText}</TableCell>
       <TableCell>{formattedExpiry}</TableCell>
     </TableRow>
   );

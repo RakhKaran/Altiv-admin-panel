@@ -44,14 +44,11 @@ import EmailTableFiltersResult from '../email-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
-   { id: 'email', label: 'Email' },
-   { id: 'createdAt', label: 'CreatedAt' },
- 
+  { id: 'email', label: 'Email' },
+  { id: 'createdAt', label: 'CreatedAt' },
 ];
 
 const defaultFilters = {
@@ -68,7 +65,7 @@ export default function EmailListView() {
   const router = useRouter();
   const confirm = useBoolean();
 
-  const {emails  = [] } = useGetEmails();
+  const { emails = [] } = useGetEmails();
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -87,18 +84,22 @@ export default function EmailListView() {
   const canReset = !isEqual(defaultFilters, filters);
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const handleFilters = useCallback((name, value) => {
-    table.onResetPage();
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  }, [table]);
+  const handleFilters = useCallback(
+    (name, value) => {
+      table.onResetPage();
+      setFilters((prev) => ({ ...prev, [name]: value }));
+    },
+    [table]
+  );
 
-  const handleDeleteRow = useCallback((id) => {
-    
-    table.onUpdatePageDeleteRow(dataInPage.length);
-  }, [dataInPage.length, table]);
+  const handleDeleteRow = useCallback(
+    (id) => {
+      table.onUpdatePageDeleteRow(dataInPage.length);
+    },
+    [dataInPage.length, table]
+  );
 
   const handleDeleteRows = useCallback(() => {
-
     table.onUpdatePageDeleteRows({
       totalRows: emails.length,
       totalRowsInPage: dataInPage.length,
@@ -106,9 +107,12 @@ export default function EmailListView() {
     });
   }, [dataFiltered.length, dataInPage.length, emails.length, table]);
 
-  const handleFilterStatus = useCallback((event, newValue) => {
-    handleFilters('status', newValue);
-  }, [handleFilters]);
+  const handleFilterStatus = useCallback(
+    (event, newValue) => {
+      handleFilters('status', newValue);
+    },
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -124,7 +128,6 @@ export default function EmailListView() {
             { name: 'Email', href: paths.dashboard.email.root },
             { name: 'List' },
           ]}
-
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
@@ -160,7 +163,10 @@ export default function EmailListView() {
               numSelected={table.selected.length}
               rowCount={emails.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, emails.map((row) => row.id))
+                table.onSelectAllRows(
+                  checked,
+                  emails.map((row) => row.id)
+                )
               }
               action={
                 <Tooltip title="Delete">
@@ -181,8 +187,12 @@ export default function EmailListView() {
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, emails.map((row) => row.id))
+                    table.onSelectAllRows(
+                      checked,
+                      emails.map((row) => row.id)
+                    )
                   }
+                  showCheckbox={false}
                 />
 
                 <TableBody>
@@ -264,7 +274,9 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter((emails) =>
-      Object.values(emails).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
+      Object.values(emails).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
     );
   }
 
@@ -276,17 +288,3 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
