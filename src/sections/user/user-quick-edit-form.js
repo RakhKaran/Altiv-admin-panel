@@ -73,7 +73,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
       fullAddress: currentUser?.fullAddress || '',
       state: currentUser?.state || '',
       city: currentUser?.city || '',
-      permissions: currentUser?.permissions[0] || '',
+      permissions: currentUser?.permissions?.[0] || '',
       isActive:currentUser?.isActive ? '1' : '0' || '',
     }),
     [currentUser]
