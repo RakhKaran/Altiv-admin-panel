@@ -9,7 +9,7 @@ export default function UserEditPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: User Edit</title>
+        <title> Dashboard: Product Edit</title>
       </Helmet>
 
       <PlanEditView />

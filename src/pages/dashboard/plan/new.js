@@ -8,7 +8,7 @@ export default function UserCreatePage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Create a new plan</title>
+        <title> Dashboard: Create a new product</title>
       </Helmet>
 
       <PlanCreateView />

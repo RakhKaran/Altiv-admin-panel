@@ -17,17 +17,17 @@ export default function PlanCreateView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Create a new plan"
+        heading="Create a new product"
         links={[
           {
             name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: 'Plan',
+            name: 'Products',
             href: paths.dashboard.plan.root,
           },
-          { name: 'New plan' },
+          { name: 'New product' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },

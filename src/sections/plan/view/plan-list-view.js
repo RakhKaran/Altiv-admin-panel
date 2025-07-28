@@ -51,11 +51,12 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'planName', label: 'Plan Name' },
+  { id: 'courseName', label: 'Course Name' },
   { id: 'price', label: 'Price', width: 120 },
+  { id: 'planType', label: 'Plan Type', width: 160 },
   { id: 'paymentType', label: 'Payment Type', width: 160 },
   { id: 'recurringPeriod', label: 'Period', width: 160 },
-  { id: 'isFreePlan', label: 'Free?', width: 80 },
+  // { id: 'isFreePlan', label: 'Free?', width: 80 },
   { id: '', width: 88 },
 ];
 
@@ -124,10 +125,10 @@ export default function PlanListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Plan List"
+          heading="Product List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Plans', href: paths.dashboard.plan.root },
+            { name: 'Products', href: paths.dashboard.plan.root },
             { name: 'List' },
           ]}
           action={
@@ -277,9 +278,11 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
-    inputData = inputData.filter((plan) =>
-      plan.planName.toLowerCase().includes(name.toLowerCase())
+ if (name) {
+    inputData = inputData.filter((courses) =>
+      Object.values(courses).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
     );
   }
 

@@ -20,7 +20,7 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
   const confirm = useBoolean();
   const popover = usePopover();
 
-  const { id, planName, price, paymentType, recurringPeriod, isFreePlan } = row;
+  const { id, courses, price, paymentType, planType, recurringPeriod, isFreePlan } = row;
 
   return (
     <>
@@ -29,15 +29,16 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell>{planName}</TableCell>
+        <TableCell>{courses?.courseName}</TableCell>
 
-        <TableCell>{price}</TableCell>
+        <TableCell>{isFreePlan ? 'Free' : price}</TableCell>
+        <TableCell>{planType === 0 ? 'Data Science' : planType === 1 ? 'Marketing' : 'Product Management'}</TableCell>
 
-        <TableCell>{paymentType}</TableCell>
+        <TableCell>{paymentType === 'oneTime' ? 'Onetime' : 'Recurring'}</TableCell>
 
-        <TableCell>{recurringPeriod}</TableCell>
+        <TableCell>{isFreePlan ? 'NA' : recurringPeriod ? recurringPeriod : 'NA'}</TableCell>
 
-        <TableCell>{isFreePlan ? 'Yes' : 'No'}</TableCell>
+        {/* <TableCell>{isFreePlan ? 'Free' : 'Paid'}</TableCell> */}
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Edit" placement="top" arrow>

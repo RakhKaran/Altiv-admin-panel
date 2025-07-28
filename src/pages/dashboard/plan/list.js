@@ -9,7 +9,7 @@ export default function UserListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Plans List</title>
+        <title> Dashboard: Products List</title>
       </Helmet>
 
       <PlanListView />

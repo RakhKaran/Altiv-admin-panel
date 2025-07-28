@@ -128,7 +128,6 @@ export default function PostNewEditForm({ currentPost }) {
         const response = await axiosInstance.post('/files', formData); 
         const imageUrl = response.data?.files[0]?.fileUrl;
         
-
         if (imageUrl) {
           setValue('coverUrl', imageUrl, { shouldValidate: true });
         } else {
