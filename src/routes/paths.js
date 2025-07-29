@@ -178,10 +178,12 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/tour/${MOCK_ID}/edit`,
       },
     },
-  plan: {
+    plan: {
       root: `${ROOTS.DASHBOARD}/plan`,
       new: `${ROOTS.DASHBOARD}/plan/new`,
       list: `${ROOTS.DASHBOARD}/plan/list`,
+      courseList: `${ROOTS.DASHBOARD}/plan/courseList`,
+      serviceList: `${ROOTS.DASHBOARD}/plan/serviceList`,
       edit: (id) => `${ROOTS.DASHBOARD}/plan/${id}/edit`,
       view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
     },
@@ -194,20 +196,22 @@ export const paths = {
     //   view: (id) => `${ROOTS.DASHBOARD}/plan/${id}/view`,
     // },
 
-     subscription: {
+    subscription: {
       root: `${ROOTS.DASHBOARD}/subscription`,
       list: `${ROOTS.DASHBOARD}/subscription/list`,
-     
+      details: (id) => `${ROOTS.DASHBOARD}/subscription/${id}`,
+
     },
- email: {
+    email: {
       root: `${ROOTS.DASHBOARD}/email`,
       list: `${ROOTS.DASHBOARD}/email/list`,
-  
+
     },
 
-     contact: {
+    contact: {
       root: `${ROOTS.DASHBOARD}/contact`,
       list: `${ROOTS.DASHBOARD}/contact/list`,
+
 
     },
 

@@ -228,15 +228,13 @@ export default function PlanNewEditForm({ currentPlan }) {
                   </RHFSelect>
 
                   {values.paymentType === 'recurring' && (
-                    <>
+                 
                       <RHFSelect name="recurringPeriod" label="Recurring Period">
                         {RECURRING_PERIOD_OPTIONS.map((option) => (
                           <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                         ))}
                       </RHFSelect>
-
-
-                    </>
+                  
                   )}
 
                 </>
@@ -245,10 +243,10 @@ export default function PlanNewEditForm({ currentPlan }) {
                 {planType.map((option) => (
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
-              </RHFSelect>
-              {Number(values.planGroup) === 0 ? <CourseFieldsComponents /> : <ServiceFieldsComponents />}
-
+              </RHFSelect>   
+                {Number(values.planGroup) === 0 ? <CourseFieldsComponents /> : <ServiceFieldsComponents />}        
             </Box>
+          
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!currentPlan ? 'Create Plan' : 'Save Changes'}

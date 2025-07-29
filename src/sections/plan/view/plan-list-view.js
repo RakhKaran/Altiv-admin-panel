@@ -279,8 +279,8 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
  if (name) {
-    inputData = inputData.filter((courses) =>
-      Object.values(courses).some((value) =>
+    inputData = inputData.filter((plan) =>
+      Object.values(plan).some((value) =>
         String(value).toLowerCase().includes(name.toLowerCase())
       )
     );

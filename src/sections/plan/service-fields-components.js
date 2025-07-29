@@ -50,9 +50,7 @@ const ServiceFieldsComponents = () => {
   }, [setValue]);
   return (
     <>
-      <RHFTextField name="productData.courseName" label="Course Name" type="string" />
-      <RHFTextField name="productData.lmsId" label="lmsId" type="string" />
-      <RHFTextField name="productData.courseDuration" label="Course Duration" type="string" />
+      <RHFTextField name="productData.serviceName" label="Service Name" type="string" />
       <Box width="200%">
         <Stack spacing={1.5}>
           <RHFTextField name="productData.description" label="Description" multiline rows={3} fullWidth />
@@ -85,7 +83,7 @@ const ServiceFieldsComponents = () => {
             }
           />
         </Stack>
-        <Stack spacing={1.5}>
+        <Box sx={{ gridColumn: 'span 2' }}>
           <Typography variant="subtitle2">thumbnail</Typography>
           <RHFUpload
             name="productData.thumbnail"
@@ -93,7 +91,7 @@ const ServiceFieldsComponents = () => {
             onDrop={handleDrop}
             onDelete={handleRemoveFile}
           />
-        </Stack>
+         </Box>
       </Box>
     </>
   )

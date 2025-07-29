@@ -60,7 +60,10 @@ export function useNavData() {
             path: paths.dashboard.plan.root,
             icon: ICONS.user,
             children: [
-              { title: t('list'), path: paths.dashboard.plan.list },
+              // { title: t('list'), path: paths.dashboard.plan.list },
+              {title: t('course list'), path: paths.dashboard.plan.courseList},
+
+               {title: t('service list'), path: paths.dashboard.plan.serviceList},
               { title: t('create'), path: paths.dashboard.plan.new },
             ],
           },
@@ -68,8 +71,9 @@ export function useNavData() {
             title: t('Subscriptions'),
             path: paths.dashboard.subscription.root,
             icon: ICONS.subscription,
-            children: [{ title: t('list'), path: paths.dashboard.subscription.list }],
-          },
+            children: [{ title: t('list'), path: paths.dashboard.subscription.list },
+            // { title: t('details'), path: paths.dashboard.subscription.details},
+         ], },
           {
             title: t('Blogs'),
             path: paths.dashboard.post.root,

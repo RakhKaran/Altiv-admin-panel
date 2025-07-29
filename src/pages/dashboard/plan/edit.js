@@ -5,7 +5,7 @@ import { PlanEditView } from 'src/sections/plan/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserEditPage() {
+export default function PlanEditPage() {
   return (
     <>
       <Helmet>

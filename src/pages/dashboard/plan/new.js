@@ -4,7 +4,7 @@ import { PlanCreateView } from 'src/sections/plan/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserCreatePage() {
+export default function PlanCreatePage() {
   return (
     <>
       <Helmet>

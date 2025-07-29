@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import PropTypes from 'prop-types';
 // @mui
 import Button from '@mui/material/Button';
@@ -16,7 +17,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 
 // ----------------------------------------------------------------------
 
-export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow, planGroup  }) {
   const confirm = useBoolean();
   const popover = usePopover();
 
@@ -29,14 +30,14 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
 
-        <TableCell>{courses?.courseName}</TableCell>
+        <TableCell>{planGroup === 0 ? courses?.courseName : 'NA'}</TableCell>
 
         <TableCell>{isFreePlan ? 'Free' : price}</TableCell>
         <TableCell>{planType === 0 ? 'Data Science' : planType === 1 ? 'Marketing' : 'Product Management'}</TableCell>
 
         <TableCell>{paymentType === 'oneTime' ? 'Onetime' : 'Recurring'}</TableCell>
 
-        <TableCell>{isFreePlan ? 'NA' : recurringPeriod ? recurringPeriod : 'NA'}</TableCell>
+        <TableCell>{isFreePlan ? 'NA' : recurringPeriod || 'NA'}</TableCell>
 
         {/* <TableCell>{isFreePlan ? 'Free' : 'Paid'}</TableCell> */}
 
@@ -102,4 +103,5 @@ PlanTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
+  planGroup: PropTypes.number
 };

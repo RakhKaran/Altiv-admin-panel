@@ -53,7 +53,7 @@ export const endpoints = {
 
   plan: {
     list: '/plans',
-    filterList: (filter) => `/plans?${filter}`,
+    filterList: (filter) => `/plans?filter=${filter}`,
     details: (id) => `/plans/${id}`,
   },
 

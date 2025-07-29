@@ -3,15 +3,26 @@ import PropTypes from 'prop-types';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
+import MenuItem from '@mui/material/MenuItem';
+import { useBoolean } from 'src/hooks/use-boolean';
+import IconButton from '@mui/material/IconButton';
 // utils
+import Iconify from 'src/components/iconify';
 import { format } from 'date-fns';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionTableRow({ row, selected, onSelectRow }) {
+export default function SubscriptionTableRow({ row, selected, onSelectRow, onViewRow }) {
   const { planData = {}, user = {}, expiryDate, paymentMethod } = row;
   const { planName, price, paymentType, courses } = planData;
   const { fullName } = user;
+
+  
+  
+    const confirm = useBoolean();
+  
+    const popover = usePopover();
 
   const isExpired = expiryDate ? new Date(expiryDate) < new Date() : false;
 
@@ -28,7 +39,7 @@ export default function SubscriptionTableRow({ row, selected, onSelectRow }) {
   const isOneTime = paymentType?.toLowerCase().includes('one time');
 
   //  Format expiry date based on plan type
-  let formattedExpiry = '—';
+  let formattedExpiry = 'N/A';
   if (isRecurring && expiryDate) {
     const formattedDate = format(new Date(expiryDate), 'dd MMM yyyy');
     formattedExpiry = (
@@ -42,14 +53,60 @@ export default function SubscriptionTableRow({ row, selected, onSelectRow }) {
   }
 
   return (
+    <>
     <TableRow hover selected={selected}>
-      <TableCell>{fullName || '-'}</TableCell>
-      <TableCell>{courses?.courseName || '-'}</TableCell>
-      <TableCell>{price !== undefined ? price : '-'}</TableCell>
+      <TableCell>{fullName || 'NA'}</TableCell>
+      <TableCell>{courses?.courseName || 'NA'}</TableCell>
+      <TableCell>{price !== undefined ? price : 'NA'}</TableCell>
       <TableCell>{paymentMethodLabel}</TableCell>
       <TableCell>{paymentTypeText}</TableCell>
       <TableCell>{formattedExpiry}</TableCell>
-    </TableRow>
+       <TableCell>
+                <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+                  <Iconify icon="eva:more-vertical-fill" />
+                </IconButton>
+              </TableCell>
+  </TableRow>
+       <CustomPopover
+              open={popover.open}
+              onClose={popover.onClose}
+              arrow="right-top"
+              sx={{ width: 160 }}
+            >
+              <MenuItem
+                onClick={() => {
+                  onViewRow();
+                  popover.onClose();
+                }}
+              >
+                <Iconify icon="solar:eye-bold" />
+                View
+              </MenuItem>
+      
+              {/* <MenuItem
+                onClick={() => {
+                  onEditRow();
+                  popover.onClose();
+                }}
+              >
+                <Iconify icon="solar:pen-bold" />
+                Edit
+              </MenuItem>
+      
+              <Divider sx={{ borderStyle: 'dashed' }} />
+      
+              <MenuItem
+                onClick={() => {
+                  confirm.onTrue();
+                  popover.onClose();
+                }}
+                sx={{ color: 'error.main' }}
+              >
+                <Iconify icon="solar:trash-bin-trash-bold" />
+                Delete
+              </MenuItem> */}
+            </CustomPopover>
+  </>
   );
 }
 
@@ -57,4 +114,5 @@ SubscriptionTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   row: PropTypes.object,
   selected: PropTypes.bool,
+  onViewRow:PropTypes.func,
 };

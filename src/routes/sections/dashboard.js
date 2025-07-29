@@ -50,10 +50,14 @@ const JobEditPage = lazy(() => import('src/pages/dashboard/job/edit'));
 const PlanListPage = lazy(() => import('src/pages/dashboard/plan/list'));
 const PlanCreatePage = lazy(() => import('src/pages/dashboard/plan/new'));
 const PlanEditPage = lazy(() => import('src/pages/dashboard/plan/edit'));
+const CourseListPage = lazy(() => import('src/pages/dashboard/plan/courseList'))
+const ServiceListPage = lazy(() => import('src/pages/dashboard/plan/serviceList'));
+
 
 // Subscriptions
 
 const SubscriptionListPage = lazy(() => import('src/pages/dashboard/subscription/list'));
+const SubscriptionDetailsPage = lazy(() => import('src/pages/dashboard/subscription/details'));
 
 // Email
 const EmailListPage = lazy(() => import('src/pages/dashboard/email/list'));
@@ -160,6 +164,8 @@ export const dashboardRoutes = [
         children: [
           { element: <PlanListPage />, index: true },
           { path: 'list', element: <PlanListPage /> },
+          {path: 'courseList', element:<CourseListPage/>},
+         { path: 'serviceList', element: <ServiceListPage /> },
           { path: 'new', element: <PlanCreatePage /> },
           { path: ':id/edit', element: <PlanEditPage /> },
         ],
@@ -170,6 +176,7 @@ export const dashboardRoutes = [
         children: [
           { element: <SubscriptionListPage />, index: true },
           { path: 'list', element: <SubscriptionListPage /> },
+          { path: ':id', element: <SubscriptionDetailsPage /> },
         ],
       },
 

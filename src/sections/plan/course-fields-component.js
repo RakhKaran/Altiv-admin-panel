@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
 
 import { useSnackbar } from 'src/components/snackbar';
 import { useCallback } from 'react';
@@ -52,12 +52,7 @@ const CourseFieldsComponents = () => {
       <RHFTextField name="productData.courseName" label="Course Name" type="string" />
       <RHFTextField name="productData.lmsId" label="lmsId" type="string" />
       <RHFTextField name="productData.courseDuration" label="Course Duration" type="string" />
-      <Box width="200%">
-        <Stack spacing={1.5}>
-          <RHFTextField name="productData.description" label="Description" multiline rows={3} fullWidth />
-        </Stack>
-        <Stack sx={{my:2}} spacing={1.5}>
-          <RHFAutocomplete
+       <RHFAutocomplete
             name="productData.features"
             label="Features"
             placeholder="+ Features"
@@ -83,8 +78,12 @@ const CourseFieldsComponents = () => {
               ))
             }
           />
-        </Stack>
-        <Stack spacing={1.5}>
+       
+       <Box sx={{ gridColumn: 'span 2' }}>
+      <RHFTextField name="productData.description" label="Description" multiline rows={3}  />
+       </Box>
+         
+          <Box sx={{ gridColumn: 'span 2' }}>
           <Typography variant="subtitle2">thumbnail</Typography>
           <RHFUpload
             name="productData.thumbnail"
@@ -92,8 +91,10 @@ const CourseFieldsComponents = () => {
             onDrop={handleDrop}
             onDelete={handleRemoveFile}
           />
-        </Stack>
-      </Box>
+          </Box>
+    
+        
+       
     </>
   )
 }

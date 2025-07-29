@@ -5,7 +5,7 @@ import { PlanListView } from 'src/sections/plan/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserListPage() {
+export default function PlanListPage() {
   return (
     <>
       <Helmet>
