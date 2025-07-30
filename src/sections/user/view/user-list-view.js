@@ -44,6 +44,7 @@ import UserTableRow from '../user-table-row';
 import UserTableToolbar from '../user-table-toolbar';
 import UserTableFiltersResult from '../user-table-filters-result';
 import UserQuickEditForm from '../user-quick-edit-form';
+import UserViewResume from './view-resume';
 
 // ----------------------------------------------------------------------
 
@@ -56,9 +57,9 @@ const TABLE_HEAD = [
   {id:'permissions', label:' Role '},
   { id:'createdAt', label:'Created At'},
   { id: 'isActive', label: 'Status'},
-  { id: '', label: 'View Events'},
-  {id: '', label:'Edit'},
-  {id:'',label:'Resume'},
+  // { id: '', label: 'View Events'},
+  {id: 'Edit', label:'Edit'},
+  {id:'resume',label:'Resume'},
   { id: '', width: 88 },
 ];
 
@@ -95,6 +96,9 @@ export default function UserListView() {
   const [tableData, setTableData] = useState([]);
 
   const [quickEditRow, setQuickEditRow] = useState();
+
+   const [resumeRow, setResumeRow] = useState(null);
+
 
   const quickEdit = useBoolean();
 
@@ -165,6 +169,11 @@ export default function UserListView() {
     },
     [quickEdit]
   );
+
+ const handleViewResumeRow = useCallback((row) => {
+  setResumeRow(row);
+}, []);
+
 
   const handleViewRow = useCallback(
     (id) => {
@@ -330,6 +339,8 @@ export default function UserListView() {
                         //   handleQuickEditRow(user);
                         // }}
                         handleQuickEditRow={() => handleQuickEditRow(row)}
+                         onViewResumeRow={() => handleViewResumeRow(row)}
+                        
                       />
                     ))}
 
@@ -391,6 +402,16 @@ export default function UserListView() {
           refreshUsers={refreshUsers}
         />
       )}
+
+
+     {resumeRow && (
+  <UserViewResume
+    open={Boolean(resumeRow)}
+    onClose={() => setResumeRow(null)}
+    userId={resumeRow.id}
+  />
+)}
+
     </>
   );
 }

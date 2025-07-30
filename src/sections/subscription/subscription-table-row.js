@@ -71,7 +71,7 @@ export default function SubscriptionTableRow({ row, selected, onSelectRow, onVie
               open={popover.open}
               onClose={popover.onClose}
               arrow="right-top"
-              sx={{ width: 160 }}
+              sx={{ width: 100 }}
             >
               <MenuItem
                 onClick={() => {

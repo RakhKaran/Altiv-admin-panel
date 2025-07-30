@@ -15,7 +15,7 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { format } from 'date-fns';
 import UserViewResume from './view/view-resume';
 
-export default function UserTableRow({ row, selected, onViewRow, onSelectRow, onDeleteRow, onEditRow, quickEdit, handleQuickEditRow, userId }) {
+export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow, onSelectRow, onDeleteRow, onEditRow, quickEdit, handleQuickEditRow, userId }) {
   const { fullName, avatar, email, phoneNumber, permissions, createdAt, isActive } = row;
 
   const confirm = useBoolean();
@@ -53,13 +53,13 @@ export default function UserTableRow({ row, selected, onViewRow, onSelectRow, on
             {isActive ? 'Active' : 'Inactive'}
           </Label>
         </TableCell>
-        <TableCell>
+        {/* <TableCell>
           <Tooltip title="View">
             <IconButton onClick={onViewRow}>
               <Iconify icon="carbon:view-filled" />
             </IconButton>
           </Tooltip>
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <Tooltip title="Quick Edit" placement="top" arrow>
@@ -72,20 +72,11 @@ export default function UserTableRow({ row, selected, onViewRow, onSelectRow, on
 
         <TableCell>
           <Tooltip title="View Resume">
-            <IconButton onClick={() => setOpenResume(true)}>
+            <IconButton onClick={onViewResumeRow}>
               <Iconify icon="mdi:file-document-outline" />
             </IconButton>
           </Tooltip>
         </TableCell>
-
-        {openResume && (
-          <UserViewResume
-            open={openResume}
-            onClose={() => setOpenResume(false)}
-            userId={row.id}
-          />
-          )}
-
 
         <TableCell align="right">
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
@@ -151,4 +142,5 @@ UserTableRow.propTypes = {
   onEditRow: PropTypes.func,
   quickEdit: PropTypes.func,
   userId: PropTypes.string,
+  onViewResumeRow: PropTypes.func,
 };

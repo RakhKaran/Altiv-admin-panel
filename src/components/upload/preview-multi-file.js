@@ -118,4 +118,5 @@ MultiFilePreview.propTypes = {
   onRemove: PropTypes.func,
   sx: PropTypes.object,
   thumbnail: PropTypes.bool,
+
 };

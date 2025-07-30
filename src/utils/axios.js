@@ -78,10 +78,10 @@ export const endpoints = {
     filterList: (filter) => `/api/users/list?${filter}`,
     details: (id) => `/api/users/${id}`, // patch
     search: '/api/user/search',
-    delete: (id) => `/user/${id}`
+    delete: (id) => `/user/${id}`,
   },
   resume: {
-    details: (id) => `/resumes/${id}`
+    details:(userId)=>`/resumes/resume-by-id/${userId}`
   },
   comments: {
     list: '/comments',

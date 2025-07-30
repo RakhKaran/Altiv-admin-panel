@@ -11,8 +11,6 @@ export function useGetUsers() {
 
   const { data, isLoading, error, isValidating, mutate } = useSWR(URL, fetcher);
 
-
-  console.log(' API response data:', data);
   const refreshUsers = () => {
     // Use the `mutate` function to trigger a revalidation
     mutate(URL);
@@ -119,17 +117,4 @@ export function useGetDashboardCounts() {
     refreshDashboardCounts,
   };
 
-}
-
-export function useGetResumesByUserId(userId) {
-
-  const URL = userId ? endpoints.resume.details(userId) : null;
-
-  const { data, isLoading, error } = useSWR(URL, fetcher);
-
-  return {
-    resumes: data?.[0] || null, // assuming one resume per user
-    loading: isLoading,
-    error,
-  };
 }

@@ -1,68 +1,43 @@
 import PropTypes from 'prop-types';
+import { MultiFilePreview } from 'src/components/upload';
 import {
-  Box,
   Dialog,
-  Typography,
   DialogTitle,
   DialogContent,
-  IconButton,
-  Stack,
-  Divider,
+  DialogActions,
   Button,
 } from '@mui/material';
-import Iconify from 'src/components/iconify';
-import { useGetResumesByUserId } from 'src/api/user';
+import { useGetResumesByUserId } from 'src/api/resume';
 
 export default function UserViewResume({ open, onClose, userId }) {
-  const { resumes, resumesLoading } = useGetResumesByUserId(userId);
-  const resumeData = resumes?.[0]; // assuming one resume per user
+  const { resume, resumeLoading } = useGetResumesByUserId(userId);
+  
+ const fileData = resume?.length > 0 
+    ? resume.map((res) => res.fileDetails)
+    : [];
+
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        Resume Details
-        <IconButton
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 16, top: 16 }}
-        >
-          <Iconify icon="eva:close-fill" />
-        </IconButton>
-      </DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <DialogTitle>User Resume</DialogTitle>
 
       <DialogContent dividers>
-        {resumesLoading && <Typography>Loading...</Typography>}
-
-        {!resumesLoading && resumeData && (
-          <Stack spacing={2}>
-            <Typography variant="subtitle1">
-              <strong>File Name:</strong> {resumeData.fileDetails.fileName}
-            </Typography>
-            <Typography variant="body2">
-              <strong>Created At:</strong>{' '}
-              {new Date(resumeData.createdAt).toLocaleString()}
-            </Typography>
-            <Divider />
-            <Box textAlign="center">
-              <Button
-                variant="outlined"
-                startIcon={<Iconify icon="mdi:file-pdf-box" />}
-                onClick={() =>
-                  window.open(resumeData.fileDetails.fileUrl, '_blank')
-                }
-              >
-                View Resume
-              </Button>
-            </Box>
-          </Stack>
-        )}
-
-        {!resumesLoading && !resumeData && (
-          <Box textAlign="center" py={5}>
-            <Iconify icon="mdi:file-remove-outline" width={48} height={48} />
-            <Typography>No resume uploaded</Typography>
-          </Box>
+        {(!resumeLoading && fileData.length > 0) ?  (
+          <MultiFilePreview
+            thumbnail
+            files={fileData}
+            onRemove={null}
+          />
+        ) : (
+          <p>No Resume Found</p>
         )}
       </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} variant="contained" >
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }
