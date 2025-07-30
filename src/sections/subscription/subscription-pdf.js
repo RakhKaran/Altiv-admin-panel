@@ -94,7 +94,7 @@ export default function SubscriptionPDF({ subscription }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={[styles.gridContainer, styles.mb40]}>
-          <Image source="/logo/logo_single.png" style={{ width: 48, height: 48 }} />
+          <Image source="/logo/altiv_logo.png"  style={{ width: 60, height: 10 }} />
 
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
             <Text> {subscription?.id} </Text>

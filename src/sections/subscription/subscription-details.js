@@ -147,8 +147,8 @@ export default function SubscriptionDetails({ subscription }) {
           <Box
             component="img"
             alt="logo"
-            src="/logo/logo_single.svg"
-            sx={{ width: 48, height: 48 }}
+            src="/logo/altiv_logo.png"
+            sx={{ width: 80, height: 20 }}
           />
 
           <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
