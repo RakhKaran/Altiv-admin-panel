@@ -73,6 +73,7 @@ export default function AccountGeneral() {
         fullName: formData.fullName,
         permissions: [formData.role],
         email: formData.email,
+    
         isActive: formData.isActive,
         dob: formData.dob,
         fullAddress: formData.fullAddress,
@@ -183,8 +184,8 @@ export default function AccountGeneral() {
               }}
             >
               <RHFTextField name="fullName" label="First Name" />
-              <RHFTextField name="email" label="Email Address" />
-              <RHFTextField name="phoneNumber" label="Phone Number" disabled />
+              <RHFTextField name="email" label="Email Address" disabled />
+              <RHFTextField name="phoneNumber" label="Phone Number" type="number"  disabled/>
               <RHFSelect fullWidth name="role" label="Role" disabled>
                 {[
                   { value: 'admin', name: 'Admin' },

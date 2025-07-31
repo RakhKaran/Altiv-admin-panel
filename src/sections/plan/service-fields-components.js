@@ -8,6 +8,7 @@ import FormProvider, {
   RHFEditor,
   RHFUpload,
   RHFAutocomplete,
+  RHFUploadBox,
 
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
@@ -85,7 +86,7 @@ const ServiceFieldsComponents = () => {
         </Stack>
         <Box sx={{ gridColumn: 'span 2' }}>
           <Typography variant="subtitle2">thumbnail</Typography>
-          <RHFUpload
+          <RHFUploadBox
             name="productData.thumbnail"
             maxSize={3145728}
             onDrop={handleDrop}

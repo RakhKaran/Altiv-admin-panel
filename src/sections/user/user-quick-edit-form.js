@@ -16,42 +16,34 @@ import Switch from '@mui/material/Switch';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { DialogContent, DialogTitle, IconButton, InputAdornment, MenuItem, TextField } from '@mui/material';
 // utils
 import { fData } from 'src/utils/format-number';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hook';
-// assets
-
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFSelect } from 'src/components/hook-form';
-import RHFSwitch from 'src/components/hook-form/rhf-switch';
 import RHFTextField from 'src/components/hook-form/rhf-text-field';
-import { RHFUploadAvatar } from 'src/components/hook-form/rhf-upload';
-import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
 
-import { DialogContent, DialogTitle, IconButton, InputAdornment, MenuItem, TextField } from '@mui/material';
-import axiosInstance, { endpoints } from 'src/utils/axios';
-import { useBoolean } from 'src/hooks/use-boolean';
-// import { _fullNames } from 'src/_mock';
+// axios
+import axiosInstance from 'src/utils/axios';
 
 
 // ----------------------------------------------------------------------
 
 export default function UserQuickEditForm({ currentUser, open, onClose, refreshUsers }) {
   const router = useRouter();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const USER_STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  { value: '1', label: 'Active' },
-  { value: '0', label: 'Non-Active' },
-];
+    { value: '1', label: 'Active' },
+    { value: '0', label: 'Inactive' },
+  ];
 
   const NewUserSchema = Yup.object().shape({
     fullName: Yup.string().required('Name is required'),
@@ -61,8 +53,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
     permissions: Yup.string().required('Role is required'),
-    isActive:Yup.string().required('Status is required'),
-
+    isActive: Yup.string().required('Status is required'),
   });
 
   const defaultValues = useMemo(
@@ -74,7 +65,7 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
       state: currentUser?.state || '',
       city: currentUser?.city || '',
       permissions: currentUser?.permissions?.[0] || '',
-      isActive:currentUser?.isActive ? '1' : '0' || '',
+      isActive: currentUser?.isActive ? '1' : '0',
     }),
     [currentUser]
   );
@@ -93,15 +84,8 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
-
-
-
   const onSubmit = handleSubmit(async (formData) => {
-    console.log("Submit Triggered");
     try {
-      console.info('DATA', formData);
-
       const inputData = {
         fullName: formData.fullName,
         email: formData.email,
@@ -111,18 +95,19 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
         city: formData.city,
         permissions: [formData.permissions],
         isDeleted: false,
-        isActive: true
+        isActive: formData.isActive === '1', // ✅ Convert to boolean
       };
+
       await axiosInstance.patch(`/api/users/${currentUser.id}`, inputData);
+
       refreshUsers();
       reset();
       onClose();
       enqueueSnackbar('User updated successfully!');
       router.push(paths.dashboard.user.list);
     } catch (error) {
-      console.error(error);
-      console.log("error generating user..!")
-      enqueueSnackbar(typeof error === 'string' ? error : error?.error?.message || 'something went wrong', {
+      console.error('Update error:', error);
+      enqueueSnackbar(typeof error === 'string' ? error : error?.error?.message || 'Something went wrong', {
         variant: 'error',
       });
     }
@@ -144,12 +129,12 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
         sx: { maxWidth: 720 },
       }}
     >
-      <FormProvider methods={methods} onSubmit={onSubmit} >
+      <FormProvider methods={methods} onSubmit={onSubmit}>
         <DialogTitle>Quick Update</DialogTitle>
         <DialogContent>
           {!currentUser?.isActive && (
             <Alert variant="outlined" severity="error" sx={{ mb: 3 }}>
-              Account is In-Active
+              Account is Inactive
             </Alert>
           )}
 
@@ -164,9 +149,9 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
             }}
           >
             <RHFSelect name="isActive" label="Status">
-              {USER_STATUS_OPTIONS.map((isActive) => (
-                <MenuItem key={isActive.value} value={isActive.value}>
-                  {isActive.label}
+              {USER_STATUS_OPTIONS.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
                 </MenuItem>
               ))}
             </RHFSelect>
@@ -178,13 +163,12 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
             <RHFTextField name="phoneNumber" label="Phone Number" />
             <RHFTextField name="state" label="State/Region" />
             <RHFTextField name="city" label="City" />
-            <RHFTextField name="fullAddress" label="address" />
+            <RHFTextField name="fullAddress" label="Address" />
+
             <RHFSelect fullWidth name="permissions" label="Role">
               {[
-
                 { value: 'customer', name: 'Customer' },
                 { value: 'admin', name: 'Admin' },
-
               ].map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.name}
@@ -194,7 +178,6 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
           </Box>
         </DialogContent>
 
-
         <DialogActions>
           <Button variant="outlined" onClick={onClose}>
             Cancel
@@ -202,11 +185,8 @@ export default function UserQuickEditForm({ currentUser, open, onClose, refreshU
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Update
           </LoadingButton>
-
         </DialogActions>
-
-
-      </FormProvider >
+      </FormProvider>
     </Dialog>
   );
 }
@@ -216,5 +196,4 @@ UserQuickEditForm.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   refreshUsers: PropTypes.func,
-
 };

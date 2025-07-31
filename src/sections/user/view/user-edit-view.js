@@ -57,23 +57,17 @@ export default function UserEditView() {
           },
           {
             name: 'User',
-            href: paths.dashboard.user.root,
+            href: paths.dashboard.user.list,
           },
           {
             name: `${currentUser?.fullName || ''} ${currentUser?.lastName || ''}`.trim(),
           },
         ]}
-        sx={{
-          mb: { xs: 3, md: 5 },
-        }}
       />
 
       <Tabs 
       value={currentTab}
       onChange={handleChangeTab}
-      sx={{
-        mb:{xs:3 , md:5},
-      }}
       >
         {TABS.map((tab)=>(
           <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />

@@ -105,8 +105,8 @@ export default function SubscriptionPDF({ subscription }) {
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice from</Text>
             <Text style={styles.body2}>Altive Ai</Text>
-            {/* <Text style={styles.body2}>{invoiceFrom.fullAddress}</Text>
-            <Text style={styles.body2}>{invoiceFrom.phoneNumber}</Text> */}
+            {/* <Text style={styles.body2}>{invoiceFrom.fullAddress}</Text> */}
+            <Text style={styles.body2}>8767876789</Text>
           </View>
 
           <View style={styles.col6}>
@@ -172,11 +172,11 @@ export default function SubscriptionPDF({ subscription }) {
                 </View>
 
                 <View style={styles.tableCell_3}>
-                  <Text>{subscription?.planData?.price}</Text>
+                  <Text>{`₹${subscription?.planData?.price}`}</Text>
                 </View>
 
                 <View style={[styles.tableCell_3, styles.alignRight]}>
-                  <Text>{fCurrency(subscription?.planData?.price)}</Text>
+                  <Text>{`₹${subscription?.planData?.price}`}</Text>
                 </View>
               </View>
         
@@ -189,7 +189,7 @@ export default function SubscriptionPDF({ subscription }) {
                 <Text>Subtotal</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text>{fCurrency(subscription?.planData?.price)}</Text>
+                <Text>{`₹${subscription?.planData?.price}`}</Text>
               </View>
             </View>
 
@@ -203,16 +203,22 @@ export default function SubscriptionPDF({ subscription }) {
                 <Text style={styles.h4}>Total</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
-                <Text style={styles.h4}>{fCurrency(subscription?.planData?.price)}</Text>
+                <Text style={styles.h4}>{`₹${subscription?.planData?.price}`}</Text>
               </View>
             </View>
           </View>
         </View>
 
-        <View style={[styles.gridContainer, styles.footer]} fixed>
+       <View style={[styles.gridContainer, styles.footer]} fixed>
+          <View style={styles.col8}>
+            <Text style={styles.subtitle2}>NOTES</Text>
+            <Text>
+              Electronically generated invoice – valid without signature.!
+            </Text>
+          </View>
           <View style={[styles.col4, styles.alignRight]}>
             <Text style={styles.subtitle2}>Have a Question?</Text>
-            <Text>support@altive.ai</Text>
+            <Text>support@altiv.ai</Text>
           </View>
         </View>
       </Page>

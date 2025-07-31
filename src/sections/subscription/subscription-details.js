@@ -56,7 +56,7 @@ export default function SubscriptionDetails({ subscription }) {
         </TableCell>
         <TableCell width={120} sx={{ typography: 'subtitle2' }}>
           <Box sx={{ mt: 2 }} />
-          {fCurrency(subscription?.planData?.price)}
+          {`₹${subscription?.planData?.price}`}
         </TableCell>
       </StyledTableRow>
 
@@ -64,19 +64,26 @@ export default function SubscriptionDetails({ subscription }) {
         <TableCell colSpan={3} />
         <TableCell sx={{ typography: 'subtitle1' }}>Total</TableCell>
         <TableCell width={140} sx={{ typography: 'subtitle1' }}>
-          {fCurrency(subscription?.planData?.price)}
+          {`₹${subscription?.planData?.price}`}
         </TableCell>
       </StyledTableRow>
     </>
   );
 
   const renderFooter = (
-    <Grid container>
+     <Grid container>
+      <Grid xs={12} md={9} sx={{ py: 3 }}>
+        <Typography variant="subtitle2">NOTES</Typography>
 
-      <Grid  sx={{ py: 3, textAlign: 'right' }}>
+        <Typography variant="body2">
+          Electronically generated invoice – valid without signature.!
+        </Typography>
+      </Grid>
+
+      <Grid xs={12} md={3} sx={{ py: 3, textAlign: 'right' }}>
         <Typography variant="subtitle2">Have a Question?</Typography>
 
-        <Typography variant="body2">support@altive.ai</Typography>
+        <Typography variant="body2">support@altiv.ai</Typography>
       </Grid>
     </Grid>
   );
@@ -115,9 +122,9 @@ export default function SubscriptionDetails({ subscription }) {
 
                 <TableCell>{1}</TableCell>
 
-                <TableCell align="right">{fCurrency(subscription?.planData?.price)}</TableCell>
+                <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
 
-                <TableCell align="right">{fCurrency(subscription?.planData?.price)}</TableCell>
+                <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
               </TableRow>
 
             {renderTotal}
@@ -151,18 +158,8 @@ export default function SubscriptionDetails({ subscription }) {
             sx={{ width: 80, height: 20 }}
           />
 
-          <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
-            {/* <Label
-              variant="soft"
-              color={
-                (currentStatus === 'paid' && 'success') ||
-                (currentStatus === 'pending' && 'warning') ||
-                (currentStatus === 'overdue' && 'error') ||
-                'default'
-              }
-            >
-              {currentStatus}
-            </Label> */}
+         <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+  <Typography variant="h6" sx={{ color: 'success.main' }}> Paid</Typography>
 
             <Typography variant="h6">INV-{subscription?.id}</Typography>
           </Stack>
@@ -173,10 +170,10 @@ export default function SubscriptionDetails({ subscription }) {
             </Typography>
                 Altive Ai
             {/* <br />
-            {invoice.invoiceFrom.fullAddress}
+            {invoice.invoiceFrom.fullAddress} */}
             <br />
-            Phone: {invoice.invoiceFrom.phoneNumber}
-            <br /> */}
+            Phone: 8767876789
+            <br />
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
@@ -185,10 +182,10 @@ export default function SubscriptionDetails({ subscription }) {
             </Typography>
             {subscription?.planData?.user?.fullName }
             {/* <br />
-            {invoice.invoiceTo.fullAddress}
+            {invoice.invoiceTo.fullAddress} */}
             <br />
-            Phone: {invoice.invoiceTo.phoneNumber}
-            <br /> */}
+            Phone: {subscription?.planData?.user?.contact }
+            <br />
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>

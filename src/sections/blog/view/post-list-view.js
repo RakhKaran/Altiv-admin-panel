@@ -87,7 +87,7 @@ export default function PostListView() {
           },
           {
             name: 'Blog',
-            href: paths.dashboard.post.root,
+            href: paths.dashboard.post.list,
           },
           {
             name: 'List',

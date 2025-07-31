@@ -129,7 +129,7 @@ export default function ContactListView() {
           heading="Contact List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Contact', href: paths.dashboard.contact.root },
+            { name: 'Contact', href: paths.dashboard.contact.list },
             { name: 'List' },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}

@@ -60,7 +60,7 @@ const TABLE_HEAD = [
   // { id: '', label: 'View Events'},
   {id: 'Edit', label:'Edit'},
   {id:'resume',label:'Resume'},
-  { id: '', width: 88 },
+  
 ];
 
 const defaultFilters = {
@@ -207,7 +207,7 @@ export default function UserListView() {
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
+            { name: 'User', href: paths.dashboard.user.list },
             { name: 'List' },
           ]}
           action={

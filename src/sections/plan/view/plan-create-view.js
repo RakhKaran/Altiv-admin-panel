@@ -25,7 +25,7 @@ export default function PlanCreateView() {
           },
           {
             name: 'Products',
-            href: paths.dashboard.plan.root,
+            href: paths.dashboard.plan?.courseList,
           },
           { name: 'New product' },
         ]}

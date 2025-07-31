@@ -74,13 +74,13 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions, }) {
               ),
             }}
           />
-          <IconButton onClick={popover.onOpen}>
+          {/* <IconButton onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </Stack>
       </Stack>
 
-      <CustomPopover open={popover.open} onClose={popover.onClose} arrow="right-top">
+      {/* <CustomPopover open={popover.open} onClose={popover.onClose} arrow="right-top">
         <MenuItem onClick={popover.onClose}>
           <Iconify icon="solar:printer-minimalistic-bold" /> Print
         </MenuItem>
@@ -90,7 +90,7 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions, }) {
         <MenuItem onClick={popover.onClose}>
           <Iconify icon="solar:export-bold" /> Export
         </MenuItem>
-      </CustomPopover>
+      </CustomPopover> */}
     </>
   );
 }

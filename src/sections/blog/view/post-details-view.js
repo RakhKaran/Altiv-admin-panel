@@ -41,20 +41,29 @@ export default function PostDetailsView() {
   const { title } = params;
 
   const [publish, setPublish] = useState('');
-  const [commentsData, setCommentsData]= useState([]);
+  const [commentsData, setCommentsData] = useState([]);
   const { post, postLoading, postError } = useGetPost(`${title}`);
 
-  const handleChangePublish = useCallback((newValue) => {
-    setPublish(newValue);
-  }, []);
+  const handleChangePublish = useCallback(async (newValue) => {
+    try {
+      await axiosInstance.patch(`/blogs/${post.id}`, {
+        publish: newValue,
+      });
+      setPublish(newValue);
 
-  const fetchComments = async(blogId) => {
-    try{
+    } catch (error) {
+      console.error(error)
+    }
+
+  }, [post?.id]);
+
+  const fetchComments = async (blogId) => {
+    try {
       const response = await axiosInstance.get(`comments/${blogId}`);
-      if(response.data){
+      if (response.data) {
         setCommentsData(response.data?.data)
       }
-    }catch(error){
+    } catch (error) {
       console.error(error);
     }
   }

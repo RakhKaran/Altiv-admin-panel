@@ -25,8 +25,8 @@ export default function PlanEditView() {
         heading="Edit"
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Plan', href: paths.dashboard.plan.root },
-          { name: currentPlan?.planName || '...' },
+          { name: 'Plan', href: (currentPlan && currentPlan?.planGroup === 0) ? paths.dashboard.plan.courseList : paths.dashboard.plan.serviceList},
+          { name: currentPlan?.planName || '' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

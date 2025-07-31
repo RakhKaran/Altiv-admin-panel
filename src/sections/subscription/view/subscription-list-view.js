@@ -146,7 +146,7 @@ export default function SubscriptionListView() {
           heading="Subscriptions List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Subscriptions', href: paths.dashboard.subscription.root },
+            { name: 'Subscriptions', href: paths.dashboard.subscription.list },
             { name: 'List' },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -294,11 +294,11 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-    inputData = inputData.filter((subscriptions) =>
-      Object.values(subscriptions).some((value) =>
-        String(value).toLowerCase().includes(name.toLowerCase())
-      )
-    );
+   inputData = inputData.filter(sub =>
+  sub?.planData?.courses?.courseName?.toLowerCase().includes(name) ||
+  sub?.user?.email?.toLowerCase().includes(name)
+);
+
   }
 
   if (status !== 'all') {

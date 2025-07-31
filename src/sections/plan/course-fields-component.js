@@ -7,15 +7,19 @@ import FormProvider, {
   RHFEditor,
   RHFUpload,
   RHFAutocomplete,
+  RHFUploadBox,
 
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
 import { useFormContext } from 'react-hook-form';
+import { MultiFilePreview } from 'src/components/upload';
 
 const CourseFieldsComponents = () => {
   const {
+    watch,
     setValue,
   } = useFormContext();
+  const values = watch();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleDrop = useCallback(
@@ -52,49 +56,53 @@ const CourseFieldsComponents = () => {
       <RHFTextField name="productData.courseName" label="Course Name" type="string" />
       <RHFTextField name="productData.lmsId" label="lmsId" type="string" />
       <RHFTextField name="productData.courseDuration" label="Course Duration" type="string" />
-       <RHFAutocomplete
-            name="productData.features"
-            label="Features"
-            placeholder="+ Features"
-            multiple
-            freeSolo
-            options={[]}
-            getOptionLabel={(option) => option}
-            renderOption={(props, option) => (
-              <li {...props} key={option}>
-                {option}
-              </li>
-            )}
-            renderTags={(selected, getTagProps) =>
-              selected.map((option, index) => (
-                <Chip
-                  {...getTagProps({ index })}
-                  key={option}
-                  label={option}
-                  size="small"
-                  color="info"
-                  variant="soft"
-                />
-              ))
-            }
-          />
-       
-       <Box sx={{ gridColumn: 'span 2' }}>
-      <RHFTextField name="productData.description" label="Description" multiline rows={3}  />
-       </Box>
-         
-          <Box sx={{ gridColumn: 'span 2' }}>
-          <Typography variant="subtitle2">thumbnail</Typography>
-          <RHFUpload
-            name="productData.thumbnail"
-            maxSize={3145728}
-            onDrop={handleDrop}
-            onDelete={handleRemoveFile}
-          />
-          </Box>
-    
-        
-       
+      <RHFAutocomplete
+        name="productData.features"
+        label="Features"
+        placeholder="+ Features"
+        multiple
+        freeSolo
+        options={[]}
+        getOptionLabel={(option) => option}
+        renderOption={(props, option) => (
+          <li {...props} key={option}>
+            {option}
+          </li>
+        )}
+        renderTags={(selected, getTagProps) =>
+          selected.map((option, index) => (
+            <Chip
+              {...getTagProps({ index })}
+              key={option}
+              label={option}
+              size="small"
+              color="info"
+              variant="soft"
+            />
+          ))
+        }
+      />
+
+      <Box sx={{ gridColumn: 'span 2' }}>
+        <RHFTextField name="productData.description" label="Description" multiline rows={3} />
+      </Box>
+
+
+      <Box sx={{ gridColumn: 'span 2' }}>
+        <Typography variant="subtitle2">thumbnail</Typography>
+        <RHFUploadBox
+          name="productData.thumbnail"
+          maxSize={3145728}
+          onDrop={handleDrop}
+          onDelete={handleRemoveFile}
+        />
+        {values.productData.thumbnail && <MultiFilePreview
+          thumbnail
+          files={[values.productData.thumbnail]}
+          onRemove={null}
+        />}
+      </Box>
+
     </>
   )
 }

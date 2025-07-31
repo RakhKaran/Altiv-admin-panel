@@ -32,7 +32,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
 
 
 
-        <TableCell>
+        <TableCell onClick={() => onEditRow()} sx={{cursor: 'pointer', "&:hover": {textDecoration: 'underline'}}}>
           {fullName}
           <br />
           <ListItemText secondary={email} />
@@ -78,19 +78,19 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
           </Tooltip>
         </TableCell>
 
-        <TableCell align="right">
+        {/* <TableCell align="right">
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       {/* Popover Menu */}
-      <CustomPopover
+      {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
-        sx={{ width: 140 }}
+        sx={{ width: 100 }}
       >
         <MenuItem
           onClick={() => {
@@ -100,9 +100,9 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
         >
           <Iconify icon="solar:pen-bold" />
           Edit
-        </MenuItem>
+        </MenuItem> */}
 
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             confirm.onTrue();
             popover.onClose();
@@ -111,11 +111,11 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
         >
           <Iconify icon="solar:trash-bin-trash-bold" />
           Delete
-        </MenuItem>
-      </CustomPopover>
+        </MenuItem> */}
+      {/* </CustomPopover> */}
 
       {/* Delete Confirmation Dialog */}
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete User"
@@ -127,7 +127,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
         }
 
 
-      />
+      /> */}
     </>
   );
 }

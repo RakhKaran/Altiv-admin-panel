@@ -184,19 +184,19 @@ export default function UserNewEditForm({ currentUser }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Card sx={{ pt: 10, pb: 5, px: 3 }}>
         <Grid container spacing={3}>
-          <Grid xs={12} md={4}>
-            {currentUser && (
+        <Grid xs={12} md={4}>
+          <Card sx={{ pt: 10, pb: 5, px: 3, textAlign: 'center' }}>
+            {/* {currentUser && (
               <Label
                 color={(values.isActive && 'success') || (!values.isActive && 'error') || 'warning'}
                 sx={{ position: 'absolute', top: 24, right: 24 }}
               >
-                {values.isActive ? 'Active' : 'Non-Active'}
+                {values.isActive ? 'Active' : 'Inactive'}
               </Label>
-            )}
+            )} */}
 
-            <Box sx={{ mb: 5 }}>
+        
               <RHFUploadAvatar
                 name="avatar"
                 maxSize={3145728}
@@ -217,11 +217,11 @@ export default function UserNewEditForm({ currentUser }) {
                   </Typography>
                 }
               />
-            </Box>
-          </Grid>
+         
+          </Card>
         </Grid>
 
-        <Grid xs={12} md={8}>
+       <Grid xs={12} md={8}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -297,9 +297,9 @@ export default function UserNewEditForm({ currentUser }) {
                 {currentUser ? 'Save Changes' : 'Create User'}
               </LoadingButton>
             </Stack>
-          </Card>
+         </Card>
         </Grid>
-      </Card>
+      </Grid>
     </FormProvider>
   );
 }

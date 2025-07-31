@@ -131,7 +131,7 @@ export default function CourseListView() {
           heading="Course List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Courses', href: paths.dashboard.plan.root },
+            { name: 'Courses', href: paths.dashboard.plan.courseList },
             { name: 'List' },
           ]}
           action={
@@ -283,12 +283,19 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
  if (name) {
-    inputData = inputData.filter((plan) =>
-      Object.values(plan).some((value) =>
-        String(value).toLowerCase().includes(name.toLowerCase())
-      )
+  const lowerName = name.toLowerCase();
+  inputData = inputData.filter((plan) => {
+    const course = plan.courses || {};
+    return (
+      course.courseName?.toLowerCase().includes(lowerName) ||
+      course.description?.toLowerCase().includes(lowerName) ||
+      course.courseDuration?.toLowerCase().includes(lowerName) ||
+      plan.paymentType?.toLowerCase().includes(lowerName)
     );
-  }
+  });
+}
+
+
 
   if (status !== 'all') {
     inputData = inputData.filter((plan) =>

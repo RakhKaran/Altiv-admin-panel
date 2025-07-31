@@ -125,7 +125,7 @@ export default function EmailListView() {
           heading="Email List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Email', href: paths.dashboard.email.root },
+            { name: 'Email', href: paths.dashboard.email.list },
             { name: 'List' },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}

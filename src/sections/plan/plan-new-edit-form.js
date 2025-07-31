@@ -143,22 +143,23 @@ export default function PlanNewEditForm({ currentPlan }) {
   console.log('error', errors);
   const values = watch();
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      console.log("Plan Group", Number(data.planGroup))
-      const inputData = {
-        plan: {
-          price: data.isFreePlan ? 0 : data.price,
-          paymentType: data.isFreePlan ? 'oneTime' : data.paymentType,
-          recurringPeriod: !data.isFreePlan && data.paymentType === 'recurring' ? data.recurringPeriod : '',
-          planType: Number(data.planType),
-          isFreePlan: data.isFreePlan,
-          planGroup: Number(data.planGroup),
-          isDeleted: false,
-        },
-        productData:
-          data?.planGroup === 0
-            ? {
+ const onSubmit = handleSubmit(async (data) => {
+  try {
+    const planGroupNumber = Number(data.planGroup);
+
+    const inputData = {
+      plan: {
+        price: data.isFreePlan ? 0 : data.price,
+        paymentType: data.isFreePlan ? 'oneTime' : data.paymentType,
+        recurringPeriod: !data.isFreePlan && data.paymentType === 'recurring' ? data.recurringPeriod : '',
+        planType: Number(data.planType),
+        isFreePlan: data.isFreePlan,
+        planGroup: planGroupNumber,
+        isDeleted: false,
+      },
+      productData:
+        planGroupNumber === 0
+          ? {
               courseName: data?.productData?.courseName || '',
               lmsId: data?.productData?.lmsId || '',
               features: data?.productData?.features || '',
@@ -166,31 +167,37 @@ export default function PlanNewEditForm({ currentPlan }) {
               courseDuration: data?.productData?.courseDuration || '',
               thumbnail: data?.productData?.thumbnail || null,
             }
-            : {
+          : {
               serviceName: data?.productData?.serviceName || '',
-
               features: data?.productData?.features || '',
               description: data?.productData?.description || '',
               thumbnail: data?.productData?.thumbnail || null,
             },
-      };
+    };
 
-      if (!currentPlan) {
-        await axiosInstance.post('/plans', inputData);
-      } else {
-        await axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
-      }
-
-      reset();
-      enqueueSnackbar(currentPlan ? 'Plan updated successfully!' : 'Plan created successfully!');
-      router.push(paths.dashboard.plan.list);
-    } catch (error) {
-      console.error(error);
-      enqueueSnackbar(typeof error === 'string' ? error : error?.message || 'Something went wrong', {
-        variant: 'error',
-      });
+    if (!currentPlan) {
+      await axiosInstance.post('/plans', inputData);
+    } else {
+      await axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
     }
-  });
+
+    reset();
+    enqueueSnackbar(currentPlan ? 'Plan updated successfully!' : 'Plan created successfully!');
+
+
+    if (planGroupNumber === 0) {
+      router.push(paths.dashboard.plan.courseList);
+    } else {
+      router.push(paths.dashboard.plan.serviceList);
+    } 
+  } catch (error) {
+    console.error(error);
+    enqueueSnackbar(typeof error === 'string' ? error : error?.message || 'Something went wrong', {
+      variant: 'error',
+    });
+  }
+});
+
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -249,7 +256,7 @@ export default function PlanNewEditForm({ currentPlan }) {
           
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!currentPlan ? 'Create Plan' : 'Save Changes'}
+                {!currentPlan ? 'Create Product' : 'Save Changes'}
               </LoadingButton>
             </Stack>
           </Card>

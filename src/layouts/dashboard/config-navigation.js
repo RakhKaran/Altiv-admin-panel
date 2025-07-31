@@ -8,6 +8,7 @@ import { useLocales } from 'src/locales';
 // import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 
+
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
@@ -24,6 +25,9 @@ const ICONS = {
   dashboard: icon('ic_dashboard'),
   mail: icon('ic_mail'),
   subscription: icon('ic_file'),
+  product: icon('ic_product'),
+  blog:  icon('ic_blog'),
+  contact: icon('ic_contact')
 };
 
 // ----------------------------------------------------------------------
@@ -58,7 +62,7 @@ export function useNavData() {
           {
             title: t('Products'),
             path: paths.dashboard.plan.root,
-            icon: ICONS.user,
+            icon: ICONS.product,
             children: [
               // { title: t('list'), path: paths.dashboard.plan.list },
               {title: t('course list'), path: paths.dashboard.plan.courseList},
@@ -77,7 +81,7 @@ export function useNavData() {
           {
             title: t('Blogs'),
             path: paths.dashboard.post.root,
-            icon: ICONS.user,
+            icon: ICONS.blog,
             children: [
               { title: t('list'), path: paths.dashboard.post.list },
               { title: t('create'), path: paths.dashboard.post.new },
@@ -94,7 +98,7 @@ export function useNavData() {
           {
             title: t('contact'),
             path: paths.dashboard.contact.root,
-            icon: ICONS.user,
+            icon: ICONS.contact,
             children: [{ title: t('list'), path: paths.dashboard.contact.list }],
           },
         ],

@@ -26,9 +26,9 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>{planGroup === 0 ? courses?.courseName : 'NA'}</TableCell>
 
@@ -41,20 +41,20 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
 
         {/* <TableCell>{isFreePlan ? 'Free' : 'Paid'}</TableCell> */}
 
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Edit" placement="top" arrow>
             <IconButton onClick={onEditRow}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
           </Tooltip>
 
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+          {/* <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          </IconButton> */}
         </TableCell>
       </TableRow>
 
-      <CustomPopover
+      {/* <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
@@ -80,9 +80,9 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
           <Iconify icon="solar:pen-bold" />
           Edit
         </MenuItem>
-      </CustomPopover>
+      </CustomPopover> */}
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -92,7 +92,7 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

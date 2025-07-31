@@ -133,7 +133,7 @@ export default function ServiceListView() {
                     heading="Service List"
                     links={[
                         { name: 'Dashboard', href: paths.dashboard.root },
-                        { name: 'Services', href: paths.dashboard.plan.root },
+                        { name: 'Services', href: paths.dashboard.plan.serviceList },
                         { name: 'List' },
                     ]}
                     action={
@@ -285,11 +285,16 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = stabilizedThis.map((el) => el[0]);
 
     if (name) {
-        inputData = inputData.filter((plan) =>
-            Object.values(plan).some((value) =>
-                String(value).toLowerCase().includes(name.toLowerCase())
-            )
-        );
+  const lowerName = name.toLowerCase();
+  inputData = inputData.filter((plan) => {
+    const service = plan.services || {};
+    return (
+      service.serviceName?.toLowerCase().includes(lowerName) ||
+      service.description?.toLowerCase().includes(lowerName) ||
+      service.courseDuration?.toLowerCase().includes(lowerName) ||
+      plan.paymentType?.toLowerCase().includes(lowerName)
+    );
+  });
     }
 
     if (status !== 'all') {
