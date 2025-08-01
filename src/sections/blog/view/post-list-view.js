@@ -1,11 +1,13 @@
 import orderBy from 'lodash/orderBy';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 // @mui
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import { Box, Pagination } from '@mui/material';
+
 // routes
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
@@ -14,7 +16,7 @@ import { useDebounce } from 'src/hooks/use-debounce';
 // _mock
 import { POST_SORT_OPTIONS } from 'src/_mock';
 // api
-import { useGetPosts, useSearchPosts } from 'src/api/blog';
+import { useGetFilteredPosts, useGetPosts, useSearchPosts } from 'src/api/blog';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -43,10 +45,21 @@ export default function PostListView() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const debouncedQuery = useDebounce(searchQuery);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
-  const { posts, postsLoading } = useGetPosts();
+  const filter = useMemo(() => ({
+    where: {
+      title: { like : `%${debouncedQuery || ''}%` }
+    },
+    limit: itemsPerPage,
+    skip: (currentPage - 1) * itemsPerPage
+  }), [currentPage, debouncedQuery]);
 
-  const { searchResults, searchLoading } = useSearchPosts(debouncedQuery);
+  const filterString = encodeURIComponent(JSON.stringify(filter));
+  const { posts, postsLoading, count } = useGetFilteredPosts(filterString);
+
+  const totalPages = Math.round(count / itemsPerPage);
 
   const dataFiltered = applyFilter({
     inputData: posts,
@@ -75,6 +88,8 @@ export default function PostListView() {
     },
     [handleFilters]
   );
+
+  console.log('currentPage', currentPage);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -118,12 +133,14 @@ export default function PostListView() {
         }}
       >
         <PostSearch
-          query={debouncedQuery}
-          results={searchResults}
+          query={searchQuery}
+          results={posts}
           onSearch={handleSearch}
-          loading={searchLoading}
-          hrefItem={(title) => paths.dashboard.post.details(title)}
+          loading={postsLoading}
+          hrefItem={(slug) => paths.dashboard.post.details(slug)}
         />
+
+
 
         <PostSort sort={sortBy} onSort={handleSortBy} sortOptions={POST_SORT_OPTIONS} />
       </Stack>
@@ -159,6 +176,10 @@ export default function PostListView() {
       </Tabs>
 
       <PostListHorizontal posts={dataFiltered} loading={postsLoading} />
+
+      <Box component='div' sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 3 }}>
+        {totalPages > 0 && <Pagination page={currentPage} onChange={(e, value) => setCurrentPage(value)} count={totalPages} variant="outlined" color="primary" />}
+      </Box>
     </Container>
   );
 }

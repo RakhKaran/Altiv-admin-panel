@@ -116,16 +116,20 @@ export default function PostItemHorizontal({ post }) {
           </Stack>
         </Box>
 
-        {mdUp && (
-          <Box sx={{ width: 180, height: 240, position: 'relative', flexShrink: 0 }}>
-            {/* <Avatar
-              alt={title.name}
-              src={coverUrl}
-              sx={{ position: 'absolute', top: 16, right: 16, zIndex: 9 }}
-            /> */}
-            <Image alt={title} src={coverUrl} sx={{ height: 1, borderRadius: 1.5 }} />
-          </Box>
-        )}
+       <Box
+  sx={{
+    width: { xs: '100%', md: 180 },
+    height: { xs: 180, md: 240 },
+    position: 'relative',
+    flexShrink: 0,
+    mt: { xs: 2, md: 0 },
+    borderRadius: 1.5,
+    overflow: 'hidden',
+  }}
+>
+  <Image alt={title} src={coverUrl} sx={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 1.5 }} />
+</Box>
+
       </Card>
 
       <CustomPopover

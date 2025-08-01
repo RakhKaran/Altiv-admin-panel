@@ -12,11 +12,12 @@ export function useGetPosts() {
 
   const memoizedValue = useMemo(
     () => ({
-      posts: data || [],
+      posts: data?.blogs || [],
+      count: data?.count || 0,
       postsLoading: isLoading,
       postsError: error,
       postsValidating: isValidating,
-      postsEmpty: !isLoading && (!data || data.length === 0),
+      postsEmpty: !isLoading && (!data || data?.blogs?.length === 0),
     }),
     [data, error, isLoading, isValidating]
   );
@@ -25,6 +26,28 @@ export function useGetPosts() {
 }
 
 // ----------------------------------------------------------------------
+
+export function useGetFilteredPosts(filterString) {
+  const URL = filterString ? endpoints.post.filterList(filterString)  : endpoints.post.list;
+
+  const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+
+  const memoizedValue = useMemo(
+    () => ({
+      posts: data?.blogs || [],
+      count: data?.count || 0,
+      postsLoading: isLoading,
+      postsError: error,
+      postsValidating: isValidating,
+      postsEmpty: !isLoading && (!data || data?.blogs?.length === 0),
+    }),
+    [data, error, isLoading, isValidating]
+  );
+
+  return memoizedValue;
+}
+
+// ------------------------------------------------------------------------
 
 export function useGetPost(slug) {
   const URL = slug ? endpoints.post.details(slug) : null;

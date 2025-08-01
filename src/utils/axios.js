@@ -40,9 +40,9 @@ export const endpoints = {
     details: '/api/mail/details',
     labels: '/api/mail/labels',
   },
-  post: {   //  Blogs enpoints 
+  post: {   
     list: '/blogs',
-    filterList: (filter) => `/blogs?${filter}`,
+    filterList: (filter) => `/blogs?filter=${filter}`,
     details: (slug) => `/blogs/slug/${slug}`,
   },
   product: {
