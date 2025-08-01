@@ -1,17 +1,18 @@
 import { Helmet } from 'react-helmet-async';
 // sections
-import { ModernForgotPasswordView } from 'src/sections/auth-demo/modern';
+
+import JwtForgotPasswordView from 'src/sections/auth/jwt/jwt-forgot-password';
 
 // ---------------------------------------------------------------------- 
 
-export default function ModernForgotPasswordPage() {
+export default function JwtForgotPasswordPage() {
   return (
     <>
       <Helmet>
         <title> Auth Classic: Forgot Password</title>
       </Helmet>
 
-      <ModernForgotPasswordView />
+      <JwtForgotPasswordView />
     </>
   );
 }

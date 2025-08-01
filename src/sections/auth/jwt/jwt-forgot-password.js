@@ -18,11 +18,11 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'src/routes/hook';
-import { Card } from '@mui/material';
+import { Box, Card } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export default function ModernForgotPasswordView() {
+export default function JwtForgotPasswordView() {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const ForgotPasswordSchema = Yup.object().shape({
@@ -113,7 +113,7 @@ export default function ModernForgotPasswordView() {
   );
 
   return (
-    <Card
+    <Box
       sx={{
         py: 5,
         px: 3,
@@ -126,6 +126,6 @@ export default function ModernForgotPasswordView() {
 
         {renderForm}
       </FormProvider>
-    </Card>
+    </Box>
   );
 }

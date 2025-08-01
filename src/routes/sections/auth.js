@@ -11,6 +11,7 @@ import AuthModernCompactLayout from 'src/layouts/auth/modern-compact';
 // JWT
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
+const JwtForgetPasswordPage = lazy(() => import('src/pages/auth/jwt/forgot-password'));
 
 // ----------------------------------------------------------------------
 
@@ -35,8 +36,16 @@ const authJwt = {
     {
       path: 'register',
       element: (
-        <AuthModernCompactLayout title="Manage the job more effectively with Minimal">
+        <AuthModernCompactLayout>
           <JwtRegisterPage />
+        </AuthModernCompactLayout>
+      ),
+    },
+    {
+      path: 'forgot-password',
+      element: (
+        <AuthModernCompactLayout>
+          <JwtForgetPasswordPage />
         </AuthModernCompactLayout>
       ),
     },
