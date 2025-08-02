@@ -10,13 +10,13 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputAdornment from '@mui/material/InputAdornment';
 // _mock
 import { _socials } from 'src/_mock';
 // components
 import Iconify from 'src/components/iconify';
 import SearchNotFound from 'src/components/search-not-found';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { InputAdornment } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
