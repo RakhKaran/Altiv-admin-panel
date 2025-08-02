@@ -57,10 +57,7 @@ const TABLE_HEAD = [
   {id:'permissions', label:' Role '},
   { id:'createdAt', label:'Created At'},
   { id: 'isActive', label: 'Status'},
-  // { id: '', label: 'View Events'},
-  {id: 'Edit', label:'Edit'},
-  {id:'resume',label:'Resume'},
-  
+  { id: '', label: 'Actions'},
 ];
 
 const defaultFilters = {
@@ -177,7 +174,7 @@ export default function UserListView() {
 
   const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.view(id));
+      router.push(paths.dashboard.user.events(id));
     },
     [router]
   );

@@ -1,6 +1,9 @@
 import { Helmet } from 'react-helmet-async';
+import { EventsListsView } from 'src/sections/events/view';
+
+
 // sections
-import UserViewEvent from 'src/sections/user/view/user-view-event';
+
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +14,7 @@ export default function UserEventPage() {
         <title> Dashboard: User View</title>
       </Helmet>
 
-      <UserViewEvent />
+      <EventsListsView />
     </>
   );
 }

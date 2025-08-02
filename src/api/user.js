@@ -116,5 +116,22 @@ export function useGetDashboardCounts() {
     isValidating,
     refreshDashboardCounts,
   };
-
 }
+export function useGetEventsByUserId(userId) {
+    const URL = userId ? endpoints.user.events(userId) : null;
+  
+    const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
+    
+    const memoizedValue = useMemo(
+      () => ({
+        event: data,
+        eventLoading: isLoading,
+        eventError: error,
+        eventValidating: isValidating,
+      }),
+      [data, error, isLoading, isValidating]
+    );
+  
+    return memoizedValue;
+  }
+

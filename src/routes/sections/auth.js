@@ -12,6 +12,8 @@ import AuthModernCompactLayout from 'src/layouts/auth/modern-compact';
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
 const JwtForgetPasswordPage = lazy(() => import('src/pages/auth/jwt/forgot-password'));
+const JwtNewPasswordPage = lazy(() => import('src/pages/auth/jwt/new-password'));
+const JwtVerifyPasswordPage = lazy(() => import('src/pages/auth/jwt/verify'));
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +48,22 @@ const authJwt = {
       element: (
         <AuthModernCompactLayout>
           <JwtForgetPasswordPage />
+        </AuthModernCompactLayout>
+      ),
+    },
+    {
+      path: 'new-password',
+      element: (
+        <AuthModernCompactLayout>
+          <JwtNewPasswordPage />
+        </AuthModernCompactLayout>
+      ),
+    },
+    {
+      path: 'verify',
+      element: (
+        <AuthModernCompactLayout>
+          <JwtVerifyPasswordPage />
         </AuthModernCompactLayout>
       ),
     },
