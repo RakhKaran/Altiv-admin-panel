@@ -48,10 +48,11 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
         <TableCell>
           <Label
             variant="soft"
-            color={(isActive && 'success') || (!isActive && 'error') || 'default'}
+            color={Number(isActive) === 1 ? 'success' : 'error'}
           >
-            {isActive ? 'Active' : 'Inactive'}
+            {Number(isActive) === 1 ? 'Active' : 'Inactive'}
           </Label>
+
         </TableCell>
         <TableCell>
           <Tooltip title="View Events">
