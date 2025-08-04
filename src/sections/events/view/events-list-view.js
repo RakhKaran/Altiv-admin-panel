@@ -76,13 +76,13 @@ export default function EventsListView() {
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { events = [] } = useGetEventsByUserId(id);
-  console.log('events' , events)
+  const { event = [] } = useGetEventsByUserId(id);
+  console.log('events', event)
 
   const [filters, setFilters] = useState(defaultFilters);
 
   const dataFiltered = applyFilter({
-    inputData: events,
+    inputData: event,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -113,14 +113,14 @@ export default function EventsListView() {
 
   const handleDeleteRows = useCallback(() => {
     table.onUpdatePageDeleteRows({
-      totalRows: events.length,
+      totalRows: event.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, events.length, table]);
+  }, [dataFiltered.length, dataInPage.length, event.length, table]);
 
   const handleFilterStatus = useCallback(
-    (event, newValue) => {
+    (newEvent, newValue) => {
       handleFilters('status', newValue);
     },
     [handleFilters]
@@ -173,11 +173,11 @@ export default function EventsListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={events.length}
+              rowCount={event.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  events.map((row) => row.id)
+                  event.map((row) => row.id)
                 )
               }
               action={
@@ -195,13 +195,13 @@ export default function EventsListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={events.length}
+                  rowCount={event.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      events.map((row) => row.id)
+                      event.map((row) => row.id)
                     )
                   }
                   showCheckbox={false}
@@ -226,7 +226,7 @@ export default function EventsListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, events.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, event.length)}
                   />
 
                   <TableNoData notFound={notFound} />

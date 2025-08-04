@@ -24,6 +24,7 @@ import { useEffect, useState } from 'react';
 import axiosInstance from 'src/utils/axios';
 import { Card, CircularProgress } from '@mui/material';
 import { useSnackbar } from 'notistack';
+import { Box } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -188,7 +189,7 @@ export default function JwtNewPasswordView() {
   }, [setValue, token]);
 
   return (
-    <Card
+    <Box
       sx={{
         py: 5,
         px: 3,
@@ -212,6 +213,6 @@ export default function JwtNewPasswordView() {
           </Stack>
         )}
       </FormProvider>
-    </Card>
+    </Box>
   );
 }
