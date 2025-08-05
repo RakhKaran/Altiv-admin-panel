@@ -63,6 +63,9 @@ export default function UserEditView() {
             name: `${currentUser?.fullName || ''} ${currentUser?.lastName || ''}`.trim(),
           },
         ]}
+          sx={{
+          mb: { xs: 3, md: 5 },
+        }}
       />
 
       <Tabs 
