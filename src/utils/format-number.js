@@ -18,10 +18,17 @@ export function fPercent(number) {
   return result(format, '.0');
 }
 
-export function fShortenNumber(number) {
-  const format = number ? numeral(number).format('0.00a') : '';
+// export function fShortenNumber(number) {
+//   const format = number ? numeral(number).format('0.00a') : '';
 
-  return result(format, '.00');
+//   return result(format, '.00');
+// }
+export function fShortenNumber(number) {
+  if (number === null || number === undefined) return '';
+
+  if (number === 0) return '0';
+
+  return result(numeral(number).format('0.00a'), '.00');
 }
 
 export function fData(number) {

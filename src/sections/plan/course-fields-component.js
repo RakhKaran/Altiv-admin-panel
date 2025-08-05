@@ -48,9 +48,11 @@ const CourseFieldsComponents = () => {
     [enqueueSnackbar, setValue]
   );
 
-  const handleRemoveFile = useCallback(() => {
-    setValue('thumbnail', null);
-  }, [setValue]);
+ const handleRemoveFile = useCallback(() => {
+  setValue('productData.thumbnail', null, { shouldValidate: true });
+}, [setValue]);
+
+
   return (
     <>
       <RHFTextField name="productData.courseName" label="Course Name" type="string" />
@@ -99,7 +101,7 @@ const CourseFieldsComponents = () => {
         {values.productData.thumbnail && <MultiFilePreview
           thumbnail
           files={[values.productData.thumbnail]}
-          onRemove={null}
+          onRemove={handleRemoveFile}
         />}
       </Box>
 

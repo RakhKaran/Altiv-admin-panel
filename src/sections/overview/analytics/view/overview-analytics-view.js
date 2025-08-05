@@ -6,6 +6,8 @@ import Typography from '@mui/material/Typography';
 
 // components
 import { useSettingsContext } from 'src/components/settings';
+import { useEffect, useState } from 'react';
+import { useGetCounts } from 'src/api/dashboard';
 //
 import AnalyticsNews from '../analytics-news';
 import AnalyticsTasks from '../analytics-tasks';
@@ -17,10 +19,26 @@ import AnalyticsTrafficBySite from '../analytics-traffic-by-site';
 import AnalyticsCurrentSubject from '../analytics-current-subject';
 import AnalyticsConversionRates from '../analytics-conversion-rates';
 
+
+
 // ----------------------------------------------------------------------
 
 export default function OverviewAnalyticsView() {
   const settings = useSettingsContext();
+  const [countData, setCountData] = useState({
+    usersCount: 0,
+    blogsCount: 0,
+    productsCount: 0,
+    servicesCount: 0
+  });
+
+  const { data, dataLoading } = useGetCounts();
+
+  useEffect(() => {
+    if (data && !dataLoading) {
+      setCountData(data);
+    }
+  }, [data, dataLoading]);
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -36,16 +54,8 @@ export default function OverviewAnalyticsView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Weekly Sales"
-            total={714000}
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
-          />
-        </Grid>
-
-        <Grid xs={12} sm={6} md={3}>
-          <AnalyticsWidgetSummary
-            title="New Users"
-            total={1352831}
+            title="Customers"
+            total={countData.usersCount}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
@@ -53,19 +63,28 @@ export default function OverviewAnalyticsView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Item Orders"
-            total={1723315}
-            color="warning"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
+            title="Blogs"
+            total={countData.blogsCount}
+            color="error"
+            icon={<img alt="icon" src="/assets/icons/glass/communication.png" />}
           />
         </Grid>
 
         <Grid xs={12} sm={6} md={3}>
           <AnalyticsWidgetSummary
-            title="Bug Reports"
-            total={234}
-            color="error"
-            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
+            title="Products"
+            total={countData.productsCount}
+            // color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
+          />
+        </Grid>
+
+        <Grid xs={12} sm={6} md={3}>
+          <AnalyticsWidgetSummary
+            title="Services"
+            total={countData.servicesCount}
+            color="warning"
+            icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
           />
         </Grid>
 

@@ -57,6 +57,10 @@ export const endpoints = {
     details: (id) => `/plans/${id}`,
   },
 
+  dashboard:{
+    count:'/analytics/cards',
+  },
+
   subscriptions: {
     list: '/subscriptions',
     filterList: (filter) => `/subscriptions?${filter}`,
