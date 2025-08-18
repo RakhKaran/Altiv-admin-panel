@@ -180,11 +180,11 @@ export default function SubscriptionDetails({ subscription }) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice To
             </Typography>
-            {subscription?.planData?.user?.fullName }
+            {subscription?.user?.fullName }
             {/* <br />
             {invoice.invoiceTo.fullAddress} */}
             <br />
-            Phone: {subscription?.planData?.user?.contact }
+            Phone: {subscription?.user?.phoneNumber }
             <br />
           </Stack>
 
