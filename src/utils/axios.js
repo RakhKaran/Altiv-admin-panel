@@ -57,6 +57,10 @@ export const endpoints = {
     details: (id) => `/plans/${id}`,
   },
 
+  dashboard:{
+    count:'/analytics/cards',
+  },
+
   subscriptions: {
     list: '/subscriptions',
     filterList: (filter) => `/subscriptions?${filter}`,
@@ -79,6 +83,7 @@ export const endpoints = {
     details: (id) => `/api/users/${id}`, // patch
     search: '/api/user/search',
     delete: (id) => `/user/${id}`,
+    events:(userId)=>`/user/events/${userId}`
   },
   resume: {
     details:(userId)=>`/resumes/resume-by-id/${userId}`

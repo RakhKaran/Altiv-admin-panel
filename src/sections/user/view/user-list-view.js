@@ -52,15 +52,12 @@ import UserViewResume from './view-resume';
 
 const TABLE_HEAD = [
   { id: 'fullName', label: 'Full Name' },
-  { id: 'email', label: 'Email'},
-  { id: 'phoneNumber', label: 'Phone Number'},
-  {id:'permissions', label:' Role '},
-  { id:'createdAt', label:'Created At'},
-  { id: 'isActive', label: 'Status'},
-  // { id: '', label: 'View Events'},
-  {id: 'Edit', label:'Edit'},
-  {id:'resume',label:'Resume'},
-  
+  { id: 'email', label: 'Email' },
+  { id: 'phoneNumber', label: 'Phone Number' },
+  { id: 'permissions', label: ' Role ' },
+  { id: 'createdAt', label: 'Created At' },
+  { id: 'isActive', label: 'Status' },
+  { id: '', label: 'Actions' },
 ];
 
 const defaultFilters = {
@@ -75,11 +72,13 @@ const role = {
 };
 
 
- const USER_STATUS_OPTIONS = [
+const USER_STATUS_OPTIONS = [
   { value: 'all', label: 'All' },
-  { value: '1', label: 'Active' },
-  { value: '0', label: 'Non-Active' },
+  { value: 'Active', label: 'Active' },
+  { value: 'Inactive', label: 'Inactive' },
 ];
+
+
 
 // ----------------------------------------------------------------------
 
@@ -97,7 +96,7 @@ export default function UserListView() {
 
   const [quickEditRow, setQuickEditRow] = useState();
 
-   const [resumeRow, setResumeRow] = useState(null);
+  const [resumeRow, setResumeRow] = useState(null);
 
 
   const quickEdit = useBoolean();
@@ -170,14 +169,14 @@ export default function UserListView() {
     [quickEdit]
   );
 
- const handleViewResumeRow = useCallback((row) => {
-  setResumeRow(row);
-}, []);
+  const handleViewResumeRow = useCallback((row) => {
+    setResumeRow(row);
+  }, []);
 
 
   const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.view(id));
+      router.push(paths.dashboard.user.events(id));
     },
     [router]
   );
@@ -198,7 +197,7 @@ export default function UserListView() {
       const updatedUsers = users.filter((obj) => obj.id !== userDetails.id);
       setTableData(updatedUsers);
     }
-  }, [userDetails.id, users]);
+  }, [userDetails?.id, users]);
 
   return (
     <>
@@ -246,16 +245,15 @@ export default function UserListView() {
                       ((tab.value === 'all' || tab.value === filters.isActive) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === '1' && 'success') ||
-                      (tab.value === '0' && 'error') ||
+                      (tab.value === 'Active' && 'success') ||
+                      (tab.value === 'Inactive' && 'error') ||
                       'default'
                     }
                   >
                     {tab.value === 'all' && tableData.length}
-                    {tab.value === '1' && tableData.filter((user) => user.isActive).length}
+                    {tab.value === 'Active' && tableData.filter((user) => Number(user.isActive) === 1).length}
+                    {tab.value === 'Inactive' && tableData.filter((user) => Number(user.isActive) !== 1).length}
 
-                    {tab.value === '0' && tableData.filter((user) => !user.isActive).length}
-                    {/* {tab.value === 'rejected' && tableData.filter((user) =>  user.status ==='rejected').length} */}
 
 
                   </Label>
@@ -339,8 +337,8 @@ export default function UserListView() {
                         //   handleQuickEditRow(user);
                         // }}
                         handleQuickEditRow={() => handleQuickEditRow(row)}
-                         onViewResumeRow={() => handleViewResumeRow(row)}
-                        
+                        onViewResumeRow={() => handleViewResumeRow(row)}
+
                       />
                     ))}
 
@@ -404,13 +402,13 @@ export default function UserListView() {
       )}
 
 
-     {resumeRow && (
-  <UserViewResume
-    open={Boolean(resumeRow)}
-    onClose={() => setResumeRow(null)}
-    userId={resumeRow.id}
-  />
-)}
+      {resumeRow && (
+        <UserViewResume
+          open={Boolean(resumeRow)}
+          onClose={() => setResumeRow(null)}
+          userId={resumeRow.id}
+        />
+      )}
 
     </>
   );
@@ -419,12 +417,12 @@ export default function UserListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name,isActive,permissions} = filters;
+  const { name, isActive, permissions } = filters;
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   const roleMapping = {
     admin: 'Admin',
     customer: 'Customer',
-    
+
   };
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -441,8 +439,12 @@ function applyFilter({ inputData, comparator, filters }) {
   }
 
   if (isActive !== 'all') {
-    inputData = inputData.filter((user) => (isActive === '1' ? user.isActive : !user.isActive));
+    inputData = inputData.filter((user) => {
+      const active = Number(user.isActive) === 1;
+      return isActive === 'Active' ? active : !active;
+    });
   }
+
 
   if (permissions.length) {
     inputData = inputData.filter(
@@ -451,7 +453,7 @@ function applyFilter({ inputData, comparator, filters }) {
         user.permissions.some((userRole) => {
           console.log(userRole);
           const mappedRole = roleMapping[userRole];
-          console.log('Mapped Role:', mappedRole); 
+          console.log('Mapped Role:', mappedRole);
           return mappedRole && permissions.includes(mappedRole);
         })
     );

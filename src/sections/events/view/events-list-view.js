@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -14,12 +14,12 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 // routes
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hook';
-import { RouterLink } from 'src/routes/components';
+import { useParams, useRouter } from 'src/routes/hook';
+
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
-import { useGetSubscriptions } from 'src/api/subscriptions';
+import { useGetEventsByUserId } from 'src/api/user';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -27,6 +27,7 @@ import Scrollbar from 'src/components/scrollbar';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+import PropTypes from 'prop-types';
 import {
   useTable,
   getComparator,
@@ -38,25 +39,23 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
-import SubscriptionTableRow from '../subscription-table-row';
-import SubscriptionTableToolbar from '../subscription-table-toolbar';
-import SubscriptionTableFiltersResult from '../subscription-table-filters-result';
+import EventsTableRow from '../events-table-row';
+import EventsTableFiltersResult from '../events-table-filters-result';
+import EventsTableToolbar from '../events-table-toolbar';
+
+
+
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  // { value: 'active', label: 'Active' },
-  // { value: 'inactive', label: 'Inactive' },
-];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
+  { id: 'eventName', label: 'Event Name' },
+  { id: 'eventDescription', label: 'Event Description' },
+  { id: 'screenName', label: 'Screen Name' },
   { id: 'fullName', label: 'Full Name' },
-  { id: 'planData', label: 'Course' },
-  { id: 'price', label: 'Price' },
-  { id: 'paymentMethod', label: 'Payment Method' },
-  { id: 'paymentType', label: 'Payment Type?'},
-  { id: 'expiryDate', label: 'Expiry Date' },
-  { id: '', label: '' },
+    { id: 'createdAt', label: 'createdAt' },
+  
 ];
 
 const defaultFilters = {
@@ -66,25 +65,24 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionListView() {
+export default function EventsListView() {
+
+ const params = useParams();
+ const { id } = params;
+
   const table = useTable();
-  const [tableData, setTableData] = useState([]);
+
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { subscriptions } = useGetSubscriptions();
+  const { event = [] } = useGetEventsByUserId(id);
+  console.log('events', event)
 
   const [filters, setFilters] = useState(defaultFilters);
 
-  useEffect(() => {
-    if(subscriptions){
-      setTableData(subscriptions);
-    }
-  },[subscriptions]);
-
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: event,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -106,15 +104,8 @@ export default function SubscriptionListView() {
     [table]
   );
 
-   const handleViewRow = useCallback(
-      (id) => {
-        router.push(paths.dashboard.subscription.details(id));
-      },
-      [router]
-    );
-
   const handleDeleteRow = useCallback(
-    (id) => {
+    (newId) => {
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
     [dataInPage.length, table]
@@ -122,14 +113,14 @@ export default function SubscriptionListView() {
 
   const handleDeleteRows = useCallback(() => {
     table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
+      totalRows: event.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, tableData.length, table]);
+  }, [dataFiltered.length, dataInPage.length, event.length, table]);
 
   const handleFilterStatus = useCallback(
-    (event, newValue) => {
+    (newEvent, newValue) => {
       handleFilters('status', newValue);
     },
     [handleFilters]
@@ -143,10 +134,10 @@ export default function SubscriptionListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Invoice List"
+          heading="Events List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Invoice', href: paths.dashboard.subscription.list },
+            { name: 'Events', href: paths.dashboard.user.list },
             { name: 'List' },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
@@ -166,10 +157,10 @@ export default function SubscriptionListView() {
             ))}
           </Tabs>
 
-          <SubscriptionTableToolbar filters={filters} onFilters={handleFilters} />
+          <EventsTableToolbar filters={filters} onFilters={handleFilters} />
 
           {canReset && (
-            <SubscriptionTableFiltersResult
+            <EventsTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               onResetFilters={handleResetFilters}
@@ -182,11 +173,11 @@ export default function SubscriptionListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={tableData.length}
+              rowCount={event.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  subscriptions.map((row) => row.id)
+                  event.map((row) => row.id)
                 )
               }
               action={
@@ -204,13 +195,13 @@ export default function SubscriptionListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={event.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      event.map((row) => row.id)
                     )
                   }
                   showCheckbox={false}
@@ -223,19 +214,19 @@ export default function SubscriptionListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <SubscriptionTableRow
+                      <EventsTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                         onViewRow={() => handleViewRow(row.id)}
+                        // onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, event.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -294,18 +285,19 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-   inputData = inputData.filter(sub =>
-  sub?.planData?.courses?.courseName?.toLowerCase().includes(name) ||
-  sub?.user?.email?.toLowerCase().includes(name)
-);
-
+    inputData = inputData.filter((events) =>
+      Object.values(events).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
+    );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((subscriptions) =>
-      status === 'active' ? !subscriptions.isDeleted : subscriptions.isDeleted
+    inputData = inputData.filter((events) =>
+      status === 'active' ? !events.isDeleted : events.isDeleted
     );
   }
 
   return inputData;
 }
+

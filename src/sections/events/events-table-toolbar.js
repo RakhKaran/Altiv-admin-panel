@@ -12,7 +12,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionTableToolbar({ filters, onFilters }) {
+export default function EventsTableToolbar({ filters, onFilters }) {
   const popover = usePopover();
 
   const handleFilterName = useCallback(
@@ -41,7 +41,7 @@ export default function SubscriptionTableToolbar({ filters, onFilters }) {
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search by Invoice..."
+            placeholder="Search by events..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -82,7 +82,7 @@ export default function SubscriptionTableToolbar({ filters, onFilters }) {
   );
 }
 
-SubscriptionTableToolbar.propTypes = {
+EventsTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
 };

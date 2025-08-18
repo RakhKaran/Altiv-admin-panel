@@ -72,7 +72,7 @@ export function useNavData() {
             ],
           },
           {
-            title: t('Subscriptions'),
+            title: t('Invoice'),
             path: paths.dashboard.subscription.root,
             icon: ICONS.subscription,
             children: [{ title: t('list'), path: paths.dashboard.subscription.list },

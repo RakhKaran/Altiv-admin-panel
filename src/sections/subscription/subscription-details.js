@@ -91,7 +91,7 @@ export default function SubscriptionDetails({ subscription }) {
   const renderList = (
     <TableContainer sx={{ overflow: 'unset', mt: 5 }}>
       <Scrollbar>
-        <Table sx={{ minWidth: 960 }}>
+        <Table sx={{ minWidth: 900 }}>
           <TableHead>
             <TableRow>
               <TableCell width={40}>#</TableCell>

@@ -32,7 +32,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
 
 
 
-        <TableCell onClick={() => onEditRow()} sx={{cursor: 'pointer', "&:hover": {textDecoration: 'underline'}}}>
+        <TableCell onClick={() => onEditRow()} sx={{ cursor: 'pointer', "&:hover": { textDecoration: 'underline' } }}>
           {fullName}
           <br />
           <ListItemText secondary={email} />
@@ -46,31 +46,25 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
         <TableCell>{createdAt ? format(new Date(createdAt), 'dd/MM/yyyy') : 'N/A'}</TableCell>
 
         <TableCell>
-          <Label 
-          variant="soft"
-          color={(isActive && 'success') || (!isActive && 'error') || 'default'}
+          <Label
+            variant="soft"
+            color={Number(isActive) === 1 ? 'success' : 'error'}
           >
-            {isActive ? 'Active' : 'Inactive'}
+            {Number(isActive) === 1 ? 'Active' : 'Inactive'}
           </Label>
+
         </TableCell>
-        {/* <TableCell>
-          <Tooltip title="View">
+        <TableCell>
+          <Tooltip title="View Events">
             <IconButton onClick={onViewRow}>
               <Iconify icon="carbon:view-filled" />
             </IconButton>
           </Tooltip>
-        </TableCell> */}
-
-        <TableCell>
           <Tooltip title="Quick Edit" placement="top" arrow>
             <IconButton onClick={handleQuickEditRow}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
           </Tooltip>
-        </TableCell>
-
-
-        <TableCell>
           <Tooltip title="View Resume">
             <IconButton onClick={onViewResumeRow}>
               <Iconify icon="mdi:file-document-outline" />
@@ -102,7 +96,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
           Edit
         </MenuItem> */}
 
-        {/* <MenuItem
+      {/* <MenuItem
           onClick={() => {
             confirm.onTrue();
             popover.onClose();

@@ -24,7 +24,7 @@ export default function SubscriptionDetailsView() {
         heading={`INV -${subscription?.id}`}
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
-          { name: 'Subscriptions', href: paths.dashboard.subscription.root },
+          { name: 'Invoice', href: paths.dashboard.subscription.root },
           { name: `INV -${subscription?.id}` },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}

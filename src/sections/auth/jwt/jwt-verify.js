@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,31 +9,28 @@ import Typography from '@mui/material/Typography';
 // routes
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
-// assets
-import { PasswordIcon } from 'src/assets/icons';
 // components
 import Iconify from 'src/components/iconify';
-import FormProvider, { RHFTextField } from 'src/components/hook-form';
-import axiosInstance from 'src/utils/axios';
-import { useSnackbar } from 'notistack';
-import { useRouter } from 'src/routes/hook';
-import { Box, Card } from '@mui/material';
+import FormProvider, { RHFCode, RHFTextField } from 'src/components/hook-form';
+// assets
+import { EmailInboxIcon } from 'src/assets/icons';
 
 // ----------------------------------------------------------------------
 
-export default function JwtForgotPasswordView() {
-  const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
-  const ForgotPasswordSchema = Yup.object().shape({
+export default function JwtVerifyView() {
+  const VerifySchema = Yup.object().shape({
+    code: Yup.string().min(6, 'Code must be at least 6 characters').required('Code is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const defaultValues = {
+    code: '',
     email: '',
   };
 
   const methods = useForm({
-    resolver: yupResolver(ForgotPasswordSchema),
+    mode: 'onChange',
+    resolver: yupResolver(VerifySchema),
     defaultValues,
   });
 
@@ -45,31 +41,23 @@ export default function JwtForgotPasswordView() {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const inputData = {
-        email: data.email,
-      };
-      const { data: response } = await axiosInstance.post('/admin/sendResetPasswordLink', inputData);
-      console.log(response);
-      enqueueSnackbar(response?.message, { variant: 'success' });
-      router.push(paths.auth.jwt.login);
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      console.info('DATA', data);
     } catch (error) {
       console.error(error);
-      enqueueSnackbar(
-        typeof error === 'string'
-          ? error
-          : error?.error?.message
-          ? error?.error?.message
-          : error?.message,
-        {
-          variant: 'error',
-        }
-      );
     }
   });
 
   const renderForm = (
     <Stack spacing={3} alignItems="center">
-      <RHFTextField name="email" label="Email address" />
+      <RHFTextField
+        name="email"
+        label="Email"
+        placeholder="example@gmail.com"
+        InputLabelProps={{ shrink: true }}
+      />
+
+      <RHFCode name="code" />
 
       <LoadingButton
         fullWidth
@@ -78,12 +66,24 @@ export default function JwtForgotPasswordView() {
         variant="contained"
         loading={isSubmitting}
       >
-        Send Request
+        Verify
       </LoadingButton>
+
+      <Typography variant="body2">
+        {`Don’t have a code? `}
+        <Link
+          variant="subtitle2"
+          sx={{
+            cursor: 'pointer',
+          }}
+        >
+          Resend code
+        </Link>
+      </Typography>
 
       <Link
         component={RouterLink}
-        href={paths.auth.jwt.login}
+        href={paths.authDemo.classic.login}
         color="inherit"
         variant="subtitle2"
         sx={{
@@ -99,33 +99,24 @@ export default function JwtForgotPasswordView() {
 
   const renderHead = (
     <>
-      <PasswordIcon sx={{ height: 96 }} />
+      <EmailInboxIcon sx={{ height: 96 }} />
 
       <Stack spacing={1} sx={{ my: 5 }}>
-        <Typography variant="h3">Forgot your password?</Typography>
+        <Typography variant="h3">Please check your email!</Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Please enter the email address associated with your account and We will email you a link
-          to reset your password.
+          We have emailed a 6-digit confirmation code to acb@domain, please enter the code in below
+          box to verify your email.
         </Typography>
       </Stack>
     </>
   );
 
   return (
-    <Box
-      sx={{
-        py: 5,
-        px: 3,
-        maxWidth: 720,
-        width: '100%',
-      }}
-    >
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        {renderHead}
+    <FormProvider methods={methods} onSubmit={onSubmit}>
+      {renderHead}
 
-        {renderForm}
-      </FormProvider>
-    </Box>
+      {renderForm}
+    </FormProvider>
   );
 }

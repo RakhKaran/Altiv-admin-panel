@@ -13,13 +13,15 @@ export default function FileThumbnail({ file, tooltip, imageView, sx, imgSx }) {
   const format = fileFormat(path || preview);
 
  const downloadFile = () => {
-  window.open(preview, '_blank');
-    window.href = preview;
-    window.download = name;
-    document.body.appendChild(window);
-    window.click();
-    document.body.removeChild(window);
-  };
+  const a = document.createElement('a');
+  a.href = preview;
+  a.download = name || 'file';
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
+
 
   const renderContent =
     format === 'image' && imageView ? (
