@@ -143,10 +143,10 @@ export default function SubscriptionListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Subscriptions List"
+          heading="Invoice List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Subscriptions', href: paths.dashboard.subscription.list },
+            { name: 'Invoice', href: paths.dashboard.subscription.list },
             { name: 'List' },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}

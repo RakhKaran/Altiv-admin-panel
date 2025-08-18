@@ -41,7 +41,7 @@ export default function SubscriptionTableToolbar({ filters, onFilters }) {
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search by Subscription..."
+            placeholder="Search by Invoice..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
