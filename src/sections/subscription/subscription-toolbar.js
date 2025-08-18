@@ -69,11 +69,11 @@ export default function SubscriptionToolbar({ subscriptions }) {
             )}
           </PDFDownloadLink>
 
-          <Tooltip title="Print">
+          {/* <Tooltip title="Print">
             <IconButton>
               <Iconify icon="solar:printer-minimalistic-bold" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           {/* <Tooltip title="Send">
             <IconButton>
