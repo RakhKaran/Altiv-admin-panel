@@ -55,7 +55,7 @@ export function useFilterSubscriptions(queryString) {
 
   const memoizedValue = useMemo(
     () => ({
-      filteredPlans: data || [],
+      filteredSubscriptions: data || [],
       filterLoading: isLoading,
       filterError: error,
       filterValidating: isValidating,

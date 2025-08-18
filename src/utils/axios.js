@@ -63,7 +63,7 @@ export const endpoints = {
 
   subscriptions: {
     list: '/subscriptions',
-    filterList: (filter) => `/subscriptions?${filter}`,
+    filterList: (filter) => `/subscriptions?filter=${filter}`,
     details: (id) => `/subscriptions/${id}`,
   },
 

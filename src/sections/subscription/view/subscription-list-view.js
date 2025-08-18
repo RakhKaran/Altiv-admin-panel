@@ -19,7 +19,7 @@ import { RouterLink } from 'src/routes/components';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
-import { useGetSubscriptions } from 'src/api/subscriptions';
+import { useFilterSubscriptions, useGetSubscriptions } from 'src/api/subscriptions';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -41,6 +41,7 @@ import {
 import SubscriptionTableRow from '../subscription-table-row';
 import SubscriptionTableToolbar from '../subscription-table-toolbar';
 import SubscriptionTableFiltersResult from '../subscription-table-filters-result';
+
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [
@@ -73,15 +74,20 @@ export default function SubscriptionListView() {
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { subscriptions } = useGetSubscriptions();
+  const filter ={
+    order: ['createdAt desc']
+  };
+
+  const filterString = encodeURIComponent(JSON.stringify(filter));
+  const { filteredSubscriptions } = useFilterSubscriptions(filterString);
 
   const [filters, setFilters] = useState(defaultFilters);
 
   useEffect(() => {
-    if(subscriptions){
-      setTableData(subscriptions);
+    if(filteredSubscriptions){
+      setTableData(filteredSubscriptions);
     }
-  },[subscriptions]);
+  },[filteredSubscriptions]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -186,7 +192,7 @@ export default function SubscriptionListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  subscriptions.map((row) => row.id)
+                  filteredSubscriptions.map((row) => row.id)
                 )
               }
               action={
