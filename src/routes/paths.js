@@ -173,6 +173,17 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/job/${MOCK_ID}/edit`,
       },
     },
+       category: {
+      root: `${ROOTS.DASHBOARD}/category`,
+      new: `${ROOTS.DASHBOARD}/category/new`,
+      list: `${ROOTS.DASHBOARD}/category/list`,
+      details: (id) => `${ROOTS.DASHBOARD}/category/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/category/${id}/edit`,
+      demo: {
+        details: `${ROOTS.DASHBOARD}/category/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/category/${MOCK_ID}/edit`,
+      },
+    },
     tour: {
       root: `${ROOTS.DASHBOARD}/tour`,
       new: `${ROOTS.DASHBOARD}/tour/new`,

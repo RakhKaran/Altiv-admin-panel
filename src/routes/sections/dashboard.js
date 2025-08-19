@@ -37,6 +37,12 @@ const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
 const UserEventPage = lazy(() => import ('src/pages/dashboard/user/View'))
+
+// CATEGORY
+const CategoryListPage = lazy(() => import('src/pages/dashboard/category/list'));
+const CategoryCreatePage = lazy(() => import('src/pages/dashboard/category/new'));
+const CategoryEditPage = lazy(() => import('src/pages/dashboard/category/edit'));
+const CategoryViewPage = lazy(() => import('src/pages/dashboard/category/view'));
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -160,6 +166,16 @@ export const dashboardRoutes = [
           { path: ':id', element: <JobDetailsPage /> },
           { path: 'new', element: <JobCreatePage /> },
           { path: ':id/edit', element: <JobEditPage /> },
+        ],
+      },
+       {
+        path: 'category',
+        children: [
+          { element: <CategoryListPage />, index: true },
+          { path: 'list', element: <CategoryListPage /> },
+          { path: ':id', element: <CategoryViewPage /> },
+          { path: 'new', element: <CategoryCreatePage /> },
+          { path: ':id/edit', element: <CategoryEditPage /> },
         ],
       },
       {

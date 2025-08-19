@@ -27,7 +27,8 @@ const ICONS = {
   subscription: icon('ic_file'),
   product: icon('ic_product'),
   blog:  icon('ic_blog'),
-  contact: icon('ic_contact')
+  contact: icon('ic_contact'),
+  
 };
 
 // ----------------------------------------------------------------------
@@ -72,7 +73,7 @@ export function useNavData() {
             ],
           },
           {
-            title: t('Invoice'),
+            title: t('Invoices'),
             path: paths.dashboard.subscription.root,
             icon: ICONS.subscription,
             children: [{ title: t('list'), path: paths.dashboard.subscription.list },
@@ -100,6 +101,15 @@ export function useNavData() {
             path: paths.dashboard.contact.root,
             icon: ICONS.contact,
             children: [{ title: t('list'), path: paths.dashboard.contact.list }],
+          },
+
+          {
+            title: t('category'),
+            path: paths.dashboard.category.root,
+            icon: ICONS.contact,
+            children: [{ title: t('list'), path: paths.dashboard.category.list },
+                      { title: t('create'), path: paths.dashboard.category.new}
+            ],
           },
         ],
       },

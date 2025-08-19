@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -15,11 +15,14 @@ import TableContainer from '@mui/material/TableContainer';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hook';
-import { RouterLink } from 'src/routes/components';
+
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
-import { useFilterSubscriptions, useGetSubscriptions } from 'src/api/subscriptions';
+import { RouterLink } from 'src/routes/components';
+
+import { useGetCategories } from 'src/api/category';
+import { useGetEmails } from 'src/api/email';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -38,26 +41,21 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 //
-import SubscriptionTableRow from '../subscription-table-row';
-import SubscriptionTableToolbar from '../subscription-table-toolbar';
-import SubscriptionTableFiltersResult from '../subscription-table-filters-result';
+
+import CategoryTableRow from '../category-table-row';
+import CategoryTableToolbar from '../category-table-toolbar';
+import CategoryTableFiltersResult from '../category-table-filters-result';
+
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  // { value: 'active', label: 'Active' },
-  // { value: 'inactive', label: 'Inactive' },
-];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Full Name' },
-  { id: 'planData', label: 'Course' },
-  { id: 'price', label: 'Price' },
-  { id: 'paymentMethod', label: 'Payment Method' },
-  { id: 'paymentType', label: 'Payment Type?'},
-  { id: 'expiryDate', label: 'Expiry Date' },
-  { id: '', label: '' },
+  { id: 'name', label: 'Name' },
+  { id: 'createdAt', label: 'CreatedAt' },
+  { id: 'description', label: 'Description' },
+  { id: '', label: 'Actions' },
 ];
 
 const defaultFilters = {
@@ -67,30 +65,34 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function SubscriptionListView() {
+export default function CategoryListView() {
   const table = useTable();
-  const [tableData, setTableData] = useState([]);
+
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
 
-  const filter ={
-    order: ['createdAt desc']
-  };
+  const { categories  } = useGetCategories();
 
-  const filterString = encodeURIComponent(JSON.stringify(filter));
-  const { filteredSubscriptions } = useFilterSubscriptions(filterString);
+const handleViewRow = useCallback(
+    (id) => {
+      router.push(paths.dashboard.category.details(id));
+    },
+    [router]
+  );
+
+   const handleEditRow = useCallback(
+      (id) => {
+        router.push(paths.dashboard.category.edit(id));
+      },
+      [router]
+    );
+  
 
   const [filters, setFilters] = useState(defaultFilters);
 
-  useEffect(() => {
-    if(filteredSubscriptions){
-      setTableData(filteredSubscriptions);
-    }
-  },[filteredSubscriptions]);
-
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: categories,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -112,13 +114,6 @@ export default function SubscriptionListView() {
     [table]
   );
 
-   const handleViewRow = useCallback(
-      (id) => {
-        router.push(paths.dashboard.subscription.details(id));
-      },
-      [router]
-    );
-
   const handleDeleteRow = useCallback(
     (id) => {
       table.onUpdatePageDeleteRow(dataInPage.length);
@@ -128,11 +123,11 @@ export default function SubscriptionListView() {
 
   const handleDeleteRows = useCallback(() => {
     table.onUpdatePageDeleteRows({
-      totalRows: tableData.length,
+      totalRows: categories.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, tableData.length, table]);
+  }, [dataFiltered.length, dataInPage.length, categories.length, table]);
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -148,16 +143,27 @@ export default function SubscriptionListView() {
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Invoice List"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Invoices', href: paths.dashboard.subscription.list },
-            { name: 'List' },
-          ]}
-          sx={{ mb: { xs: 3, md: 5 } }}
-        />
-
+         <CustomBreadcrumbs
+                  heading="List"
+                  links={[
+                    { name: 'Dashboard', href: paths.dashboard.root },
+                    { name: 'Category', href: paths.dashboard.category.list },
+                    { name: 'List' },
+                  ]}
+                  action={
+                    <Button
+                      component={RouterLink}
+                      href={paths.dashboard.category.new}
+                      variant="contained"
+                      startIcon={<Iconify icon="mingcute:add-line" />}
+                    >
+                      New Category
+                    </Button>
+                  }
+                  sx={{
+                    mb: { xs: 3, md: 5 },
+                  }}
+                />
         <Card>
           <Tabs
             value={filters.status}
@@ -172,10 +178,10 @@ export default function SubscriptionListView() {
             ))}
           </Tabs>
 
-          <SubscriptionTableToolbar filters={filters} onFilters={handleFilters} />
+          <CategoryTableToolbar filters={filters} onFilters={handleFilters} />
 
           {canReset && (
-            <SubscriptionTableFiltersResult
+            <CategoryTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               onResetFilters={handleResetFilters}
@@ -188,11 +194,11 @@ export default function SubscriptionListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={tableData.length}
+              rowCount={categories.length}
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  filteredSubscriptions.map((row) => row.id)
+                  categories.map((row) => row.id)
                 )
               }
               action={
@@ -210,13 +216,13 @@ export default function SubscriptionListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  rowCount={categories.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      categories.map((row) => row.id)
                     )
                   }
                   showCheckbox={false}
@@ -229,19 +235,20 @@ export default function SubscriptionListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <SubscriptionTableRow
+                      <CategoryTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
                          onViewRow={() => handleViewRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, categories.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -300,16 +307,16 @@ function applyFilter({ inputData, comparator, filters }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
-   inputData = inputData.filter(sub =>
-  sub?.planData?.courses?.courseName?.toLowerCase().includes(name) ||
-  sub?.user?.email?.toLowerCase().includes(name)
-);
-
+    inputData = inputData.filter((emails) =>
+      Object.values(emails).some((value) =>
+        String(value).toLowerCase().includes(name.toLowerCase())
+      )
+    );
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((subscriptions) =>
-      status === 'active' ? !subscriptions.isDeleted : subscriptions.isDeleted
+    inputData = inputData.filter((emails) =>
+      status === 'active' ? !emails.isDeleted : emails.isDeleted
     );
   }
 

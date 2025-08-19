@@ -72,6 +72,11 @@ export const endpoints = {
     filterList: (filter) => `/wait-lists?${filter}`,
     details: (id) => `/wait-lists/${id}`,
   },
+    category: {
+    list: '/categories',
+    filterList: (filter) => `/categories?${filter}`,
+    details: (id) => `/categories/${id}`,
+  },
   contact: {
     list: '/contact-uses',
     filterList: (filter) => `/contact-uses?${filter}`,

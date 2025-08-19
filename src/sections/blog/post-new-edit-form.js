@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo, useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
@@ -31,12 +31,23 @@ import FormProvider, {
   RHFAutocomplete,
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
-//
+import { useGetCategories } from 'src/api/category';//
 import PostDetailsPreview from './post-details-preview';
 
 // ----------------------------------------------------------------------
 
 export default function PostNewEditForm({ currentPost }) {
+  const {categories, categoriesEmpty} = useGetCategories();
+  const [categoryData, setCategoryData]= useState([]);
+
+  useEffect(() => {
+    if (categories && !categoriesEmpty) {
+      setCategoryData(categories);
+    } else {
+      setCategoryData([]);
+    }
+  }, [categories, categoriesEmpty]);
+
   const router = useRouter();
 
   const mdUp = useResponsive('up', 'md');
@@ -172,6 +183,33 @@ export default function PostNewEditForm({ currentPost }) {
               <Typography variant="subtitle2">Content</Typography>
               <RHFEditor simple name="content" />
             </Stack>
+            <RHFAutocomplete
+              name="categories"
+              label="Categories"
+              placeholder="Categories"
+              multiple
+              options={categoryData.map((option) => option.name)}
+              filterOptions={(opt => opt)}
+              isOptionsEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => option.name}
+              renderOption={(props, option) => (
+                <li {...props} key={option}>
+                  {option}
+                </li>
+              )}
+              renderTags={(selected, getTagProps) =>
+                selected.map((option, index) => (
+                  <Chip
+                    {...getTagProps({ index })}
+                    key={option}
+                    label={option}
+                    size="small"
+                    color="info"
+                    variant="soft"
+                  />
+                ))
+              }
+            />
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Cover</Typography>
