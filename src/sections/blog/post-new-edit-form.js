@@ -30,6 +30,7 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
 } from 'src/components/hook-form';
+import { createFilterOptions } from '@mui/material';
 import axiosInstance from 'src/utils/axios';
 import { useGetCategories } from 'src/api/category';//
 import PostDetailsPreview from './post-details-preview';
@@ -95,11 +96,11 @@ export default function PostNewEditForm({ currentPost }) {
   const values = watch();
 
   useEffect(() => {
-    if (currentPost && currentPost.title) {
+    if (currentPost && currentPost.title && categories) {
       console.log('Resetting with currentPost', currentPost);
       reset(defaultValues);
     }
-  }, [currentPost, defaultValues, reset]);
+  }, [currentPost, defaultValues, reset, categories]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -160,6 +161,14 @@ export default function PostNewEditForm({ currentPost }) {
     setValue('coverUrl', null);
   }, [setValue]);
 
+  console.log('currentPost', currentPost);
+  console.log('defaultvalues', defaultValues);
+
+  const filter = createFilterOptions({
+    matchFrom: 'any', // matches anywhere in the string
+    stringify: (option) => option.name,
+  });
+
   const renderDetails = (
     <>
       {mdUp && (
@@ -187,17 +196,21 @@ export default function PostNewEditForm({ currentPost }) {
               <RHFEditor simple name="content" />
             </Stack>
             <RHFAutocomplete
+              multiple
               name="categories"
               label="Categories"
-              placeholder="Categories"
-              multiple
-              options={categoryData}
-              filterOptions={(opt) => opt}
-              isOptionsEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.name}
+              // onInputChange={(event) => setCategoryData((prev) => prev.filter((cat) => cat.name === event.target.value))}
+              options={categoryData || []}
+              getOptionLabel={(option) => `${option?.name}` || ''}
+              filterOptions={filter}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               renderOption={(props, option) => (
-                <li {...props} key={option.id}>
-                  {option.name}
+                <li {...props}>
+                  <div>
+                    <Typography variant="subtitle2" fontWeight="bold">
+                      {`${option?.name}`}
+                    </Typography>
+                  </div>
                 </li>
               )}
               renderTags={(selected, getTagProps) =>
