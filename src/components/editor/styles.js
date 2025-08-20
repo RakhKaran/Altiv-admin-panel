@@ -1,6 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import { pxToRem, responsiveFontSizes } from 'src/theme/typography';
+import { fontFamily } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -33,6 +34,7 @@ export const StyledEditor = styled(Box)(({ theme }) => ({
       lineHeight: 80 / 64,
       fontSize: pxToRem(40),
       ...responsiveFontSizes({ sm: 44, md: 54, lg: 54 }),
+      color: "#212529",
     },
     '& h2': {
       ...theme.typography.h2,

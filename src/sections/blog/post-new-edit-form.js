@@ -37,8 +37,8 @@ import PostDetailsPreview from './post-details-preview';
 // ----------------------------------------------------------------------
 
 export default function PostNewEditForm({ currentPost }) {
-  const {categories, categoriesEmpty} = useGetCategories();
-  const [categoryData, setCategoryData]= useState([]);
+  const { categories, categoriesEmpty } = useGetCategories();
+  const [categoryData, setCategoryData] = useState([]);
 
   useEffect(() => {
     if (categories && !categoriesEmpty) {
@@ -62,7 +62,8 @@ export default function PostNewEditForm({ currentPost }) {
     content: Yup.string().required('Content is required'),
     coverUrl: Yup.mixed().nullable().required('Cover is required'),
     tags: Yup.array().min(2, 'Must have at least 2 tags'),
-    publish:Yup.string().required('Status is required i.e(publish or draft or unpublish)'),
+    publish: Yup.string().required('Status is required i.e(publish or draft or unpublish)'),
+    categories: Yup.array().of(Yup.object()).min(1, "Atleast one category is required"),
   });
 
   const defaultValues = useMemo(
@@ -72,7 +73,8 @@ export default function PostNewEditForm({ currentPost }) {
       content: currentPost?.content || '',
       coverUrl: currentPost?.coverUrl || null,
       tags: currentPost?.tags || [],
-      publish:currentPost?.publish || 'draft',
+      publish: currentPost?.publish || 'draft',
+      categories: currentPost?.categories || [],
     }),
     [currentPost]
   );
@@ -107,7 +109,8 @@ export default function PostNewEditForm({ currentPost }) {
         content: data.content,
         coverUrl: data.coverUrl,
         tags: data.tags,
-        publish:data.publish
+        publish: data.publish,
+        categories: (data.categories && data.categories.length > 0) ? data.categories.map((cat) => cat.id) : [],
       };
 
       if (!currentPost) {
@@ -118,7 +121,7 @@ export default function PostNewEditForm({ currentPost }) {
 
       reset();
       enqueueSnackbar(currentPost ? 'Blogs updated successfully!' : 'Blogs created successfully!');
-      router.push(paths.dashboard.post.list); 
+      router.push(paths.dashboard.post.list);
     } catch (error) {
       console.error(error);
       enqueueSnackbar(typeof error === 'string' ? error : error?.message || 'Something went wrong', {
@@ -127,31 +130,31 @@ export default function PostNewEditForm({ currentPost }) {
     }
   });
 
- const handleDrop = useCallback(
-  async (acceptedFiles) => {
-    const file = acceptedFiles[0];
+  const handleDrop = useCallback(
+    async (acceptedFiles) => {
+      const file = acceptedFiles[0];
 
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
 
-      try {
-        const response = await axiosInstance.post('/files', formData); 
-        const imageUrl = response.data?.files[0]?.fileUrl;
-        
-        if (imageUrl) {
-          setValue('coverUrl', imageUrl, { shouldValidate: true });
-        } else {
-          enqueueSnackbar('Image upload failed: No URL returned.', { variant: 'error' });
+        try {
+          const response = await axiosInstance.post('/files', formData);
+          const imageUrl = response.data?.files[0]?.fileUrl;
+
+          if (imageUrl) {
+            setValue('coverUrl', imageUrl, { shouldValidate: true });
+          } else {
+            enqueueSnackbar('Image upload failed: No URL returned.', { variant: 'error' });
+          }
+        } catch (error) {
+          console.error(error);
+          enqueueSnackbar('Image upload failed.', { variant: 'error' });
         }
-      } catch (error) {
-        console.error(error);
-        enqueueSnackbar('Image upload failed.', { variant: 'error' });
       }
-    }
-  },
-  [enqueueSnackbar, setValue]
-);
+    },
+    [enqueueSnackbar, setValue]
+  );
 
   const handleRemoveFile = useCallback(() => {
     setValue('coverUrl', null);
@@ -188,21 +191,21 @@ export default function PostNewEditForm({ currentPost }) {
               label="Categories"
               placeholder="Categories"
               multiple
-              options={categoryData.map((option) => option.name)}
-              filterOptions={(opt => opt)}
+              options={categoryData}
+              filterOptions={(opt) => opt}
               isOptionsEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.name}
               renderOption={(props, option) => (
-                <li {...props} key={option}>
-                  {option}
+                <li {...props} key={option.id}>
+                  {option.name}
                 </li>
               )}
               renderTags={(selected, getTagProps) =>
                 selected.map((option, index) => (
                   <Chip
                     {...getTagProps({ index })}
-                    key={option}
-                    label={option}
+                    key={option.id}
+                    label={option.name}
                     size="small"
                     color="info"
                     variant="soft"
@@ -319,7 +322,7 @@ export default function PostNewEditForm({ currentPost }) {
   const renderActions = (
     <>
       {mdUp && <Grid md={4} />}
-        <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
+      <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
         <FormControlLabel
           control={
             <Switch
