@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
+import { format } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -24,7 +25,7 @@ import Label from 'src/components/label';
 import Scrollbar from 'src/components/scrollbar';
 //
 // import InvoiceToolbar from './invoice-toolbar';
- import SubscriptionToolbar from './subscription-toolbar';
+import SubscriptionToolbar from './subscription-toolbar';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +72,7 @@ export default function SubscriptionDetails({ subscription }) {
   );
 
   const renderFooter = (
-     <Grid container>
+    <Grid container>
       <Grid xs={12} md={9} sx={{ py: 3 }}>
         <Typography variant="subtitle2">NOTES</Typography>
 
@@ -107,25 +108,25 @@ export default function SubscriptionDetails({ subscription }) {
           </TableHead>
 
           <TableBody>
-              <TableRow>
-                <TableCell>{1}</TableCell>
+            <TableRow>
+              <TableCell>{1}</TableCell>
 
-                <TableCell>
-                  <Box sx={{ maxWidth: 560 }}>
-                    <Typography variant="subtitle2">{subscription?.planData?.courses?.courseName}</Typography>
+              <TableCell>
+                <Box sx={{ maxWidth: 560 }}>
+                  <Typography variant="subtitle2">{subscription?.planData?.courses?.courseName}</Typography>
 
-                    {/* <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                  {/* <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
                       {row.description}
                     </Typography> */}
-                  </Box>
-                </TableCell>
+                </Box>
+              </TableCell>
 
-                <TableCell>{1}</TableCell>
+              <TableCell>{1}</TableCell>
 
-                <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
+              <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
 
-                <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
-              </TableRow>
+              <TableCell align="right">{`₹${subscription?.planData?.price}`}</TableCell>
+            </TableRow>
 
             {renderTotal}
           </TableBody>
@@ -138,7 +139,7 @@ export default function SubscriptionDetails({ subscription }) {
     <>
       <SubscriptionToolbar
         subscriptions={subscription}
-        
+
       />
 
       <Card sx={{ pt: 5, px: 5 }}>
@@ -158,17 +159,21 @@ export default function SubscriptionDetails({ subscription }) {
             sx={{ width: 80, height: 20 }}
           />
 
-         <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
-  <Typography variant="h6" sx={{ color: 'success.main' }}> Paid</Typography>
+          <Stack spacing={1} alignItems={{ xs: 'flex-start', md: 'flex-end' }}>
+            <Typography variant="h6" sx={{ color: 'success.main' }}> Paid</Typography>
 
-            <Typography variant="h6">INV-{subscription?.id}</Typography>
+            <Typography variant="h6">
+              {subscription?.createdAt
+                ? `${format(new Date(subscription?.createdAt), 'MM-yyyy')}-${subscription?.id}`
+                : `${subscription?.id}`}
+            </Typography>
           </Stack>
 
           <Stack sx={{ typography: 'body2' }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice From
             </Typography>
-                Altive Ai
+            Altive Ai
             {/* <br />
             {invoice.invoiceFrom.fullAddress} */}
             <br />
@@ -180,11 +185,11 @@ export default function SubscriptionDetails({ subscription }) {
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
               Invoice To
             </Typography>
-            {subscription?.user?.fullName }
+            {subscription?.user?.fullName}
             {/* <br />
             {invoice.invoiceTo.fullAddress} */}
             <br />
-            Phone: {subscription?.user?.phoneNumber }
+            Phone: {subscription?.user?.phoneNumber}
             <br />
           </Stack>
 
@@ -200,7 +205,7 @@ export default function SubscriptionDetails({ subscription }) {
               Due Date
             </Typography>
             {
-              (subscription?.paymentType === 'reccuring' &&  subscription?.expiryDate) ? fDate( subscription?.expiryDate) : 'NA'
+              (subscription?.paymentType === 'reccuring' && subscription?.expiryDate) ? fDate(subscription?.expiryDate) : 'NA'
             }
           </Stack>
         </Box>

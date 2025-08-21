@@ -4,6 +4,7 @@ import { Page, View, Text, Image, Document, Font, StyleSheet } from '@react-pdf/
 // utils
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
+import { format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ const useStyles = () =>
           borderTopWidth: 1,
           borderStyle: 'solid',
           position: 'absolute',
-          borderColor: '#DFE3E8',
+          borderColor: 'black',
         },
         gridContainer: {
           flexDirection: 'row',
@@ -54,29 +55,40 @@ const useStyles = () =>
         },
         table: {
           display: 'flex',
-          width: 'auto',
+          width: '100%',
+          borderWidth: 1,
+          borderStyle: 'solid',
+          borderColor: 'black',
         },
+
         tableRow: {
-          padding: '8px 0',
           flexDirection: 'row',
           borderBottomWidth: 1,
+          borderBottomColor: 'black',
           borderStyle: 'solid',
-          borderColor: '#DFE3E8',
         },
-        noBorder: {
-          paddingTop: 8,
-          paddingBottom: 0,
-          borderBottomWidth: 0,
-        },
+
         tableCell_1: {
           width: '5%',
+          padding: 8,
+          borderRightWidth: 1,
+          borderRightColor: 'black',
+          borderStyle: 'solid',
         },
         tableCell_2: {
           width: '50%',
-          paddingRight: 16,
+          padding: 8,
+          borderRightWidth: 1,
+          borderRightColor: 'black',
+          borderStyle: 'solid',
         },
         tableCell_3: {
           width: '15%',
+          padding: 8,
+          // Add borderRight if it's NOT the last cell
+        },
+        noBorder: {
+          borderBottomWidth: 0, // for the last row
         },
       }),
     []
@@ -85,8 +97,8 @@ const useStyles = () =>
 // ----------------------------------------------------------------------
 
 export default function SubscriptionPDF({ subscription }) {
- 
-    console.log("data", subscription)
+
+  console.log("data", subscription)
 
   const styles = useStyles();
 
@@ -94,10 +106,13 @@ export default function SubscriptionPDF({ subscription }) {
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={[styles.gridContainer, styles.mb40]}>
-          <Image source="/logo/altiv_logo.png"  style={{ width: 60, height: 10 }} />
+          <Image source="/logo/altiv_logo.png" style={{ width: 60, height: 10 }} />
 
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
-            <Text> {subscription?.id} </Text>
+            <Text> {subscription?.createdAt
+              ? `${format(new Date(subscription?.createdAt), 'MM-yyyy')}-${subscription?.id}`
+              : `${subscription?.id}`}
+            </Text>
           </View>
         </View>
 
@@ -145,47 +160,57 @@ export default function SubscriptionPDF({ subscription }) {
                 <Text style={styles.subtitle2}>Qty</Text>
               </View>
 
-              <View style={styles.tableCell_3}>
+              <View style={{
+                ...styles.tableCell_3,
+                borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid',
+              }}>
                 <Text style={styles.subtitle2}>Unit price</Text>
               </View>
 
-              <View style={[styles.tableCell_3, styles.alignRight]}>
+              <View
+                style={[
+                  styles.tableCell_3,
+                  styles.alignRight,
+                  { borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid' },
+                ]}
+              >
                 <Text style={styles.subtitle2}>Total</Text>
               </View>
+
             </View>
           </View>
 
           <View>
-         
-              <View style={styles.tableRow} >
-                <View style={styles.tableCell_1}>
-                  <Text>1</Text>
-                </View>
 
-                <View style={styles.tableCell_2}>
-                  <Text style={styles.subtitle2}>{subscription?.planData?.courses?.courseName}</Text>
-                  {/* <Text>{item.description}</Text> */}
-                </View>
-
-                <View style={styles.tableCell_3}>
-                  <Text>{1}</Text>
-                </View>
-
-                <View style={styles.tableCell_3}>
-                  <Text>{`₹${subscription?.planData?.price}`}</Text>
-                </View>
-
-                <View style={[styles.tableCell_3, styles.alignRight]}>
-                  <Text>{`₹${subscription?.planData?.price}`}</Text>
-                </View>
+            <View style={styles.tableRow} >
+              <View style={styles.tableCell_1}>
+                <Text>1</Text>
               </View>
-        
 
-            <View style={[styles.tableRow, styles.noBorder]}>
+              <View style={styles.tableCell_2}>
+                <Text style={styles.subtitle2}>{subscription?.planData?.courses?.courseName}</Text>
+                {/* <Text>{item.description}</Text> */}
+              </View>
+
+              <View style={styles.tableCell_3}>
+                <Text>{1}</Text>
+              </View>
+
+              <View style={[styles.tableCell_3, { borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid' }]}>
+                <Text>{`₹${subscription?.planData?.price}`}</Text>
+              </View>
+
+              <View style={[styles.tableCell_3, styles.alignRight, { borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid' }]}>
+                <Text>{`₹${subscription?.planData?.price}`}</Text>
+              </View>
+            </View>
+
+
+            <View style={[styles.tableRow]}>
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
-              <View style={styles.tableCell_3}>
+              <View style={[styles.tableCell_3, { borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid' }]}>
                 <Text>Subtotal</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
@@ -193,13 +218,13 @@ export default function SubscriptionPDF({ subscription }) {
               </View>
             </View>
 
-            
 
-            <View style={[styles.tableRow, styles.noBorder]}>
+
+            <View style={[styles.tableRow]}>
               <View style={styles.tableCell_1} />
               <View style={styles.tableCell_2} />
               <View style={styles.tableCell_3} />
-              <View style={styles.tableCell_3}>
+              <View style={[styles.tableCell_3, { borderLeftWidth: 1, borderLeftColor: 'black', borderStyle: 'solid' }]}>
                 <Text style={styles.h4}>Total</Text>
               </View>
               <View style={[styles.tableCell_3, styles.alignRight]}>
@@ -209,18 +234,31 @@ export default function SubscriptionPDF({ subscription }) {
           </View>
         </View>
 
-       <View style={[styles.gridContainer, styles.footer]} fixed>
-          <View style={styles.col8}>
-            <Text style={styles.subtitle2}>NOTES</Text>
-            <Text>
-              Electronically generated invoice – valid without signature.!
-            </Text>
-          </View>
-          <View style={[styles.col4, styles.alignRight]}>
-            <Text style={styles.subtitle2}>Have a Question?</Text>
-            <Text>support@altiv.ai</Text>
+        {/* Terms and Conditions section (normal content flow) */}
+        <View style={{ marginTop: 40, marginBottom: 80 }}>
+          <Text>Terms and Conditions:</Text>
+          <Text>1. Payment is non-refundable.</Text>
+          <Text>2. Plan valid till end date.</Text>
+          <Text>3. Auto-renews unless canceled.</Text>
+          <Text>4. For issues, contact support@mycompany.com within 7 days.</Text>
+        </View>
+
+        {/* Footer (always at bottom, fixed) */}
+        <View style={[styles.footer]} fixed>
+          <View style={styles.gridContainer}>
+            <View style={styles.col8}>
+              <Text style={styles.subtitle2}>NOTES</Text>
+              <Text>
+                Electronically generated invoice – valid without signature!
+              </Text>
+            </View>
+            <View style={[styles.col4, styles.alignRight]}>
+              <Text style={styles.subtitle2}>Have a Question?</Text>
+              <Text>support@altiv.ai</Text>
+            </View>
           </View>
         </View>
+
       </Page>
     </Document>
   );

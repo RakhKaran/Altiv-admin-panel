@@ -30,7 +30,7 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
 } from 'src/components/hook-form';
-import { createFilterOptions } from '@mui/material';
+import { Box, createFilterOptions } from '@mui/material';
 import axiosInstance from 'src/utils/axios';
 import { useGetCategories } from 'src/api/category';//
 import PostDetailsPreview from './post-details-preview';
@@ -170,191 +170,116 @@ export default function PostNewEditForm({ currentPost }) {
   });
 
   const renderDetails = (
-    <>
-      {mdUp && (
-        <Grid md={4}>
-          <Typography variant="h6" sx={{ mb: 0.5 }}>
-            Details
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Title, short description, image...
-          </Typography>
-        </Grid>
-      )}
+    <Grid xs={12} md={12}>
+      <Card>
+        {!mdUp && <CardHeader title="Details" />}
 
-      <Grid xs={12} md={8}>
-        <Card>
-          {!mdUp && <CardHeader title="Details" />}
+        <Stack spacing={3} sx={{ p: 3 }}>
+          <RHFTextField name="title" label="Post Title" />
 
-          <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFTextField name="title" label="Post Title" />
+          <RHFTextField name="description" label="Description" multiline rows={3} />
 
-            <RHFTextField name="description" label="Description" multiline rows={3} />
+          <RHFAutocomplete
+            multiple
+            name="categories"
+            label="Categories"
+            // onInputChange={(event) => setCategoryData((prev) => prev.filter((cat) => cat.name === event.target.value))}
+            options={categoryData || []}
+            getOptionLabel={(option) => `${option?.name}` || ''}
+            filterOptions={filter}
+            isOptionEqualToValue={(option, value) => option.id === value.id}
+            renderOption={(props, option) => (
+              <li {...props}>
+                <div>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    {`${option?.name}`}
+                  </Typography>
+                </div>
+              </li>
+            )}
+            renderTags={(selected, getTagProps) =>
+              selected.map((option, index) => (
+                <Chip
+                  {...getTagProps({ index })}
+                  key={option.id}
+                  label={option.name}
+                  size="small"
+                  color="info"
+                  variant="soft"
+                />
+              ))
+            }
+          />
 
-            <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="content" />
-            </Stack>
-            <RHFAutocomplete
-              multiple
-              name="categories"
-              label="Categories"
-              // onInputChange={(event) => setCategoryData((prev) => prev.filter((cat) => cat.name === event.target.value))}
-              options={categoryData || []}
-              getOptionLabel={(option) => `${option?.name}` || ''}
-              filterOptions={filter}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              renderOption={(props, option) => (
-                <li {...props}>
-                  <div>
-                    <Typography variant="subtitle2" fontWeight="bold">
-                      {`${option?.name}`}
-                    </Typography>
-                  </div>
-                </li>
-              )}
-              renderTags={(selected, getTagProps) =>
-                selected.map((option, index) => (
-                  <Chip
-                    {...getTagProps({ index })}
-                    key={option.id}
-                    label={option.name}
-                    size="small"
-                    color="info"
-                    variant="soft"
-                  />
-                ))
-              }
-            />
-
-            <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Cover</Typography>
-              <RHFUpload
-                name="coverUrl"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                onDelete={handleRemoveFile}
-              />
-            </Stack>
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Content</Typography>
+            <RHFEditor simple name="content" />
           </Stack>
-        </Card>
-      </Grid>
-    </>
-  );
 
-  const renderProperties = (
-    <>
-      {mdUp && (
-        <Grid md={4}>
-          <Typography variant="h6" sx={{ mb: 0.5 }}>
-            Properties
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Additional functions and attributes...
-          </Typography>
-        </Grid>
-      )}
-
-      <Grid xs={12} md={8}>
-        <Card>
-          {!mdUp && <CardHeader title="Properties" />}
-
-          <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFAutocomplete
-              name="tags"
-              label="Tags"
-              placeholder="+ Tags"
-              multiple
-              freeSolo
-              options={_tags.map((option) => option)}
-              getOptionLabel={(option) => option}
-              renderOption={(props, option) => (
-                <li {...props} key={option}>
-                  {option}
-                </li>
-              )}
-              renderTags={(selected, getTagProps) =>
-                selected.map((option, index) => (
-                  <Chip
-                    {...getTagProps({ index })}
-                    key={option}
-                    label={option}
-                    size="small"
-                    color="info"
-                    variant="soft"
-                  />
-                ))
-              }
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Cover</Typography>
+            <RHFUpload
+              name="coverUrl"
+              maxSize={3145728}
+              onDrop={handleDrop}
+              onDelete={handleRemoveFile}
             />
-
-            {/* <RHFTextField name="metaTitle" label="Meta title" /> */}
-
-            {/* <RHFTextField
-              name="metaDescription"
-              label="Meta description"
-              fullWidth
-              multiline
-              rows={3}
-            /> */}
-
-            {/* <RHFAutocomplete
-              name="metaKeywords"
-              label="Meta keywords"
-              placeholder="+ Keywords"
-              multiple
-              freeSolo
-              disableCloseOnSelect
-              options={_tags.map((option) => option)}
-              getOptionLabel={(option) => option}
-              renderOption={(props, option) => (
-                <li {...props} key={option}>
-                  {option}
-                </li>
-              )}
-              renderTags={(selected, getTagProps) =>
-                selected.map((option, index) => (
-                  <Chip
-                    {...getTagProps({ index })}
-                    key={option}
-                    label={option}
-                    size="small"
-                    color="info"
-                    variant="soft"
-                  />
-                ))
-              }
-            /> */}
-
-            {/* <FormControlLabel control={<Switch defaultChecked />} label="Enable comments" /> */}
           </Stack>
-        </Card>
-      </Grid>
-    </>
+          <RHFAutocomplete
+            name="tags"
+            label="Tags"
+            placeholder="+ Tags"
+            multiple
+            freeSolo
+            options={_tags.map((option) => option)}
+            getOptionLabel={(option) => option}
+            renderOption={(props, option) => (
+              <li {...props} key={option}>
+                {option}
+              </li>
+            )}
+            renderTags={(selected, getTagProps) =>
+              selected.map((option, index) => (
+                <Chip
+                  {...getTagProps({ index })}
+                  key={option}
+                  label={option}
+                  size="small"
+                  color="info"
+                  variant="soft"
+                />
+              ))
+            }
+          />
+
+          <Box xs={12} md={12} sx={{ display: 'flex', alignItems: 'center', pl: 0 }}>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={values.publish === 'published'}
+                  onChange={(e) =>
+                    setValue('publish', e.target.checked ? 'published' : 'draft', {
+                      shouldValidate: true,
+                    })
+                  }
+                />
+              }
+              label="Publish"
+              sx={{ flexGrow: 1 }}
+            />
+            <Button variant="outlined" onClick={preview.onTrue}>Preview</Button>
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 2 }}>
+              {currentPost ? 'Save Changes' : 'Create Post'}
+            </LoadingButton>
+          </Box>
+        </Stack>
+      </Card>
+    </Grid>
   );
 
   const renderActions = (
     <>
-      {mdUp && <Grid md={4} />}
-      <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={values.publish === 'published'}
-              onChange={(e) =>
-                setValue('publish', e.target.checked ? 'published' : 'draft', {
-                  shouldValidate: true,
-                })
-              }
-            />
-          }
-          label="Publish"
-          sx={{ flexGrow: 1, pl: 3 }}
-        />
-        <Button variant="outlined" onClick={preview.onTrue}>Preview</Button>
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ ml: 2 }}>
-          {currentPost ? 'Save Changes' : 'Create Post'}
-        </LoadingButton>
-      </Grid>
+
     </>
   );
 
@@ -362,10 +287,6 @@ export default function PostNewEditForm({ currentPost }) {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         {renderDetails}
-
-        {renderProperties}
-
-        {renderActions}
       </Grid>
 
       <PostDetailsPreview
