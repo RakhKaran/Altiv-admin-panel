@@ -4,7 +4,7 @@ import { Page, View, Text, Image, Document, Font, StyleSheet } from '@react-pdf/
 // utils
 import { fDate } from 'src/utils/format-time';
 import { fCurrency } from 'src/utils/format-number';
-import { format } from 'date-fns';
+import { addYears, format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -109,9 +109,9 @@ export default function SubscriptionPDF({ subscription }) {
           <Image source="/logo/altiv_logo.png" style={{ width: 60, height: 10 }} />
 
           <View style={{ alignItems: 'flex-end', flexDirection: 'column' }}>
-            <Text> {subscription?.createdAt
-              ? `${format(new Date(subscription?.createdAt), 'MM-yyyy')}-${subscription?.id}`
-              : `${subscription?.id}`}
+            <Text style={{ fontWeight: 'bold' }}> {subscription?.createdAt
+              ? `# INV-${format(new Date(subscription?.createdAt), 'yy')}-${format(addYears(new Date(subscription?.createdAt), 1), 'yy')}/${String(subscription?.id)}`
+              : `${String(subscription?.id)}`}
             </Text>
           </View>
         </View>

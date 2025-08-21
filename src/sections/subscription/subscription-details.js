@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
-import { format } from 'date-fns';
+import { addYears, format } from 'date-fns';
 // @mui
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -164,8 +164,8 @@ export default function SubscriptionDetails({ subscription }) {
 
             <Typography variant="h6">
               {subscription?.createdAt
-                ? `${format(new Date(subscription?.createdAt), 'MM-yyyy')}-${subscription?.id}`
-                : `${subscription?.id}`}
+                ? `# INV-${format(new Date(subscription?.createdAt), 'yy')}-${format(addYears(new Date(subscription?.createdAt), 1), 'yy')}/${String(subscription?.id)}`
+                : `${String(subscription?.id)}`}
             </Typography>
           </Stack>
 

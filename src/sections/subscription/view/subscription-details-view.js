@@ -1,3 +1,4 @@
+import { addYears, format } from 'date-fns';
 // @mui
 import Container from '@mui/material/Container';
 // routes
@@ -21,13 +22,19 @@ export default function SubscriptionDetailsView() {
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading={`INV -${subscription?.id}`}
+        heading={subscription?.createdAt
+          ? `# INV-${format(new Date(subscription?.createdAt), 'yy')}-${format(addYears(new Date(subscription?.createdAt), 1), 'yy')}/${String(subscription?.id)}`
+          : `${String(subscription?.id)}`}
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Invoices', href: paths.dashboard.subscription.root },
-          { name: `INV -${subscription?.id}` },
+          {
+            name: subscription?.createdAt
+              ? `# INV-${format(new Date(subscription?.createdAt), 'yy')}-${format(addYears(new Date(subscription?.createdAt), 1), 'yy')}/${String(subscription?.id)}`
+              : `${String(subscription?.id)}`
+          },
         ]}
-        sx={{ mb: { xs: 3, md: 5 } }}
+      sx={{ mb: { xs: 3, md: 5 } }}
       />
 
       <SubscriptionDetails subscription={subscription} />
