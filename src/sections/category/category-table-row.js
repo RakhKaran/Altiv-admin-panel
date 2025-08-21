@@ -12,11 +12,14 @@ import Iconify from 'src/components/iconify';
 // ----------------------------------------------------------------------
 
 export default function CategoryTableRow({ row, selected, onSelectRow, onViewRow, onEditRow }) {
-  const { name,description, createdAt } = row;
+  const { name, description, createdAt } = row;
 
   return (
     <TableRow hover selected={selected}>
       <TableCell>{name || 'NA'}</TableCell>
+
+      <TableCell>{description || 'NA'}</TableCell>
+
       <TableCell>
         <ListItemText
           primary={format(new Date(createdAt), 'dd/MMM/yyyy')}
@@ -29,20 +32,19 @@ export default function CategoryTableRow({ row, selected, onSelectRow, onViewRow
           }}
         />
       </TableCell>
-       <TableCell>{description || 'NA'}</TableCell>
 
-       <TableCell>
-         {/* <Tooltip title="View Events">
+      <TableCell>
+        {/* <Tooltip title="View Events">
             <IconButton onClick={onViewRow}>
               <Iconify icon="carbon:view-filled" />
             </IconButton>
           </Tooltip> */}
-          <Tooltip title="Edit" placement="top" arrow>
-            <IconButton onClick={onEditRow}>
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-            </Tooltip>
-            </TableCell>
+        <Tooltip title="Edit" placement="top" arrow>
+          <IconButton onClick={onEditRow}>
+            <Iconify icon="solar:pen-bold" />
+          </IconButton>
+        </Tooltip>
+      </TableCell>
     </TableRow>
   );
 }

@@ -41,7 +41,7 @@ export default function CategoryTableToolbar({ filters, onFilters }) {
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search by email..."
+            placeholder="Search by category..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">

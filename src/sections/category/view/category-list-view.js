@@ -53,8 +53,8 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name' },
-  { id: 'createdAt', label: 'CreatedAt' },
   { id: 'description', label: 'Description' },
+  { id: 'createdAt', label: 'CreatedAt' },
   { id: '', label: 'Actions' },
 ];
 
@@ -72,22 +72,22 @@ export default function CategoryListView() {
   const router = useRouter();
   const confirm = useBoolean();
 
-  const { categories  } = useGetCategories();
+  const { categories } = useGetCategories();
 
-const handleViewRow = useCallback(
+  const handleViewRow = useCallback(
     (id) => {
       router.push(paths.dashboard.category.details(id));
     },
     [router]
   );
 
-   const handleEditRow = useCallback(
-      (id) => {
-        router.push(paths.dashboard.category.edit(id));
-      },
-      [router]
-    );
-  
+  const handleEditRow = useCallback(
+    (id) => {
+      router.push(paths.dashboard.category.edit(id));
+    },
+    [router]
+  );
+
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -143,27 +143,27 @@ const handleViewRow = useCallback(
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-         <CustomBreadcrumbs
-                  heading="List"
-                  links={[
-                    { name: 'Dashboard', href: paths.dashboard.root },
-                    { name: 'Category', href: paths.dashboard.category.list },
-                    { name: 'List' },
-                  ]}
-                  action={
-                    <Button
-                      component={RouterLink}
-                      href={paths.dashboard.category.new}
-                      variant="contained"
-                      startIcon={<Iconify icon="mingcute:add-line" />}
-                    >
-                      New Category
-                    </Button>
-                  }
-                  sx={{
-                    mb: { xs: 3, md: 5 },
-                  }}
-                />
+        <CustomBreadcrumbs
+          heading="List"
+          links={[
+            { name: 'Dashboard', href: paths.dashboard.root },
+            { name: 'Category', href: paths.dashboard.category.list },
+            { name: 'List' },
+          ]}
+          action={
+            <Button
+              component={RouterLink}
+              href={paths.dashboard.category.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New Category
+            </Button>
+          }
+          sx={{
+            mb: { xs: 3, md: 5 },
+          }}
+        />
         <Card>
           <Tabs
             value={filters.status}
@@ -241,7 +241,7 @@ const handleViewRow = useCallback(
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                         onViewRow={() => handleViewRow(row.id)}
+                        onViewRow={() => handleViewRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}
