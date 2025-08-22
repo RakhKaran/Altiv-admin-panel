@@ -44,11 +44,11 @@ export default function SubscriptionToolbar({ subscriptions }) {
         sx={{ mb: { xs: 3, md: 5 } }}
       >
         <Stack direction="row" spacing={1} flexGrow={1} sx={{ width: 1 }}>
-          <Tooltip title="View">
+          {/* <Tooltip title="View">
             <IconButton onClick={view.onTrue}>
               <Iconify icon="solar:eye-bold" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <PDFDownloadLink
             document={<SubscriptionPDF subscription={subscriptions} />}
