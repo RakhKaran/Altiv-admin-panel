@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect } from 'react';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { BlobProvider, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 // @mui
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -30,7 +30,7 @@ export default function SubscriptionToolbar({ subscriptions }) {
   const router = useRouter();
 
   const view = useBoolean();
-    useEffect(() => {
+  useEffect(() => {
     console.log(' subscriptions:', subscriptions);
   }, [subscriptions]);
 
@@ -44,15 +44,14 @@ export default function SubscriptionToolbar({ subscriptions }) {
         sx={{ mb: { xs: 3, md: 5 } }}
       >
         <Stack direction="row" spacing={1} flexGrow={1} sx={{ width: 1 }}>
-          {/* <Tooltip title="View">
+          <Tooltip title="View">
             <IconButton onClick={view.onTrue}>
               <Iconify icon="solar:eye-bold" />
             </IconButton>
-          </Tooltip> */}
-            
+          </Tooltip>
+
           <PDFDownloadLink
-        
-            document={<SubscriptionPDF subscription={subscriptions}  />}
+            document={<SubscriptionPDF subscription={subscriptions} />}
             fileName={subscriptions?.id}
             style={{ textDecoration: 'none' }}
           >
@@ -69,11 +68,45 @@ export default function SubscriptionToolbar({ subscriptions }) {
             )}
           </PDFDownloadLink>
 
-          {/* <Tooltip title="Print">
-            <IconButton>
-              <Iconify icon="solar:printer-minimalistic-bold" />
-            </IconButton>
-          </Tooltip> */}
+
+          <BlobProvider document={<SubscriptionPDF subscription={subscriptions} />}>
+            {({ blob, loading }) =>
+              loading ? (
+                <Tooltip title="Print">
+                  <IconButton>
+                    <CircularProgress size={24} color="inherit" />
+                  </IconButton>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Print">
+                  <IconButton
+                    onClick={() => {
+                      if (!blob) return;
+
+                      const blobUrl = URL.createObjectURL(blob);
+                      const printWindow = window.open(blobUrl, '_blank');
+
+                      if (printWindow) {
+                        printWindow.addEventListener('load', () => {
+                          printWindow.focus();
+                          printWindow.print();
+                          printWindow.onafterprint = () => {
+                            printWindow.close();
+                            URL.revokeObjectURL(blobUrl);
+                          };
+                        });
+                      } else {
+                        alert('Popup blocked! Please allow popups for this site.');
+                      }
+                    }}
+                  >
+                    <Iconify icon="solar:printer-minimalistic-bold" />
+                  </IconButton>
+                </Tooltip>
+              )
+            }
+          </BlobProvider>
+
 
           {/* <Tooltip title="Send">
             <IconButton>
@@ -120,7 +153,7 @@ export default function SubscriptionToolbar({ subscriptions }) {
 
           <Box sx={{ flexGrow: 1, height: 1, overflow: 'hidden' }}>
             <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-              <SubscriptionPDF subscription={subscriptions}  />
+              <SubscriptionPDF subscription={subscriptions} />
             </PDFViewer>
           </Box>
         </Box>
@@ -130,8 +163,8 @@ export default function SubscriptionToolbar({ subscriptions }) {
 }
 
 SubscriptionToolbar.propTypes = {
-//   currentStatus: PropTypes.string,
+  //   currentStatus: PropTypes.string,
   subscriptions: PropTypes.object,
- 
- 
+
+
 };
