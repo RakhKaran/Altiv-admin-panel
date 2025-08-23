@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect } from 'react';
 import { BlobProvider, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 // @mui
+import { addYears, format } from 'date-fns';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -22,6 +23,7 @@ import Iconify from 'src/components/iconify';
 //
 // import InvoicePDF from './invoice-pdf';
 import SubscriptionPDF from './subscription-pdf';
+
 
 
 // ----------------------------------------------------------------------
@@ -52,7 +54,7 @@ export default function SubscriptionToolbar({ subscriptions }) {
 
           <PDFDownloadLink
             document={<SubscriptionPDF subscription={subscriptions} />}
-            fileName={subscriptions?.id}
+            fileName={subscriptions?.createdAt ? `INV-${format(new Date(subscriptions?.createdAt), 'yy')}-${format(addYears(new Date(subscriptions?.createdAt), 1), 'yy')}/${String(subscriptions?.id)}` : `${String(subscriptions?.id)}`}
             style={{ textDecoration: 'none' }}
           >
             {({ loading }) => (
