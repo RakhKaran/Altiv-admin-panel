@@ -65,7 +65,7 @@ export const paths = {
       forgotPassword: `${ROOTS.AUTH}/jwt/forgot-password`,
       newPassword: `${ROOTS.AUTH}/jwt/new-password`,
     },
-    
+
 
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
@@ -120,7 +120,7 @@ export const paths = {
       profile: `${ROOTS.DASHBOARD}/user/profile`,
       account: `${ROOTS.DASHBOARD}/user/account`,
       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
-      events: (id)=> `${ROOTS.DASHBOARD}/user/${id}/events`,
+      events: (id) => `${ROOTS.DASHBOARD}/user/${id}/events`,
       demo: {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
@@ -166,6 +166,7 @@ export const paths = {
     job: {
       root: `${ROOTS.DASHBOARD}/job`,
       new: `${ROOTS.DASHBOARD}/job/new`,
+      list: `${ROOTS.DASHBOARD}/job/list`,
       details: (id) => `${ROOTS.DASHBOARD}/job/${id}`,
       edit: (id) => `${ROOTS.DASHBOARD}/job/${id}/edit`,
       demo: {
@@ -173,7 +174,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/job/${MOCK_ID}/edit`,
       },
     },
-       category: {
+    category: {
       root: `${ROOTS.DASHBOARD}/category`,
       new: `${ROOTS.DASHBOARD}/category/new`,
       list: `${ROOTS.DASHBOARD}/category/list`,

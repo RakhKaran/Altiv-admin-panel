@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 // sections
-import { JobListView } from 'src/sections/job/view';
+
+import { JobsListView } from 'src/sections/jobList/view';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +12,7 @@ export default function JobListPage() {
         <title> Dashboard: Job List</title>
       </Helmet>
 
-      <JobListView />
+      <JobsListView />
     </>
   );
 }

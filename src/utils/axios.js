@@ -98,6 +98,10 @@ export const endpoints = {
     filterList: (filter) => `/comments/${filter}`,
   details: (blogId) => `/comments/${ blogId }`,
 },
-
+  jobs:{
+   list: '/jobs',
+    filterList: (filter) => `/jobs?filter=${filter}`,
+  details: (id) => `/jobs/${ id }`,
+  }
 
 };

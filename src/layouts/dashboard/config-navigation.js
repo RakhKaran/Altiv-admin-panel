@@ -90,6 +90,14 @@ export function useNavData() {
             { title: t('create'), path: paths.dashboard.category.new }
             ],
           },
+            {
+            title: t('jobs'),
+            path: paths.dashboard.category.root,
+            icon: ICONS.category,
+            children: [{ title: t('list'), path: paths.dashboard.job.list },
+            // { title: t('create'), path: paths.dashboard.category.new }
+            ],
+          },
           {
             title: t('Blogs'),
             path: paths.dashboard.post.root,

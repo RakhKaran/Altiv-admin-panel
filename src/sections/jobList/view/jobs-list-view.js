@@ -1,24 +1,30 @@
 import isEqual from 'lodash/isEqual';
 import { useState, useCallback, useEffect } from 'react';
 // @mui
-import { alpha } from '@mui/material/styles';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Card from '@mui/material/Card';
-import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import Container from '@mui/material/Container';
-import TableBody from '@mui/material/TableBody';
-import IconButton from '@mui/material/IconButton';
-import TableContainer from '@mui/material/TableContainer';
+import {
+  alpha,
+  Table,
+  Tab,
+  Tabs,
+  Card,
+  Button,
+  Tooltip,
+  Container,
+  TableBody,
+  IconButton,
+  TableContainer,
+  TableRow,
+  TableCell,
+} from '@mui/material';
+
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hook';
 import { RouterLink } from 'src/routes/components';
 // _mock
+// import { _companyList } from 'src/_mock/_company';
+import {  USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
-import { useGetUsers } from 'src/api/user';
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
 import Label from 'src/components/label';
@@ -36,74 +42,67 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
+
 } from 'src/components/table';
+// import { TableRow,TableCell } from '@mui/material';
+
 //
-import { useAuthContext } from 'src/auth/hooks';
-// import { _roles, USER_STATUS_OPTIONS } from 'src/utils/constants';
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
-import UserQuickEditForm from '../user-quick-edit-form';
-import UserViewResume from './view-resume';
+import { useGetJobs } from 'src/api/jobs';
+import JobTableRow from '../jobs-table-row';
+import JobTableToolbar from '../jobs-table-toolbar';
+import JobsTableFiltersResult from '../jobs-table-filters-result';
+
 
 // ----------------------------------------------------------------------
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' },
+  { value: '1', label: 'sync' },
+  { value: '0', label: 'Not Sync' }
 
-// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+];
+
 
 const TABLE_HEAD = [
-  { id: 'fullName', label: 'Full Name' },
-  { id: 'email', label: 'Email' },
-  { id: 'phoneNumber', label: 'Phone Number' },
-  { id: 'permissions', label: ' Role ' },
-  { id: 'createdAt', label: 'Created At' },
-  { id: 'isActive', label: 'Status' },
-  { id: '', label: 'Actions' },
+  { id: 'jobTitle', label: 'Title' },
+  { id: 'company', label: 'Company' },
+  { id: 'location', label: 'Location'},
+  { id: 'salaryRange', label: 'Salary Range'},
+  { id: 'jobType', label: 'Job Type'},
+  // {id:'skillRequirements', label:'Skill Requirements'},
+    // { id: 'description', label: 'Description'},
+      { id: 'experience', label: 'Experience'},
+  { id: 'createdAt', label: 'Created At'},
+  {id:'postedAt', label: 'Posted Date'},
+  { id: '',label:'Actions', width: 88 },
 ];
 
 const defaultFilters = {
   name: '',
-  permissions: [],
-  isActive: 'all',
+  email: '',
+  role: [],
+  status: 'all',
 };
-
-const role = {
-  admin: 'Admin',
-  customer: 'Customer',
-};
-
-
-const USER_STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-  { value: 'Active', label: 'Active' },
-  { value: 'Inactive', label: 'Inactive' },
-];
-
-
 
 // ----------------------------------------------------------------------
 
-export default function UserListView() {
-  const { user: userDetails } = useAuthContext();
-  const table = useTable({ defaultOrderBy: 'createdAt', defaultOrder: 'desc' });
+export default function JobsListView() {
+  const table = useTable();
 
   const settings = useSettingsContext();
 
   const router = useRouter();
+const {jobs, jobsLoading }=useGetJobs();
 
   const confirm = useBoolean();
 
   const [tableData, setTableData] = useState([]);
 
-  const [quickEditRow, setQuickEditRow] = useState();
-
-  const [resumeRow, setResumeRow] = useState(null);
-
-
-  const quickEdit = useBoolean();
-
   const [filters, setFilters] = useState(defaultFilters);
 
-  const { users, usersLoading, usersEmpty, refreshUsers } = useGetUsers();
+  useEffect(() => {
+    if(jobs && !jobsLoading){
+      setTableData(jobs);
+    }
+  }, [jobs, jobsLoading])
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -132,7 +131,12 @@ export default function UserListView() {
     },
     [table]
   );
-
+const handleView = useCallback(
+    (id) => {
+      router.push(paths.dashboard.job.details(id));
+    },
+    [router]
+  );
   const handleDeleteRow = useCallback(
     (id) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
@@ -154,36 +158,16 @@ export default function UserListView() {
     });
   }, [dataFiltered.length, dataInPage.length, table, tableData]);
 
-  const handleEditRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.user.edit(id));
-    },
-    [router]
-  );
-
-  const handleQuickEditRow = useCallback(
-    (row) => {
-      setQuickEditRow(row);
-      quickEdit.onTrue();
-    },
-    [quickEdit]
-  );
-
-  const handleViewResumeRow = useCallback((row) => {
-    setResumeRow(row);
-  }, []);
-
-
-  const handleViewRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.user.events(id));
-    },
-    [router]
-  );
+  // const handleEditRow = useCallback(
+  //   (id) => {
+  //     router.push(paths.dashboard.company.edit(id));
+  //   },
+  //   [router]
+  // );
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
-      handleFilters('isActive', newValue);
+      handleFilters('status', newValue);
     },
     [handleFilters]
   );
@@ -192,13 +176,6 @@ export default function UserListView() {
     setFilters(defaultFilters);
   }, []);
 
-  useEffect(() => {
-    if (users) {
-      const updatedUsers = users.filter((obj) => obj.id !== userDetails.id);
-      setTableData(updatedUsers);
-    }
-  }, [userDetails?.id, users]);
-
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -206,19 +183,19 @@ export default function UserListView() {
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.list },
+            { name: 'Jobs', href: paths.dashboard.job.root },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New User
-            </Button>
-          }
+          // action={
+          //   <Button
+          //     component={RouterLink}
+          //     href={paths.dashboard.user.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="mingcute:add-line" />}
+          //   >
+          //     New User
+          //   </Button>
+          // }
           sx={{
             mb: { xs: 3, md: 5 },
           }}
@@ -226,48 +203,52 @@ export default function UserListView() {
 
         <Card>
           <Tabs
-            value={filters.isActive}
+            value={filters.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {USER_STATUS_OPTIONS.map((tab) => (
+            {STATUS_OPTIONS.map((tab) => (
               <Tab
-                key={tab.value || tab.label}
+                key={tab.value}
                 iconPosition="end"
                 value={tab.value}
                 label={tab.label}
                 icon={
                   <Label
                     variant={
-                      ((tab.value === 'all' || tab.value === filters.isActive) && 'filled') || 'soft'
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'Active' && 'success') ||
-                      (tab.value === 'Inactive' && 'error') ||
+                      (tab.value === '1' && 'success') ||
+                      (tab.value === '0' && 'warning') ||
+                    //   (tab.value === 'banned' && 'error') ||
                       'default'
-                    }
+                     }
                   >
                     {tab.value === 'all' && tableData.length}
-                    {tab.value === 'Active' && tableData.filter((user) => Number(user.isActive) === 1).length}
-                    {tab.value === 'Inactive' && tableData.filter((user) => Number(user.isActive) !== 1).length}
+                     {tab.value === '1' &&
+                      tableData.filter((data) => Number(data.isAsync) === 1).length}
 
+                    {tab.value === '0' &&
+                      tableData.filter((data) =>Number(data.isAsync) === 0).length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <JobTableToolbar
             filters={filters}
             onFilters={handleFilters}
-            roleOptions={Object.values(role)}
+            //
+            // roleOptions={_jobsOption}
           />
 
           {canReset && (
-            <UserTableFiltersResult
+            <JobsTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -279,7 +260,7 @@ export default function UserListView() {
           )}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
               rowCount={tableData.length}
@@ -296,7 +277,7 @@ export default function UserListView() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
@@ -313,40 +294,36 @@ export default function UserListView() {
                       tableData.map((row) => row.id)
                     )
                   }
-                  showCheckbox={false}
                 />
 
                 <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                        // handleQuickEditRow={(user) => {
-                        //   handleQuickEditRow(user);
-                        // }}
-                        handleQuickEditRow={() => handleQuickEditRow(row)}
-                        onViewResumeRow={() => handleViewResumeRow(row)}
-
-                      />
-                    ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData notFound={notFound} />
+                  {dataFiltered.length > 0 ? (
+                    dataFiltered
+                      .slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage
+                      )
+                      .map((row) => (
+                        <JobTableRow
+                          key={row.id}
+                          row={row}
+                          selected={table.selected.includes(row.id)}
+                          onSelectRow={() => table.onSelectRow(row.id)}
+                            onViewRow={() => handleView(row.id)}
+                          // onDeleteRow={() => handleDeleteRow(row.id)}
+                          // onEditRow={() => handleEditRow(row.id)}
+                        />
+                      ))
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colSpan={8}>
+                        No data found
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
+
+
               </Table>
             </Scrollbar>
           </TableContainer>
@@ -364,7 +341,7 @@ export default function UserListView() {
         </Card>
       </Container>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
@@ -385,29 +362,7 @@ export default function UserListView() {
             Delete
           </Button>
         }
-      />
-
-      {quickEdit.value && quickEditRow && (
-        <UserQuickEditForm
-          currentUser={quickEditRow}
-          open={quickEdit.value}
-          onClose={() => {
-            setQuickEditRow(null);
-            quickEdit.onFalse();
-          }}
-          refreshUsers={refreshUsers}
-        />
-      )}
-
-
-      {resumeRow && (
-        <UserViewResume
-          open={Boolean(resumeRow)}
-          onClose={() => setResumeRow(null)}
-          userId={resumeRow.id}
-        />
-      )}
-
+      /> */}
     </>
   );
 }
@@ -415,13 +370,10 @@ export default function UserListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, isActive, permissions } = filters;
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-  const roleMapping = {
-    admin: 'Admin',
-    customer: 'Customer',
+  const { name, status, email,role } = filters;
 
-  };
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -430,31 +382,33 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
-    inputData = inputData.filter((user) =>
-      Object.values(user).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
+    if (name) {
+    inputData = inputData.filter((job) =>
+      Object.values(job).some((value) => String(value).toLowerCase().includes(name.toLowerCase()))
     );
   }
 
-  if (isActive !== 'all') {
-    inputData = inputData.filter((user) => {
-      const active = Number(user.isActive) === 1;
-      return isActive === 'Active' ? active : !active;
-    });
-  }
+if (role.length > 0) {
+  inputData = inputData.filter((job) =>
+    role.some((r) =>
+      job.source.toLowerCase().includes(r.toLowerCase()) ||
+      (job.jobType && job.jobType.toLowerCase().includes(r.toLowerCase()))
+    )
+  );
+}
 
 
-  if (permissions.length) {
-    inputData = inputData.filter(
-      (user) =>
-        user.permissions &&
-        user.permissions.some((userRole) => {
-          console.log(userRole);
-          const mappedRole = roleMapping[userRole];
-          console.log('Mapped Role:', mappedRole);
-          return mappedRole && permissions.includes(mappedRole);
-        })
-    );
+
+
+if (status !== 'all') {
+  const statusBool = status === '1'; 
+  inputData = inputData.filter((job) => job.isAsync === statusBool);
+}
+
+
+
+  if (email.length) {
+    inputData = inputData.filter((job) => email.includes(job.email));
   }
 
   return inputData;

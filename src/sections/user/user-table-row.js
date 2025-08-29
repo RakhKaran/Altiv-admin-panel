@@ -60,7 +60,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
               <Iconify icon="carbon:view-filled" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Quick Edit" placement="top" arrow>
+          <Tooltip title="Quick Edit" placement="side" arrow>
             <IconButton onClick={handleQuickEditRow}>
               <Iconify icon="solar:pen-bold" />
             </IconButton>
