@@ -29,6 +29,7 @@ const ICONS = {
   blog: icon('ic_blog'),
   contact: icon('ic_contact'),
   category: icon('ic_categories'),
+  job: icon('ic_job')
 
 };
 
@@ -93,7 +94,7 @@ export function useNavData() {
             {
             title: t('jobs'),
             path: paths.dashboard.category.root,
-            icon: ICONS.category,
+            icon: ICONS.job,
             children: [{ title: t('list'), path: paths.dashboard.job.list },
             // { title: t('create'), path: paths.dashboard.category.new }
             ],
