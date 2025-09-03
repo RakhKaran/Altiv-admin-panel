@@ -65,7 +65,11 @@ export default function PostNewEditForm({ currentPost }) {
     tags: Yup.array().min(2, 'Must have at least 2 tags'),
     publish: Yup.string().required('Status is required i.e(publish or draft or unpublish)'),
     categories: Yup.array().of(Yup.object()).min(1, "Atleast one category is required"),
+    authorName: Yup.string().required('Author name is required'),
+    designation: Yup.string().required('Designation is required'),
+    authorImage: Yup.mixed().nullable().required('Author image is required'),
   });
+
 
   const defaultValues = useMemo(
     () => ({
@@ -76,9 +80,13 @@ export default function PostNewEditForm({ currentPost }) {
       tags: currentPost?.tags || [],
       publish: currentPost?.publish || 'draft',
       categories: currentPost?.categories || [],
+      authorName: currentPost?.authorName || '',
+      designation: currentPost?.designation || '',
+      authorImage: currentPost?.authorImage || null,
     }),
     [currentPost]
   );
+
 
   const methods = useForm({
     resolver: yupResolver(NewBlogSchema),
@@ -112,6 +120,9 @@ export default function PostNewEditForm({ currentPost }) {
         tags: data.tags,
         publish: data.publish,
         categories: (data.categories && data.categories.length > 0) ? data.categories.map((cat) => cat.id) : [],
+        authorName: data.authorName,
+        designation: data.designation,
+        authorImage: data.authorImage,
       };
 
       if (!currentPost) {
@@ -130,6 +141,7 @@ export default function PostNewEditForm({ currentPost }) {
       });
     }
   });
+
 
   const handleDrop = useCallback(
     async (acceptedFiles) => {
@@ -161,6 +173,36 @@ export default function PostNewEditForm({ currentPost }) {
     setValue('coverUrl', null);
   }, [setValue]);
 
+  const handleAuthorImageDrop = useCallback(
+    async (acceptedFiles) => {
+      const file = acceptedFiles[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+          const response = await axiosInstance.post('/files', formData);
+          const imageUrl = response.data?.files[0]?.fileUrl;
+
+          if (imageUrl) {
+            setValue('authorImage', imageUrl, { shouldValidate: true });
+          } else {
+            enqueueSnackbar('Author image upload failed: No URL returned.', { variant: 'error' });
+          }
+        } catch (error) {
+          console.error(error);
+          enqueueSnackbar('Author image upload failed.', { variant: 'error' });
+        }
+      }
+    },
+    [enqueueSnackbar, setValue]
+  );
+
+  const handleRemoveAuthorImage = useCallback(() => {
+    setValue('authorImage', null);
+  }, [setValue]);
+
+
   console.log('currentPost', currentPost);
   console.log('defaultvalues', defaultValues);
 
@@ -178,6 +220,21 @@ export default function PostNewEditForm({ currentPost }) {
           <RHFTextField name="title" label="Post Title" />
 
           <RHFTextField name="description" label="Description" multiline rows={3} />
+
+          <RHFTextField name="authorName" label="Author Name" />
+
+          <RHFTextField name="designation" label="Designation" />
+
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2">Author Image</Typography>
+            <RHFUpload
+              name="authorImage"
+              maxSize={3145728}
+              onDrop={handleAuthorImageDrop}
+              onDelete={handleRemoveAuthorImage}
+            />
+          </Stack>
+
 
           <RHFAutocomplete
             multiple
