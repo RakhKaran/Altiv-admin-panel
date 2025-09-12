@@ -27,13 +27,15 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
 
   const smUp = useResponsive('up', 'sm');
 
+   const safeCoverUrl = coverUrl ? encodeURI(coverUrl) : '';
+
   return (
     <Box
       sx={{
         height: 480,
         overflow: 'hidden',
         ...bgGradient({
-          imgUrl: coverUrl,
+          imgUrl: safeCoverUrl,
           startColor: `${alpha(theme.palette.grey[900], 0.64)} 0%`,
           endColor: `${alpha(theme.palette.grey[900], 0.64)} 100%`,
         }),

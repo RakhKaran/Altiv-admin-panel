@@ -56,7 +56,8 @@ export default function PostDetailsPreview({
 
       {hasContent ? (
         <Scrollbar>
-          {hasHero && <PostDetailsHero title={title} coverUrl={coverUrl} />}
+          {hasHero && <PostDetailsHero title={title} coverUrl={encodeURI(coverUrl)} />
+}
 
           <Container sx={{ mt: 5, mb: 10 }}>
             <Stack sx={{ maxWidth: 720, mx: 'auto' }}>
