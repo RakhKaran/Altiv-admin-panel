@@ -127,8 +127,9 @@ export default function SubscriptionPDF({ subscription }) {
           <View style={styles.col6}>
             <Text style={[styles.subtitle2, styles.mb4]}>Invoice to</Text>
             <Text style={styles.body2}>{subscription?.user?.fullName}</Text>
-            {/* <Text style={styles.body2}>{invoiceTo.fullAddress}</Text> */}
-            <Text style={styles.body2}> Phone: {subscription?.user?.phoneNumber}</Text>
+            <Text style={styles.body2}> Email:{subscription?.user?.email}</Text>
+            <Text style={styles.body2}>Address:{subscription?.user?.fullAddress}</Text>
+            <Text style={styles.body2}> Phone:{subscription?.user?.phoneNumber}</Text>
           </View>
         </View>
 
