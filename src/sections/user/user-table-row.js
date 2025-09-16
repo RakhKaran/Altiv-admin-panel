@@ -54,7 +54,8 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
           </Label>
 
         </TableCell>
-        <TableCell>
+        <TableCell >
+           <Stack direction="row" spacing={1}>
           <Tooltip title="View Events">
             <IconButton onClick={onViewRow}>
               <Iconify icon="carbon:view-filled" />
@@ -70,6 +71,7 @@ export default function UserTableRow({ row, selected, onViewRow, onViewResumeRow
               <Iconify icon="mdi:file-document-outline" />
             </IconButton>
           </Tooltip>
+          </Stack>
         </TableCell>
 
         {/* <TableCell align="right">

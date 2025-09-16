@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -23,11 +24,14 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import { useSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function JwtLoginView() {
   const { login } = useAuthContext();
+
+   const { enqueueSnackbar } = useSnackbar();
 
   const router = useRouter();
 
@@ -65,12 +69,27 @@ export default function JwtLoginView() {
       await login?.(data.email, data.password);
 
       router.push(returnTo || PATH_AFTER_LOGIN);
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
+     } catch (error) {
+  console.error(error);
+
+  const message =
+    typeof error === 'string'
+      ? error
+      : error?.error?.message || error?.message || 'Login failed';
+
+  if (message.toLowerCase().includes('email')) {
+    setErrorMsg('Email address not found');
+  } else if (message.toLowerCase().includes('password')) {
+    setErrorMsg('Incorrect password');
+  } else {
+    setErrorMsg(message);
+  }
+
+  reset();
+}
   });
+
+  
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
