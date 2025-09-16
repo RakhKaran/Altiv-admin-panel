@@ -5,6 +5,7 @@ import {
   Button, Avatar, Tooltip, MenuItem, TableRow, TableCell,
   IconButton, ListItemText, Checkbox
 } from '@mui/material';
+import Stack from '@mui/material/Stack';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
