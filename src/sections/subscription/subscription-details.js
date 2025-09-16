@@ -186,8 +186,10 @@ export default function SubscriptionDetails({ subscription }) {
               Invoice To
             </Typography>
             {subscription?.user?.fullName}
-            {/* <br />
-            {invoice.invoiceTo.fullAddress} */}
+            <br />
+            Email:{subscription?.user?.email}
+            <br/>
+            Address:{subscription?.user?.fullAddress}
             <br />
             Phone: {subscription?.user?.phoneNumber}
             <br />
