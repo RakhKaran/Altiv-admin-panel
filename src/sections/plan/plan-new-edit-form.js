@@ -82,8 +82,10 @@ export default function PlanNewEditForm({ currentPlan }) {
       otherwise: (schema) =>
         schema.shape({
           courseName: Yup.string().required('Course name is required'),
+          heading: Yup.string().required('Course heading is required'),
           lmsId: Yup.string().required('LMS ID is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
+          keyOutcomes: Yup.array().of(Yup.string().required('Key outcomes are required')).min(1, 'At least One outcome is required'),
           description: Yup.string().required('Description is required'),
           courseDuration: Yup.string().required('Course duration is required'),
           thumbnail: Yup.mixed().nullable().required('Thumbnail is required'),
@@ -102,19 +104,21 @@ export default function PlanNewEditForm({ currentPlan }) {
       productData:
         currentPlan?.planGroup === 0
           ? {
-              courseName: currentPlan?.courses?.courseName || '',
-              lmsId: currentPlan?.courses?.lmsId || '',
-              features: currentPlan?.courses?.features || [],
-              description: currentPlan?.courses?.description || '',
-              courseDuration: currentPlan?.courses?.courseDuration || '',
-              thumbnail: currentPlan?.courses?.thumbnail || null,
-            }
+            courseName: currentPlan?.courses?.courseName || '',
+            heading: currentPlan?.courses?.heading || '',
+            lmsId: currentPlan?.courses?.lmsId || '',
+            features: currentPlan?.courses?.features || [],
+            keyOutcomes: currentPlan?.courses?.keyOutcomes || [],
+            description: currentPlan?.courses?.description || '',
+            courseDuration: currentPlan?.courses?.courseDuration || '',
+            thumbnail: currentPlan?.courses?.thumbnail || null,
+          }
           : {
-              serviceName: currentPlan?.productData?.serviceName || '',
-              features: currentPlan?.productData?.features || [],
-              description: currentPlan?.productData?.description || '',
-              thumbnail: currentPlan?.productData?.thumbnail || null,
-            },
+            serviceName: currentPlan?.productData?.serviceName || '',
+            features: currentPlan?.productData?.features || [],
+            description: currentPlan?.productData?.description || '',
+            thumbnail: currentPlan?.productData?.thumbnail || null,
+          },
     }),
     [currentPlan]
   );
@@ -151,19 +155,21 @@ export default function PlanNewEditForm({ currentPlan }) {
         productData:
           planGroupNumber === 0
             ? {
-                courseName: data?.productData?.courseName || '',
-                lmsId: data?.productData?.lmsId || '',
-                features: data?.productData?.features || '',
-                description: data?.productData?.description || '',
-                courseDuration: data?.productData?.courseDuration || '',
-                thumbnail: data?.productData?.thumbnail || null,
-              }
+              courseName: data?.productData?.courseName || '',
+              heading: data?.productData?.heading || '',
+              lmsId: data?.productData?.lmsId || '',
+              features: data?.productData?.features || '',
+              keyOutcomes: data?.productData?.keyOutcomes || '',
+              description: data?.productData?.description || '',
+              courseDuration: data?.productData?.courseDuration || '',
+              thumbnail: data?.productData?.thumbnail || null,
+            }
             : {
-                serviceName: data?.productData?.serviceName || '',
-                features: data?.productData?.features || '',
-                description: data?.productData?.description || '',
-                thumbnail: data?.productData?.thumbnail || null,
-              },
+              serviceName: data?.productData?.serviceName || '',
+              features: data?.productData?.features || '',
+              description: data?.productData?.description || '',
+              thumbnail: data?.productData?.thumbnail || null,
+            },
       };
 
       if (!currentPlan) {

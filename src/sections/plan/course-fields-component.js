@@ -48,14 +48,15 @@ const CourseFieldsComponents = () => {
     [enqueueSnackbar, setValue]
   );
 
- const handleRemoveFile = useCallback(() => {
-  setValue('productData.thumbnail', null, { shouldValidate: true });
-}, [setValue]);
+  const handleRemoveFile = useCallback(() => {
+    setValue('productData.thumbnail', null, { shouldValidate: true });
+  }, [setValue]);
 
 
   return (
     <>
       <RHFTextField name="productData.courseName" label="Course Name" type="string" />
+      <RHFTextField name="productData.heading" label="Course heading" type="string" />
       <RHFTextField name="productData.lmsId" label="lmsId" type="string" />
       <RHFTextField name="productData.courseDuration" label="Course Duration" type="string" />
       <RHFAutocomplete
@@ -84,7 +85,32 @@ const CourseFieldsComponents = () => {
           ))
         }
       />
-
+      <RHFAutocomplete
+        name="productData.keyOutcomes"
+        label="Key Outcomes"
+        placeholder="+ outcome"
+        multiple
+        freeSolo
+        options={[]}
+        getOptionLabel={(option) => option}
+        renderOption={(props, option) => (
+          <li {...props} key={option}>
+            {option}
+          </li>
+        )}
+        renderTags={(selected, getTagProps) =>
+          selected.map((option, index) => (
+            <Chip
+              {...getTagProps({ index })}
+              key={option}
+              label={option}
+              size="small"
+              color="info"
+              variant="soft"
+            />
+          ))
+        }
+      />
       <Box sx={{ gridColumn: 'span 2' }}>
         <RHFTextField name="productData.description" label="Description" multiline rows={3} />
       </Box>
