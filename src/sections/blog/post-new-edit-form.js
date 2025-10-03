@@ -1,3 +1,4 @@
+
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useMemo, useEffect, useState } from 'react';
@@ -30,16 +31,74 @@ import FormProvider, {
   RHFTextField,
   RHFAutocomplete,
 } from 'src/components/hook-form';
-import { Box, createFilterOptions } from '@mui/material';
+import { Box, createFilterOptions, IconButton, InputAdornment } from '@mui/material';
 import axiosInstance from 'src/utils/axios';
 import { useGetCategories } from 'src/api/category';//
+import Iconify from 'src/components/iconify';
 import PostDetailsPreview from './post-details-preview';
+
 
 // ----------------------------------------------------------------------
 
 export default function PostNewEditForm({ currentPost }) {
   const { categories, categoriesEmpty } = useGetCategories();
   const [categoryData, setCategoryData] = useState([]);
+  const [slugStatus, setSlugStatus] = useState(null);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+
+
+  // const checkSlugExists = useCallback(async (slug) => {
+  //   try {
+  //     const response = await axiosInstance.get('/blogs', { params: { slug } });
+  //     const blogs = response.data?.blogs || [];
+  //     setSlugStatus(blogs.length > 0);
+  //   } catch (error) {
+  //     console.error('Error checking slug existence:', error);
+  //     setSlugStatus(null);
+  //   }
+  // }, []);
+
+const generateSlug = (text) =>
+  text
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // spaces -> hyphens
+    .replace(/-+/g, '-'); // collapse multiple hyphens
+
+const checkSlugAvailability = async (slug) => {
+  if (!slug) return;
+  try {
+    const res = await axiosInstance.get('/blogs', { params: { slug } });
+
+    if (typeof res.data.available !== 'undefined') {
+   
+      setSlugStatus(res.data.available ? 'available' : 'unavailable');
+    } else if (Array.isArray(res.data.blogs)) {
+
+      setSlugStatus(res.data.blogs.length === 0 ? 'available' : 'unavailable');
+    } else {
+      console.warn('Unexpected API response:', res.data);
+      setSlugStatus(null);
+    }
+  } catch (err) {
+    console.error('Error checking slug availability:', err);
+    setSlugStatus(null);
+  }
+};
+
+
+const renderSlugHelper = () => {
+  if (slugStatus === 'available') {
+    return <Typography color="green">✓ Available</Typography>;
+  }
+  if (slugStatus === 'unavailable') {
+    return <Typography color="red">✗ Not Available</Typography>;
+  }
+  return 'Enter a unique slug for SEO-friendly URL';
+};
+
 
   useEffect(() => {
     if (categories && !categoriesEmpty) {
@@ -59,6 +118,7 @@ export default function PostNewEditForm({ currentPost }) {
 
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
+    slug: Yup.string().required('Slug is required'),
     description: Yup.string().required('Description is required'),
     content: Yup.string().required('Content is required'),
     coverUrl: Yup.mixed().nullable().required('Cover is required'),
@@ -74,6 +134,7 @@ export default function PostNewEditForm({ currentPost }) {
   const defaultValues = useMemo(
     () => ({
       title: currentPost?.title || '',
+      slug: currentPost?.slug || '',
       description: currentPost?.description || '',
       content: currentPost?.content || '',
       coverUrl: currentPost?.coverUrl || null,
@@ -114,6 +175,7 @@ export default function PostNewEditForm({ currentPost }) {
     try {
       const inputData = {
         title: data.title,
+        slug: data.slug,
         description: data.description,
         content: data.content,
         coverUrl: data.coverUrl,
@@ -207,7 +269,7 @@ export default function PostNewEditForm({ currentPost }) {
   console.log('defaultvalues', defaultValues);
 
   const filter = createFilterOptions({
-    matchFrom: 'any', // matches anywhere in the string
+    matchFrom: 'any', 
     stringify: (option) => option.name,
   });
 
@@ -217,7 +279,47 @@ export default function PostNewEditForm({ currentPost }) {
         {!mdUp && <CardHeader title="Details" />}
 
         <Stack spacing={3} sx={{ p: 3 }}>
+
+          <Stack direction="row"  justifyContent="space-between" spacing={4}>
+
           <RHFTextField name="title" label="Post Title" />
+<RHFTextField
+  name="slug"
+  label="Slug"
+  placeholder="custom-slug"
+  onChange={(e) => {
+    setValue('slug', e.target.value, { shouldValidate: true });
+    setSlugManuallyEdited(true); 
+  }}
+  onBlur={(e) => checkSlugAvailability(e.target.value)}
+  InputProps={{
+    endAdornment: (
+      <InputAdornment position="end">
+        <IconButton
+          onClick={() => {
+            let newSlug;
+            if (!slugManuallyEdited) {
+              newSlug = generateSlug(values.title || '');
+            } else {
+              newSlug = values.slug;
+            }
+            if (newSlug) {
+              setValue('slug', newSlug, { shouldValidate: true });
+              checkSlugAvailability(newSlug);
+            }
+          }}
+          edge="end"
+        >
+          <Iconify icon="eva:refresh-outline" />
+        </IconButton>
+      </InputAdornment>
+    ),
+  }}
+  helperText={renderSlugHelper()}
+/>
+</Stack>
+
+
 
           <RHFTextField name="description" label="Description" multiline rows={3} />
 
