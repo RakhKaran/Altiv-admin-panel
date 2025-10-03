@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -19,7 +19,8 @@ import { RouterLink } from 'src/routes/components';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // api
-import { useFilterPlans, useGetPlans } from 'src/api/plan';
+import { useFilterPlans } from 'src/api/plan';
+import useSWR, { mutate } from 'swr';
 // components
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
@@ -44,17 +45,14 @@ import PlanTableFiltersResult from '../plan-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'All' },
-];
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }];
 
 const TABLE_HEAD = [
   { id: 'courseName', label: 'Course Name' },
-  { id: 'price', label: 'Price'},
+  { id: 'price', label: 'Price' },
   { id: 'planType', label: 'Plan Type' },
-  { id: 'paymentType', label: 'Payment Type'},
-  { id: 'recurringPeriod', label: 'Period'},
-  // { id: 'isFreePlan', label: 'Free?', width: 80 },
+  { id: 'paymentType', label: 'Payment Type' },
+  { id: 'recurringPeriod', label: 'Period' },
   { id: '', },
 ];
 
@@ -70,18 +68,23 @@ export default function CourseListView() {
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
-  const filter = {
-    where: {
-      planGroup: 0
-    }
-  }
-  const filterString = encodeURIComponent(JSON.stringify(filter));
-  const { filteredPlans: plans  } = useFilterPlans(filterString);
 
+  const filter = { where: { planGroup: 0 } };
+  const filterString = encodeURIComponent(JSON.stringify(filter));
+  const { filteredPlans } = useFilterPlans(filterString);
+  
+
+  // Local state to handle instant updates
+  const [localPlans, setLocalPlans] = useState(filteredPlans || []);
   const [filters, setFilters] = useState(defaultFilters);
 
+  // Sync localPlans when SWR fetches new data
+  useEffect(() => {
+    setLocalPlans(filteredPlans || []);
+  }, [filteredPlans]);
+
   const dataFiltered = applyFilter({
-    inputData: plans,
+    inputData: localPlans,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -106,19 +109,38 @@ export default function CourseListView() {
 
   const handleDeleteRows = useCallback(() => {
     table.onUpdatePageDeleteRows({
-      totalRows: plans.length,
+      totalRows: localPlans.length,
       totalRowsInPage: dataInPage.length,
       totalRowsFiltered: dataFiltered.length,
     });
-  }, [dataFiltered.length, dataInPage.length, plans.length, table]);
+  }, [dataFiltered.length, dataInPage.length, localPlans.length, table]);
 
-  const handleEditRow = useCallback((id) => {
-    router.push(paths.dashboard.plan.edit(id));
-  }, [router]);
+  // Handle edit row
+  const handleEditRow = useCallback(
+    (id) => {
+      router.push({
+        pathname: paths.dashboard.plan.edit(id),
+        query: { fromList: true },
+      });
+    },
+    [router]
+  );
 
-  const handleFilterStatus = useCallback((event, newValue) => {
-    handleFilters('status', newValue);
-  }, [handleFilters]);
+  // Call this after the edit form updates a plan
+  const handlePlanUpdated = (updatedPlan) => {
+    // Optimistically update localPlans
+    setLocalPlans((prev) =>
+      prev.map((plan) => (plan.id === updatedPlan.id ? updatedPlan : plan))
+    );
+
+    // Revalidate SWR cache
+    mutate(filterString);
+  };
+
+  const handleFilterStatus = useCallback(
+    (event, newValue) => handleFilters('status', newValue),
+    [handleFilters]
+  );
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
@@ -153,7 +175,8 @@ export default function CourseListView() {
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+              boxShadow: (theme) =>
+                `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
             {STATUS_OPTIONS.map((tab) => (
@@ -177,9 +200,9 @@ export default function CourseListView() {
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
-              rowCount={plans.length}
+              rowCount={localPlans.length}
               onSelectAllRows={(checked) =>
-                table.onSelectAllRows(checked, plans.map((row) => row.id))
+                table.onSelectAllRows(checked, localPlans.map((row) => row.id))
               }
               action={
                 <Tooltip title="Delete">
@@ -196,11 +219,11 @@ export default function CourseListView() {
                   order={table.order}
                   orderBy={table.orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={plans.length}
+                  rowCount={localPlans.length}
                   numSelected={table.selected.length}
                   onSort={table.onSort}
                   onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(checked, plans.map((row) => row.id))
+                    table.onSelectAllRows(checked, localPlans.map((row) => row.id))
                   }
                 />
 
@@ -224,7 +247,7 @@ export default function CourseListView() {
 
                   <TableEmptyRows
                     height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, plans.length)}
+                    emptyRows={emptyRows(table.page, table.rowsPerPage, localPlans.length)}
                   />
 
                   <TableNoData notFound={notFound} />
@@ -273,29 +296,25 @@ function applyFilter({ inputData, comparator, filters }) {
   const { name, status } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-
   inputData = stabilizedThis.map((el) => el[0]);
 
- if (name) {
-  const lowerName = name.toLowerCase();
-  inputData = inputData.filter((plan) => {
-    const course = plan.courses || {};
-    return (
-      course.courseName?.toLowerCase().includes(lowerName) ||
-      course.description?.toLowerCase().includes(lowerName) ||
-      course.courseDuration?.toLowerCase().includes(lowerName) ||
-      plan.paymentType?.toLowerCase().includes(lowerName)
-    );
-  });
-}
-
-
+  if (name) {
+    const lowerName = name.toLowerCase();
+    inputData = inputData.filter((plan) => {
+      const course = plan.courses || {};
+      return (
+        course.courseName?.toLowerCase().includes(lowerName) ||
+        course.description?.toLowerCase().includes(lowerName) ||
+        course.courseDuration?.toLowerCase().includes(lowerName) ||
+        plan.paymentType?.toLowerCase().includes(lowerName)
+      );
+    });
+  }
 
   if (status !== 'all') {
     inputData = inputData.filter((plan) =>
@@ -305,12 +324,3 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
-
-
-
-
-
-
-
-
-

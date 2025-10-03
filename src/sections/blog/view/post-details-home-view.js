@@ -67,6 +67,7 @@ export default function PostDetailsHomeView() {
         title={post.title}
         author={post.author}
         coverUrl={post.coverUrl}
+        converAlt={post.converAlt}
         createdAt={post.createdAt}
       />
 

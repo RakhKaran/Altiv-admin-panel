@@ -22,7 +22,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function PostDetailsHero({ title, author, coverUrl, createdAt }) {
+export default function PostDetailsHero({ title, author,coverAlt, coverUrl, createdAt }) {
   const theme = useTheme();
 
   const smUp = useResponsive('up', 'sm');
@@ -36,6 +36,7 @@ export default function PostDetailsHero({ title, author, coverUrl, createdAt }) 
         overflow: 'hidden',
         ...bgGradient({
           imgUrl: safeCoverUrl,
+          alt: coverAlt,
           startColor: `${alpha(theme.palette.grey[900], 0.64)} 0%`,
           endColor: `${alpha(theme.palette.grey[900], 0.64)} 100%`,
         }),
@@ -120,5 +121,6 @@ PostDetailsHero.propTypes = {
   author: PropTypes.object,
   coverUrl: PropTypes.string,
   createdAt: PropTypes.string,
+  coverAlt: PropTypes.string,
   title: PropTypes.string,
 };

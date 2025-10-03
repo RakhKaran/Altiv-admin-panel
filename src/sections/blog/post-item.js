@@ -30,7 +30,7 @@ export default function PostItem({ post, index }) {
 
   const mdUp = useResponsive('up', 'md');
 
-  const { coverUrl, title, totalViews, totalComments, totalShares, author, createdAt } = post;
+  const { coverUrl,coverAlt, title, totalViews, totalComments, totalShares, author, createdAt } = post;
 
   const latestPost = index === 0 || index === 1 || index === 2;
 
@@ -58,7 +58,7 @@ export default function PostItem({ post, index }) {
         />
 
         <Image
-          alt={title}
+          alt={coverAlt}
           src={coverUrl}
           overlay={alpha(theme.palette.grey[900], 0.48)}
           sx={{
@@ -95,7 +95,7 @@ export default function PostItem({ post, index }) {
           }}
         />
 
-        <Image alt={title} src={coverUrl} ratio="4/3" />
+        <Image alt={coverAlt} src={coverUrl} ratio="4/3" />
       </Box>
 
       <PostContent
