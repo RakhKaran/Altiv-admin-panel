@@ -42,35 +42,6 @@ export default function PostNewEditForm({ currentPost }) {
   const [slugStatus, setSlugStatus] = useState(null);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
 
-  const generateSlug = (text) =>
-    text
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
-
-  const checkSlugAvailability = async (slug) => {
-    if (!slug) {
-      setSlugStatus(null);
-      return;
-    }
-
-    try {
-      const response = await axiosInstance.get(`/blogs/slug/${slug}`);
-      const blog = response.data;
-
-      if (blog && blog.id) {
-        setSlugStatus('unavailable');
-      } else {
-        setSlugStatus('available');
-      }
-    } catch (err) {
-      console.error('Error checking slug:', err);
-      setSlugStatus('available');
-    }
-  };
-
   const router = useRouter();
   const mdUp = useResponsive('up', 'md');
   const { enqueueSnackbar } = useSnackbar();
@@ -89,6 +60,15 @@ export default function PostNewEditForm({ currentPost }) {
     authorName: Yup.string(),
     designation: Yup.string(),
     authorImage: Yup.mixed().nullable(),
+    metaTitle: Yup.string().required('Meta title is required').max(60, 'Maximum character limit is 60'),
+    metaDescription: Yup.string().required('Meta description is required').max(160, 'Maximum character limit is 160'),
+    canonicalURL: Yup.string()
+      .required('URL is required')
+      .matches(
+        /^(https?:\/\/)(localhost|\d{1,3}(\.\d{1,3}){3}|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(:\d+)?(\/.*)?$/,
+        'Enter a valid URL'
+      ),
+    isIndexed: Yup.boolean().required('Indexed value is required'),
   });
 
   const defaultValues = useMemo(
@@ -105,6 +85,10 @@ export default function PostNewEditForm({ currentPost }) {
       authorName: currentPost?.authorName || '',
       designation: currentPost?.designation || '',
       authorImage: currentPost?.authorImage || null,
+      metaTitle: currentPost?.metaTitle || '',
+      metaDescription: currentPost?.metaDescription || '',
+      canonicalURL: currentPost?.canonicalURL || '',
+      isIndexed: currentPost?.isIndexed || true,
     }),
     [currentPost]
   );
@@ -124,13 +108,49 @@ export default function PostNewEditForm({ currentPost }) {
     }
   }, [currentPost, defaultValues, reset, categories]);
 
+  const generateSlug = (text) =>
+    text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+
+  const checkSlugAvailability = useCallback(
+    async (slug) => {
+      if (!slug) {
+        setSlugStatus(null);
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get(`/blogs/slug/${slug}`);
+        const blog = response.data;
+
+        if (blog && blog.id) {
+          if (currentPost && currentPost.id === blog.id) {
+            setSlugStatus('available');
+          } else {
+            setSlugStatus('unavailable');
+          }
+        } else {
+          setSlugStatus('available');
+        }
+      } catch (err) {
+        console.error('Error checking slug:', err);
+        setSlugStatus('available');
+      }
+    },
+    [currentPost, setSlugStatus]
+  );
+
   // Debounce slug availability
   useEffect(() => {
     const handler = setTimeout(() => {
       if (watchedValues.slug) checkSlugAvailability(watchedValues.slug);
     }, 500);
     return () => clearTimeout(handler);
-  }, [watchedValues.slug]);
+  }, [watchedValues.slug, checkSlugAvailability]);
 
   const renderSlugHelper = () => {
     if (slugStatus === 'available') return <Typography color="green">Available</Typography>;
@@ -161,6 +181,10 @@ export default function PostNewEditForm({ currentPost }) {
         authorName: data.authorName,
         designation: data.designation,
         authorImage: data.authorImage,
+        metaTitle: data.metaTitle,
+        metaDescription: data.metaDescription,
+        canonicalURL: data.canonicalURL,
+        isIndexed: data.isIndexed
       };
 
       if (!currentPost) {
@@ -222,6 +246,12 @@ export default function PostNewEditForm({ currentPost }) {
   const handleRemoveAuthorImage = useCallback(() => setValue('authorImage', null), [setValue]);
 
   const filter = createFilterOptions({ matchFrom: 'any', stringify: (option) => option.name });
+
+  useEffect(() => {
+    if (watchedValues.slug !== '' && !watchedValues.canonicalURL) {
+      setValue('canonicalURL', `${process.env.REACT_APP_FRONTEND_URL}/${watchedValues.slug}`, { shouldValidate: true });
+    }
+  }, [watchedValues.slug, setValue, watchedValues.canonicalURL])
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -330,10 +360,40 @@ export default function PostNewEditForm({ currentPost }) {
               </Stack>
               <RHFTextField name="coverAlt" label="Alter Text For Img" />
 
+              <Typography variant="h5" gutterBottom>
+                SEO Settings
+              </Typography>
+
+              {/* Meta Title */}
+              <RHFTextField
+                name="metaTitle"
+                label="Meta Title"
+                helperText="📝 Recommended: up to 60 characters for best display in search results."
+                inputProps={{ maxLength: 60 }}
+              />
+
+              {/* Meta Description */}
+              <RHFTextField
+                name="metaDescription"
+                label="Meta Description"
+                multiline
+                minRows={3}
+                helperText="📝 Recommended: up to 160 characters for best SEO performance."
+                inputProps={{ maxLength: 160 }}
+              />
+
+              {/* Canonical URL */}
+              <RHFTextField
+                name="canonicalURL"
+                label="Canonical URL"
+                placeholder="https://example.com/blog/post-url"
+              />
+
+              {/* Tags */}
               <RHFAutocomplete
                 name="tags"
                 label="Tags"
-                placeholder="+ Tags"
+                placeholder="+ Add Tags"
                 multiple
                 freeSolo
                 options={_tags.map((option) => option)}
@@ -357,7 +417,20 @@ export default function PostNewEditForm({ currentPost }) {
                 }
               />
 
-              <Box xs={12} md={12} sx={{ display: 'flex', alignItems: 'center', pl: 0 }}>
+              {/* Switches: Is Indexed & Publish */}
+              <Stack direction="row" spacing={3}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={watchedValues.isIndexed === true}
+                      onChange={(e) =>
+                        setValue('isIndexed', e.target.checked, { shouldValidate: true })
+                      }
+                    />
+                  }
+                  label="Is Indexed"
+                />
+
                 <FormControlLabel
                   control={
                     <Switch
@@ -370,8 +443,62 @@ export default function PostNewEditForm({ currentPost }) {
                     />
                   }
                   label="Publish"
-                  sx={{ flexGrow: 1 }}
                 />
+              </Stack>
+
+              {/* Schema Markup (JSON-LD) */}
+              <Box sx={{ mt: 3 }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Schema Markup (JSON-LD)
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  This structured data helps Google understand your blog content better. It’s automatically generated based on your inputs.
+                </Typography>
+
+                <Box
+                  component="pre"
+                  sx={{
+                    p: 2,
+                    borderRadius: 2,
+                    bgcolor: 'background.neutral',
+                    fontSize: 13,
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {JSON.stringify(
+                    {
+                      '@context': 'https://schema.org',
+                      '@type': 'BlogPosting',
+                      headline: watchedValues.metaTitle || '',
+                      description: watchedValues.metaDescription || '',
+                      image: watchedValues.coverUrl || '',
+                      author: {
+                        '@type': 'Person',
+                        name: watchedValues.authorName || 'Anonymous',
+                      },
+                      publisher: {
+                        '@type': 'Organization',
+                        name: 'Altiv',
+                        logo: {
+                          '@type': 'ImageObject',
+                          url: `${process.env.REACT_APP_FRONTEND_URL}/assets/Altivlogo.png`,
+                        },
+                      },
+                      datePublished: new Date().toISOString(),
+                      mainEntityOfPage: {
+                        '@type': 'WebPage',
+                        '@id': watchedValues.canonicalURL || '',
+                      },
+                    },
+                    null,
+                    2
+                  )}
+                </Box>
+              </Box>
+
+              <Box xs={12} md={12} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'end', pl: 0 }}>
                 <Button variant="outlined" onClick={preview.onTrue}>
                   Preview
                 </Button>

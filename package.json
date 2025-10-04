@@ -62,6 +62,7 @@
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
+    "dotenv": "^17.2.3",
     "firebase": "^9.22.2",
     "framer-motion": "^10.12.16",
     "highlight.js": "^11.8.0",
