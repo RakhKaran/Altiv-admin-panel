@@ -7,35 +7,34 @@ import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
 
-import PlanNewEditForm from '../plan-new-edit-form';
-import PlanStepper from '../stepper';
+import BatchesNewEditForm from '../batches-new-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function PlanCreateView() {
+export default function BatchesCreateView() {
   const settings = useSettingsContext();
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
-        heading="Create a new product"
+        heading="Create a new Batch"
         links={[
           {
             name: 'Dashboard',
             href: paths.dashboard.root,
           },
           {
-            name: 'Products',
-            href: paths.dashboard.plan?.courseList,
+            name: 'Batches',
+            href: paths.dashboard.batches.root,
           },
-          { name: 'New product' },
+          { name: 'New Batch' },
         ]}
         sx={{
           mb: { xs: 3, md: 5 },
         }}
       />
 
-     <PlanStepper />
+      <BatchesNewEditForm/>
     </Container>
   );
 }

@@ -57,6 +57,12 @@ export const endpoints = {
     details: (id) => `/plans/${id}`,
   },
 
+   batch: {
+    list: '/batches',
+    filterList: (filter) => `/batches?filter=${filter}`,
+    details: (id) => `/batches/${id}`,
+  },
+
   dashboard:{
     count:'/analytics/cards',
   },

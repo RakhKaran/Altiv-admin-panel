@@ -74,6 +74,14 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.plan.new },
             ],
           },
+           {
+            title: t('Batches'),
+            path: paths.dashboard.batches.root,
+            icon: ICONS.category,
+            children: [{ title: t('list'), path: paths.dashboard.batches.list },
+            { title: t('create'), path: paths.dashboard.batches.new }
+            ],
+          },
           {
             title: t('Invoices'),
             path: paths.dashboard.subscription.root,
@@ -84,7 +92,7 @@ export function useNavData() {
           },
 
           {
-            title: t('category'),
+            title: t('Category'),
             path: paths.dashboard.category.root,
             icon: ICONS.category,
             children: [{ title: t('list'), path: paths.dashboard.category.list },
@@ -93,7 +101,7 @@ export function useNavData() {
           },
             {
             title: t('jobs'),
-            path: paths.dashboard.category.root,
+            path: paths.dashboard.job.root,
             icon: ICONS.job,
             children: [{ title: t('list'), path: paths.dashboard.job.list },
             // { title: t('create'), path: paths.dashboard.category.new }

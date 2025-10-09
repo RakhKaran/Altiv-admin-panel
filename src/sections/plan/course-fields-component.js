@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Box, Chip, Grid, MenuItem, Stack, Typography } from '@mui/material';
 
 import { useSnackbar } from 'src/components/snackbar';
 import { useCallback } from 'react';
@@ -8,13 +8,16 @@ import FormProvider, {
   RHFUpload,
   RHFAutocomplete,
   RHFUploadBox,
+  RHFSelect,
 
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
 import { useFormContext } from 'react-hook-form';
 import { MultiFilePreview } from 'src/components/upload';
+import { Note } from '@react-pdf/renderer';
+import PropTypes from 'prop-types';
 
-const CourseFieldsComponents = () => {
+const CourseFieldsComponents = ({format}) => {
   const {
     watch,
     setValue,
@@ -85,25 +88,27 @@ const CourseFieldsComponents = () => {
           ))
         }
       />
+
+
       <RHFAutocomplete
-        name="productData.keyOutcomes"
-        label="Key Outcomes"
-        placeholder="+ outcome"
+        name="productData.format"
+        label="Format"
+        placeholder="+ Format"
         multiple
-        freeSolo
-        options={[]}
-        getOptionLabel={(option) => option}
+        options={format}
+        getOptionLabel={(option) => option.label || ''}
+    
         renderOption={(props, option) => (
-          <li {...props} key={option}>
-            {option}
+          <li {...props} key={option.value}>
+            {option.label}
           </li>
         )}
         renderTags={(selected, getTagProps) =>
           selected.map((option, index) => (
             <Chip
               {...getTagProps({ index })}
-              key={option}
-              label={option}
+              key={option.value}
+              label={option.label}
               size="small"
               color="info"
               variant="soft"
@@ -111,8 +116,16 @@ const CourseFieldsComponents = () => {
           ))
         }
       />
+
+
+
+
+
+      <RHFTextField name="productData.effort" label="Effort" type="string" helperText="Enter effort like:-2-3 h / week" />
+
+
       <Box sx={{ gridColumn: 'span 2' }}>
-        <RHFTextField name="productData.description" label="Description" multiline rows={3} />
+        <RHFEditor simple name="description" sx={{ height: 200 }} />
       </Box>
 
 
@@ -135,4 +148,8 @@ const CourseFieldsComponents = () => {
   )
 }
 
-export default CourseFieldsComponents
+export default CourseFieldsComponents;
+
+CourseFieldsComponents.propTypes = {
+  format: PropTypes.array
+}

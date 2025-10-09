@@ -47,8 +47,15 @@ const FREE_PLAN_OPTIONS = [
   { value: false, label: 'Paid' },
   { value: true, label: 'Free' },
 ];
+const format = [
+  { value: 'Live ', label: 'Live ' },
+  { value: 'Self-paced', label: 'Self-paced' },
 
-export default function PlanNewEditForm({ currentPlan }) {
+];
+
+export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseId, setCurrentCourseId }) {
+
+  console.log('currentPlan', currentPlan)
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -70,13 +77,13 @@ export default function PlanNewEditForm({ currentPlan }) {
     }),
     planType: Yup.string().required('Features are required'),
     planGroup: Yup.number().required('Plan group are required'),
+    description: Yup.string().required('Description is required'),
     productData: Yup.object().when('planGroup', {
       is: '1',
       then: (schema) =>
         schema.shape({
           serviceName: Yup.string().required('Service name is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
-          description: Yup.string().required('Description is required'),
           thumbnail: Yup.mixed().nullable().required('Thumbnail is required'),
         }),
       otherwise: (schema) =>
@@ -85,8 +92,8 @@ export default function PlanNewEditForm({ currentPlan }) {
           heading: Yup.string().required('Course heading is required'),
           lmsId: Yup.string().required('LMS ID is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
-          keyOutcomes: Yup.array().of(Yup.string().required('Key outcomes are required')).min(1, 'At least One outcome is required'),
-          description: Yup.string().required('Description is required'),
+          effort: Yup.string().required('Effort is required'),
+          format: Yup.array().of(Yup.object().required('Format is required')).min(1, 'Please select at least one option'),
           courseDuration: Yup.string().required('Course duration is required'),
           thumbnail: Yup.mixed().nullable().required('Thumbnail is required'),
         }),
@@ -101,6 +108,8 @@ export default function PlanNewEditForm({ currentPlan }) {
       planType: currentPlan?.planType ? currentPlan?.planType?.toString() : '0',
       isFreePlan: currentPlan?.isFreePlan || false,
       planGroup: currentPlan?.planGroup?.toString() || '0',
+      // eslint-disable-next-line no-nested-ternary
+      description: currentPlan?.planGroup === 0 ? currentPlan?.courses?.description : currentPlan?.planGroup === 1 ? currentPlan?.services?.description : '',
       productData:
         currentPlan?.planGroup === 0
           ? {
@@ -108,15 +117,18 @@ export default function PlanNewEditForm({ currentPlan }) {
             heading: currentPlan?.courses?.heading || '',
             lmsId: currentPlan?.courses?.lmsId || '',
             features: currentPlan?.courses?.features || [],
-            keyOutcomes: currentPlan?.courses?.keyOutcomes || [],
-            description: currentPlan?.courses?.description || '',
+            effort: currentPlan?.courses?.effort || '',
+            format: currentPlan?.courses?.format?.length > 0
+              ? currentPlan.courses.format
+                .map((opt) => format.find((f) => f.value === opt))
+                .filter(Boolean)
+              : [],
             courseDuration: currentPlan?.courses?.courseDuration || '',
             thumbnail: currentPlan?.courses?.thumbnail || null,
           }
           : {
             serviceName: currentPlan?.productData?.serviceName || '',
             features: currentPlan?.productData?.features || [],
-            description: currentPlan?.productData?.description || '',
             thumbnail: currentPlan?.productData?.thumbnail || null,
           },
     }),
@@ -130,6 +142,8 @@ export default function PlanNewEditForm({ currentPlan }) {
 
   const { reset, watch, setValue, handleSubmit, formState: { isSubmitting, errors } } = methods;
   const values = watch();
+
+  console.log({errors});
 
   // ⚡ Fix: Reset form whenever currentPlan changes
   useEffect(() => {
@@ -159,31 +173,35 @@ export default function PlanNewEditForm({ currentPlan }) {
               heading: data?.productData?.heading || '',
               lmsId: data?.productData?.lmsId || '',
               features: data?.productData?.features || '',
-              keyOutcomes: data?.productData?.keyOutcomes || '',
-              description: data?.productData?.description || '',
+              description: data?.description || '',
               courseDuration: data?.productData?.courseDuration || '',
               thumbnail: data?.productData?.thumbnail || null,
+              format: data?.productData?.format?.length > 0 ? data?.productData?.format?.map((opt) => opt.value) : [],
+              effort: data?.productData?.effort || ''
             }
             : {
               serviceName: data?.productData?.serviceName || '',
               features: data?.productData?.features || '',
-              description: data?.productData?.description || '',
+              description: data?.description || '',
               thumbnail: data?.productData?.thumbnail || null,
             },
       };
 
       if (!currentPlan) {
-        await axiosInstance.post('/plans', inputData);
+        const response = await axiosInstance.post('/plans', inputData);
+        if (response.data && planGroupNumber === 0) {
+          setCourseId(response?.data?.coursesId);
+          setActiveStep(1);
+        }
       } else {
-        await axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
+        axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
+        setActiveStep(1);
       }
 
       reset();
       enqueueSnackbar(currentPlan ? 'Plan updated successfully!' : 'Plan created successfully!');
 
-      if (planGroupNumber === 0) {
-        router.push(paths.dashboard.plan.courseList);
-      } else {
+      if (planGroupNumber === 1) {
         router.push(paths.dashboard.plan.serviceList);
       }
     } catch (error) {
@@ -245,11 +263,11 @@ export default function PlanNewEditForm({ currentPlan }) {
                 ))}
               </RHFSelect>
 
-              {Number(values.planGroup) === 0 ? <CourseFieldsComponents /> : <ServiceFieldsComponents />}
+              {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents />}
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+              <LoadingButton type="submit" variant="contained" color='success' loading={isSubmitting}>
                 {!currentPlan ? 'Create Product' : 'Save Changes'}
               </LoadingButton>
             </Stack>
@@ -262,4 +280,7 @@ export default function PlanNewEditForm({ currentPlan }) {
 
 PlanNewEditForm.propTypes = {
   currentPlan: PropTypes.object,
+  setActiveStep: PropTypes.func,
+  setCourseId: PropTypes.func,
+  setCurrentCourseId: PropTypes.func,
 };

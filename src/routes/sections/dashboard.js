@@ -43,6 +43,13 @@ const CategoryListPage = lazy(() => import('src/pages/dashboard/category/list'))
 const CategoryCreatePage = lazy(() => import('src/pages/dashboard/category/new'));
 const CategoryEditPage = lazy(() => import('src/pages/dashboard/category/edit'));
 const CategoryViewPage = lazy(() => import('src/pages/dashboard/category/view'));
+
+// BATCHES
+
+const BatchesNewPage = lazy(()=> import('src/pages/dashboard/batches/new'));
+const BatchesListPage = lazy(()=> import('src/pages/dashboard/batches/list'));
+const BatchesEditPage = lazy(()=> import('src/pages/dashboard/batches/edit'))
+ 
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -128,6 +135,16 @@ export const dashboardRoutes = [
           { path: ':id', element: <ProductDetailsPage /> },
           { path: 'new', element: <ProductCreatePage /> },
           { path: ':id/edit', element: <ProductEditPage /> },
+        ],
+      },
+         {
+        path: 'batches',
+        children: [
+          { element: <BatchesListPage />, index: true },
+          { path: 'list', element: <BatchesListPage /> },
+          // { path: ':id', element: <CategoryViewPage /> },
+          { path: 'new', element: <BatchesNewPage /> },
+          { path: ':id/edit', element: <BatchesEditPage /> },
         ],
       },
       {

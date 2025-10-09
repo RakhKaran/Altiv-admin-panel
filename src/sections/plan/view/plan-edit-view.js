@@ -8,7 +8,8 @@ import { useGetPlan } from 'src/api/plan';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 //
-import PlanNewEditForm from '../plan-new-edit-form';
+
+import PlanStepper from '../stepper';
 
 
 // ----------------------------------------------------------------------
@@ -19,6 +20,8 @@ export default function PlanEditView() {
 
   const { plan: currentPlan, planLoading } = useGetPlan(id);
 
+  console.log('currentPlan', currentPlan)
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
@@ -26,12 +29,12 @@ export default function PlanEditView() {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Plan', href: (currentPlan && currentPlan?.planGroup === 0) ? paths.dashboard.plan.courseList : paths.dashboard.plan.serviceList},
-          { name: currentPlan?.planName || '' },
+          { name: currentPlan?.courses?.courseName || '' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />
 
-      {!planLoading && <PlanNewEditForm currentPlan={currentPlan} />}
+      {!planLoading && <PlanStepper currentPlan={currentPlan} />}
     </Container>
   );
 }
