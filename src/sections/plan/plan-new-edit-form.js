@@ -194,6 +194,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           setActiveStep(1);
         }
       } else {
+        console.log({currentPlan});
         axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
         setActiveStep(1);
       }
