@@ -15,8 +15,8 @@ export default function PlanStepper({currentPlan} ) {
   const [courseId, setCourseId] = useState(null);
 
   useEffect(()=>{
-    if(currentPlan.coursesId){
-      setCourseId(currentPlan.coursesId);
+    if(currentPlan){
+      setCourseId(currentPlan?.courses?.id);
     }
   }, [currentPlan])
 

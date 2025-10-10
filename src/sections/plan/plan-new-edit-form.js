@@ -102,7 +102,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
 
   const defaultValues = useMemo(
     () => ({
-      price: currentPlan?.price || undefined,
+      price: currentPlan?.price || '',
       paymentType: currentPlan?.paymentType || 'oneTime',
       recurringPeriod: currentPlan?.recurringPeriod || '',
       planType: currentPlan?.planType ? currentPlan?.planType?.toString() : '0',
