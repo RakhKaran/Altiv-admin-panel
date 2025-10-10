@@ -210,6 +210,8 @@ export default function KeyOutcomes({ courseId, setActiveStep, currentOutcomes }
         coursesId: courseId
       }))
 
+      console.log({courseId})
+
       if (!currentOutcomes) {
         const response = await axiosInstance.post('/keyoutcomes/create-all', inputData);
         if (response.data.success) {
@@ -224,12 +226,16 @@ export default function KeyOutcomes({ courseId, setActiveStep, currentOutcomes }
           image: data?.keyOutcomes[index]?.image,
         }));
 
+       
+
         const newOutcomes = data.keyOutcomes.slice(currentOutcomes.length).map(outcome => ({
           heading: outcome.heading,
           description: outcome.description,
           image: outcome.image,
-          coursesId: currentOutcomes[0].coursesId
+          coursesId: courseId,
+          
         }));
+      
 
         const finalOutcomes = [...updatedData, ...newOutcomes];
 

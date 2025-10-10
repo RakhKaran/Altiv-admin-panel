@@ -145,7 +145,7 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
                 ? currentModules
                 : [{ moduleName: '', modules: '' }],
     }), [currentModules])
-
+console.log({courseId})
 
 
     const methods = useForm({
@@ -185,7 +185,7 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
                 const newOutcomes = data.programModule.slice(currentModules.length).map(outcome => ({
                     moduleName: outcome.moduleName,
                     modules: outcome.modules,
-                    coursesId: currentModules[0].coursesId
+                    coursesId: courseId,
                 }));
 
                 const finalOutcomes = [...updatedData, ...newOutcomes];

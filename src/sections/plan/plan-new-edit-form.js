@@ -53,7 +53,7 @@ const format = [
 
 ];
 
-export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseId, setCurrentCourseId }) {
+export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseId }) {
 
   console.log('currentPlan', currentPlan)
   const router = useRouter();
@@ -282,5 +282,5 @@ PlanNewEditForm.propTypes = {
   currentPlan: PropTypes.object,
   setActiveStep: PropTypes.func,
   setCourseId: PropTypes.func,
-  setCurrentCourseId: PropTypes.func,
+
 };

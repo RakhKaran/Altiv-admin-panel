@@ -13,11 +13,10 @@ const steps = ['Plan Details', 'Key Outcomes', 'Program Modules'];
 export default function PlanStepper({currentPlan} ) {
   const [activeStep, setActiveStep] = useState(0);
   const [courseId, setCourseId] = useState(null);
-  const [currentCourseId, setCurrentCourseId] = useState(null);
 
   useEffect(()=>{
-    if(currentPlan){
-      setCurrentCourseId(currentPlan?.courses?.id);
+    if(currentPlan.coursesId){
+      setCourseId(currentPlan.coursesId);
     }
   }, [currentPlan])
 
@@ -25,11 +24,11 @@ export default function PlanStepper({currentPlan} ) {
   const renderForm = () => {
     switch (activeStep) {
       case 0:
-        return <PlanNewEditForm currentPlan={currentPlan || null} setCourseId={setCourseId} setActiveStep={setActiveStep} setCurrentCourseId={setCurrentCourseId}  />;
+        return <PlanNewEditForm currentPlan={currentPlan || null} setCourseId={setCourseId} setActiveStep={setActiveStep}  />;
       case 1:
-        return <KeyOutcomes courseId={courseId} activeStep={activeStep} setActiveStep={setActiveStep} currentCourseId={currentCourseId} currentOutcomes={currentPlan?.courses?.keyOutComes}/>;
+        return <KeyOutcomes courseId={courseId} activeStep={activeStep} setActiveStep={setActiveStep}  currentOutcomes={currentPlan?.courses?.keyOutComes}/>;
       case 2:
-        return <ProgramModule courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep} currentCourseId={currentCourseId} currentModules={currentPlan?.courses?.programModules}/>;
+        return <ProgramModule courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentModules={currentPlan?.courses?.programModules}/>;
       default:
         return (
           <Box sx={{ p: 3 }}>
