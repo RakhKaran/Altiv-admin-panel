@@ -142,10 +142,14 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
     const defaultValues = useMemo(() => ({
         programModule:
             currentModules?.length > 0
-                ? currentModules
+                ? currentModules.map((outcome) => ({
+                    moduleName: outcome?.moduleName || '',
+                    modules: outcome?.modules || '',
+                }))
                 : [{ moduleName: '', modules: '' }],
     }), [currentModules])
-console.log({courseId})
+
+    console.log({ courseId })
 
 
     const methods = useForm({
@@ -157,9 +161,9 @@ console.log({courseId})
 
     useEffect(() => {
         if (currentModules) {
-            reset({ programModule: currentModules });
+            reset(defaultValues);
         }
-    }, [currentModules, reset]);
+    }, [currentModules, reset, defaultValues]);
 
     const onSubmit = handleSubmit(async (data) => {
         try {
@@ -176,20 +180,20 @@ console.log({courseId})
                     router.push(paths.dashboard.plan.courseList);
                 }
             } else {
-                const updatedData = currentModules.map((outcome, index) => ({
-                    id: outcome?.id,
-                    moduleName: data?.programModule[index].moduleName,
-                    modules: data?.programModule[index].modules,
-                }))
+                // const updatedData = currentModules.map((outcome, index) => ({
+                //     id: outcome?.id,
+                //     moduleName: data?.programModule[index].moduleName,
+                //     modules: data?.programModule[index].modules,
+                // }))
 
-                const newOutcomes = data.programModule.slice(currentModules.length).map(outcome => ({
-                    moduleName: outcome.moduleName,
-                    modules: outcome.modules,
-                    coursesId: courseId,
-                }));
+                // const newOutcomes = data.programModule.slice(currentModules.length).map(outcome => ({
+                //     moduleName: outcome.moduleName,
+                //     modules: outcome.modules,
+                //     coursesId: courseId,
+                // }));
 
-                const finalOutcomes = [...updatedData, ...newOutcomes];
-                const response = await axiosInstance.patch(`/program-modules/update-all`, finalOutcomes);
+                // const finalOutcomes = [...updatedData, ...newOutcomes];
+                const response = await axiosInstance.patch(`/program-modules/update-all`, inputData);
                 if (response.data.success) {
                     enqueueSnackbar(response.data.message, { variant: 'success' });
                     router.push(paths.dashboard.plan.courseList);

@@ -185,8 +185,12 @@ export default function KeyOutcomes({ courseId, setActiveStep, currentOutcomes }
 
   const defaultValues = useMemo(() => ({
     keyOutcomes: currentOutcomes?.length > 0
-      ? currentOutcomes
-      : [{ heading: '', description: '', image: '' }],
+      ? currentOutcomes.map((outcome) => ({
+        heading: outcome?.heading || '',
+        description: outcome?.description || '',
+        image: outcome?.image || null,
+      }))
+      : [{ heading: '', description: '', image: null}],
   }), [currentOutcomes])
 
   const methods = useForm({
@@ -198,16 +202,17 @@ export default function KeyOutcomes({ courseId, setActiveStep, currentOutcomes }
 
   useEffect(() => {
     if (currentOutcomes?.length && !watch('keyOutcomes')?.length) {
-      reset({ keyOutcomes: currentOutcomes });
+      reset(defaultValues);
     }
-  }, [currentOutcomes, reset, watch]);
+  }, [currentOutcomes, reset,watch, defaultValues]);
 
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       const inputData = data?.keyOutcomes?.map((outcome) => ({
         ...outcome,
-        coursesId: courseId
+        coursesId: courseId,
+       
       }))
 
       console.log({courseId})
@@ -219,27 +224,27 @@ export default function KeyOutcomes({ courseId, setActiveStep, currentOutcomes }
           setActiveStep(2);
         }
       } else {
-        const updatedData = currentOutcomes.map((outcome, index) => ({
-          id: outcome?.id,
-          heading: data?.keyOutcomes[index]?.heading,
-          description: data?.keyOutcomes[index]?.description,
-          image: data?.keyOutcomes[index]?.image,
-        }));
+        // const updatedData = currentOutcomes.map((outcome, index) => ({
+        //   id: outcome?.id,
+        //   heading: data?.keyOutcomes[index]?.heading,
+        //   description: data?.keyOutcomes[index]?.description,
+        //   image: data?.keyOutcomes[index]?.image,
+        // }));
 
        
 
-        const newOutcomes = data.keyOutcomes.slice(currentOutcomes.length).map(outcome => ({
-          heading: outcome.heading,
-          description: outcome.description,
-          image: outcome.image,
-          coursesId: courseId,
+        // const newOutcomes = data.keyOutcomes.slice(currentOutcomes.length).map(outcome => ({
+        //   heading: outcome.heading,
+        //   description: outcome.description,
+        //   image: outcome.image,
+        //   coursesId: courseId,
           
-        }));
+        // }));
       
 
-        const finalOutcomes = [...updatedData, ...newOutcomes];
+        // const finalOutcomes = [...updatedData, ...newOutcomes];
 
-        const response = await axiosInstance.patch(`/keyoutcomes/update-all`, finalOutcomes);
+        const response = await axiosInstance.patch(`/keyoutcomes/update-all`, inputData);
         if (response.data.success) {
           enqueueSnackbar(response.data.message, { variant: 'success' });
           setActiveStep(2);
