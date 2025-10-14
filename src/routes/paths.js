@@ -196,6 +196,28 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/category/${MOCK_ID}/edit`,
       },
     },
+        faqCategory: {
+      root: `${ROOTS.DASHBOARD}/faqCategory`,
+      new: `${ROOTS.DASHBOARD}/faqCategory/new`,
+      list: `${ROOTS.DASHBOARD}/faqCategory/list`,
+      details: (id) => `${ROOTS.DASHBOARD}/faqCategory/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/faqCategory/${id}/edit`,
+      demo: {
+        details: `${ROOTS.DASHBOARD}/faqCategory/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/faqCategory/${MOCK_ID}/edit`,
+      },
+    },
+        faq: {
+      root: `${ROOTS.DASHBOARD}/faq`,
+      new: `${ROOTS.DASHBOARD}/faq/new`,
+      list: `${ROOTS.DASHBOARD}/faq/list`,
+      details: (id) => `${ROOTS.DASHBOARD}/faq/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/faq/${id}/edit`,
+      demo: {
+        details: `${ROOTS.DASHBOARD}/faq/${MOCK_ID}`,
+        edit: `${ROOTS.DASHBOARD}/faq/${MOCK_ID}/edit`,
+      },
+    },
     tour: {
       root: `${ROOTS.DASHBOARD}/tour`,
       new: `${ROOTS.DASHBOARD}/tour/new`,

@@ -83,6 +83,16 @@ export const endpoints = {
     filterList: (filter) => `/categories?${filter}`,
     details: (id) => `/categories/${id}`,
   },
+   faqCategory: {
+    list: '/faq-categories',
+    filterList: (filter) => `/faq-categories?filter=${filter}`,
+    details: (id) => `/faq-categories/${id}`,
+  },
+   faq: {
+    list: '/faqs',
+    filterList: (filter) => `/faqs?filter=${filter}`,
+    details: (id) => `/faqs/${id}`,
+  },
   contact: {
     list: '/contact-uses',
     filterList: (filter) => `/contact-uses?${filter}`,

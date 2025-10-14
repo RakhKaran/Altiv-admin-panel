@@ -177,7 +177,7 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
                 if (response.data.success) {
                     enqueueSnackbar(response.data.message, { variant: 'success' });
                     setActiveStep(3);
-                    router.push(paths.dashboard.plan.courseList);
+                   
                 }
             } else {
                 // const updatedData = currentModules.map((outcome, index) => ({
@@ -196,7 +196,8 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
                 const response = await axiosInstance.patch(`/program-modules/update-all`, inputData);
                 if (response.data.success) {
                     enqueueSnackbar(response.data.message, { variant: 'success' });
-                    router.push(paths.dashboard.plan.courseList);
+                     setActiveStep(3);
+                  
                 }
             }
         } catch (error) {
@@ -236,7 +237,7 @@ export default function ProgramModule({ currentModules, courseId, setActiveStep 
                             )}
 
                             <LoadingButton type="submit" variant="contained" color='success' loading={isSubmitting}>
-                                {!currentModules ? 'Submit' : 'Subimt'}
+                                {!currentModules ? 'Create' : 'Save'}
                             </LoadingButton>
                         </Box>
 

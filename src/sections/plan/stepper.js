@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 import PlanNewEditForm from './plan-new-edit-form';
 import KeyOutcomes from './key-outcomes';
 import ProgramModule from './program-module';
+import Tools from './tools';
 
 
-const steps = ['Plan Details', 'Key Outcomes', 'Program Modules'];
+const steps = ['Plan Details', 'Key Outcomes', 'Program Modules', 'Tools'];
 
 
 
@@ -29,6 +30,8 @@ export default function PlanStepper({currentPlan} ) {
         return <KeyOutcomes courseId={courseId} activeStep={activeStep} setActiveStep={setActiveStep}  currentOutcomes={currentPlan?.courses?.keyOutComes}/>;
       case 2:
         return <ProgramModule courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentModules={currentPlan?.courses?.programModules}/>;
+        case 3:
+        return <Tools courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentTools={currentPlan?.courses?.tools}/>;
       default:
         return (
           <Box sx={{ p: 3 }}>

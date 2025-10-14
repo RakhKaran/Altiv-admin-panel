@@ -6,6 +6,8 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
+import FaqCategoryNewPage from 'src/pages/dashboard/faqCategory/new';
+import FaqNewPage from 'src/pages/dashboard/faq/new';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +45,18 @@ const CategoryListPage = lazy(() => import('src/pages/dashboard/category/list'))
 const CategoryCreatePage = lazy(() => import('src/pages/dashboard/category/new'));
 const CategoryEditPage = lazy(() => import('src/pages/dashboard/category/edit'));
 const CategoryViewPage = lazy(() => import('src/pages/dashboard/category/view'));
+
+// FAQ CATEGORY
+const FaqCategoryListPage = lazy(() => import('src/pages/dashboard/faqCategory/list'));
+const FaqCategoryCreatePage = lazy(() => import('src/pages/dashboard/faqCategory/new'));
+const FaqCategoryEditPage = lazy(() => import('src/pages/dashboard/faqCategory/edit'));
+const FaqCategoryViewPage = lazy(() => import('src/pages/dashboard/faqCategory/view'));
+
+// FAQ
+const FaqListPage = lazy(() => import('src/pages/dashboard/faq/list'));
+const FaqCreatePage = lazy(() => import('src/pages/dashboard/faq/new'));
+const FaqEditPage = lazy(() => import('src/pages/dashboard/faq/edit'));
+const FaqViewPage = lazy(() => import('src/pages/dashboard/faq/view')); 
 
 // BATCHES
 
@@ -193,6 +207,26 @@ export const dashboardRoutes = [
           { path: ':id', element: <CategoryViewPage /> },
           { path: 'new', element: <CategoryCreatePage /> },
           { path: ':id/edit', element: <CategoryEditPage /> },
+        ],
+      },
+       {
+        path: 'faqCategory',
+        children: [
+          { element: <FaqCategoryListPage />, index: true },
+          { path: 'list', element: <FaqCategoryListPage /> },
+          { path: ':id', element: <FaqCategoryViewPage /> },
+          { path: 'new', element: <FaqCategoryNewPage /> },
+          { path: ':id/edit', element: <FaqCategoryEditPage /> },
+        ],
+      },
+       {
+        path: 'faq',
+        children: [
+          { element: <FaqListPage />, index: true },
+          { path: 'list', element: <FaqListPage /> },
+          { path: ':id', element: <FaqViewPage /> },
+          { path: 'new', element: <FaqNewPage /> },
+          { path: ':id/edit', element: <FaqEditPage /> },
         ],
       },
       {

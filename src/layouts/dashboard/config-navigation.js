@@ -7,6 +7,7 @@ import { useLocales } from 'src/locales';
 // import Label from 'src/components/label';
 // import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
+import { batch } from 'react-redux';
 
 
 // ----------------------------------------------------------------------
@@ -29,7 +30,10 @@ const ICONS = {
   blog: icon('ic_blog'),
   contact: icon('ic_contact'),
   category: icon('ic_categories'),
-  job: icon('ic_job')
+  job: icon('ic_job'),
+  batch: icon('ic_batch'),
+  faqCategory: icon('ic_faqCategory'),
+  faq: icon('ic_faq'),
 
 };
 
@@ -77,7 +81,7 @@ export function useNavData() {
            {
             title: t('Batches'),
             path: paths.dashboard.batches.root,
-            icon: ICONS.category,
+            icon: ICONS.batch,
             children: [{ title: t('list'), path: paths.dashboard.batches.list },
             { title: t('create'), path: paths.dashboard.batches.new }
             ],
@@ -97,6 +101,22 @@ export function useNavData() {
             icon: ICONS.category,
             children: [{ title: t('list'), path: paths.dashboard.category.list },
             { title: t('create'), path: paths.dashboard.category.new }
+            ],
+          },
+            {
+            title: t('Faq Category'),
+            path: paths.dashboard.faqCategory.root,
+            icon: ICONS.faqCategory,
+            children: [{ title: t('list'), path: paths.dashboard.faqCategory.list },
+            { title: t('create'), path: paths.dashboard.faqCategory.new }
+            ],
+          },
+            {
+            title: t('Faq'),
+            path: paths.dashboard.faq.root,
+            icon: ICONS.faq,
+            children: [{ title: t('list'), path: paths.dashboard.faq.list },
+            { title: t('create'), path: paths.dashboard.faq.new }
             ],
           },
             {
