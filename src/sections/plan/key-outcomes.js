@@ -88,7 +88,6 @@ function RenderKeyOutcomes({ name }) {
             sx={{
               p: 2,
               borderRadius: 1,
-
               mb: 2,
             }}
           >
