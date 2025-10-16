@@ -35,7 +35,10 @@ const RECURRING_PERIOD_OPTIONS = [
   { value: 'weekly', label: 'Weekly', days: 7 },
 ];
 
-const planGroupOption = [{ value: '0', label: 'Course' }];
+const planGroupOption = [
+  { value: '0', label: 'Course' },
+  { value: '1', label: 'Service' }
+];
 
 const planType = [
   { value: '0', label: 'Data Science' },
@@ -53,7 +56,13 @@ const format = [
 
 ];
 
-export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseId }) {
+const pages =[
+
+  { value: 'fobo-pro', label: 'Fobo Pro' },
+]
+
+
+export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseId, setPlanGroup }) {
 
   console.log('currentPlan', currentPlan)
   const router = useRouter();
@@ -79,17 +88,18 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
     planGroup: Yup.number().required('Plan group are required'),
     description: Yup.string().required('Description is required'),
     productData: Yup.object().when('planGroup', {
-      is: '1',
+     is: (val) => val === '1' || val === 1,
       then: (schema) =>
         schema.shape({
           serviceName: Yup.string().required('Service name is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
-          thumbnail: Yup.mixed().nullable().required('Thumbnail is required'),
+          page: Yup.array().of(Yup.object().required('Features are required')).min(1, 'At least One Feature is required'),
         }),
       otherwise: (schema) =>
         schema.shape({
           courseName: Yup.string().required('Course name is required'),
           heading: Yup.string().required('Course heading is required'),
+          courseType: Yup.string().required('Course type is required'),
           lmsId: Yup.string().required('LMS ID is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
           effort: Yup.string().required('Effort is required'),
@@ -115,6 +125,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           ? {
             courseName: currentPlan?.courses?.courseName || '',
             heading: currentPlan?.courses?.heading || '',
+            courseType: currentPlan?.courses?.courseType || '',
             lmsId: currentPlan?.courses?.lmsId || '',
             features: currentPlan?.courses?.features || [],
             effort: currentPlan?.courses?.effort || '',
@@ -127,9 +138,14 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
             thumbnail: currentPlan?.courses?.thumbnail || null,
           }
           : {
-            serviceName: currentPlan?.productData?.serviceName || '',
-            features: currentPlan?.productData?.features || [],
-            thumbnail: currentPlan?.productData?.thumbnail || null,
+            serviceName: currentPlan?.services?.serviceName || '',
+            features: currentPlan?.services?.features || [],
+            page: currentPlan?.services?.page?.length > 0
+              ? currentPlan.services.page
+                .map((opt) => pages.find((f) => f.value === opt))
+                .filter(Boolean)
+              : [],
+            description: currentPlan?.services?.description || '',
           },
     }),
     [currentPlan]
@@ -143,7 +159,13 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
   const { reset, watch, setValue, handleSubmit, formState: { isSubmitting, errors } } = methods;
   const values = watch();
 
-  console.log({errors});
+    useEffect(() => {
+    if (setPlanGroup) {
+      setPlanGroup(Number(values.planGroup));
+    }
+  }, [values.planGroup, setPlanGroup]);
+
+  console.log({ errors });
 
   // ⚡ Fix: Reset form whenever currentPlan changes
   useEffect(() => {
@@ -171,6 +193,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
             ? {
               courseName: data?.productData?.courseName || '',
               heading: data?.productData?.heading || '',
+              courseType: data?.productData?.courseType || '',
               lmsId: data?.productData?.lmsId || '',
               features: data?.productData?.features || '',
               description: data?.description || '',
@@ -183,7 +206,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
               serviceName: data?.productData?.serviceName || '',
               features: data?.productData?.features || '',
               description: data?.description || '',
-              thumbnail: data?.productData?.thumbnail || null,
+              page: data?.productData?.page?.length > 0 ? data?.productData?.page?.map((opt) => opt.value) : [],
             },
       };
 
@@ -194,7 +217,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           setActiveStep(1);
         }
       } else {
-        console.log({currentPlan});
+        console.log({ currentPlan });
         axiosInstance.patch(`/plans/${currentPlan.id}`, inputData);
         setActiveStep(1);
       }
@@ -264,7 +287,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
                 ))}
               </RHFSelect>
 
-              {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents />}
+              {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents pages={pages} />}
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
@@ -283,5 +306,5 @@ PlanNewEditForm.propTypes = {
   currentPlan: PropTypes.object,
   setActiveStep: PropTypes.func,
   setCourseId: PropTypes.func,
-
+  setPlanGroup: PropTypes.func,
 };

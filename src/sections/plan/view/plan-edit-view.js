@@ -29,7 +29,7 @@ export default function PlanEditView() {
         links={[
           { name: 'Dashboard', href: paths.dashboard.root },
           { name: 'Plan', href: (currentPlan && currentPlan?.planGroup === 0) ? paths.dashboard.plan.courseList : paths.dashboard.plan.serviceList},
-          { name: currentPlan?.courses?.courseName || '' },
+          { name: currentPlan?.planGroup === 0 ? currentPlan?.courses?.courseName : currentPlan?.services?.serviceName || '' },
         ]}
         sx={{ mb: { xs: 3, md: 5 } }}
       />

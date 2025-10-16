@@ -278,12 +278,33 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
- if (name) {
-    inputData = inputData.filter((plan) =>
-      Object.values(plan).some((value) =>
-        String(value).toLowerCase().includes(name.toLowerCase())
-      )
-    );
+   /* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-continue */
+
+  if (name) {
+    const searchValue = name.toLowerCase();
+
+    const recursiveSearch = (obj) => {
+      for (const key in obj) {
+        const value = obj[key];
+
+        if (value == null) continue;
+
+        // If value is object → search inside recursively
+        if (typeof value === 'object') {
+          if (recursiveSearch(value)) return true;
+        }
+
+        // If value is string/number/boolean → compare text
+        if (String(value).toLowerCase().includes(searchValue)) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    inputData = inputData.filter((emails) => recursiveSearch(emails));
   }
 
   if (status !== 'all') {

@@ -21,7 +21,7 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
   const confirm = useBoolean();
   const popover = usePopover();
 
-  const { id, courses, price, paymentType, planType, recurringPeriod, isFreePlan } = row;
+  const { id, courses,services, price, paymentType, planType, recurringPeriod, isFreePlan } = row;
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function PlanTableRow({ row, selected, onEditRow, onSelectRow, on
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <TableCell>{planGroup === 0 ? courses?.courseName : 'NA'}</TableCell>
+        <TableCell>{planGroup === 0 ? courses?.courseName : services?.serviceName ||'NA'}</TableCell>
 
         <TableCell>{isFreePlan ? 'Free' : price}</TableCell>
         <TableCell>{planType === 0 ? 'Data Science' : planType === 1 ? 'Marketing' : 'Product Management'}</TableCell>

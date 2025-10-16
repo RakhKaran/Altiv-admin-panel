@@ -13,48 +13,51 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
 import { useFormContext } from 'react-hook-form';
+import PropTypes from 'prop-types';
 
-const ServiceFieldsComponents = () => {
+
+
+const ServiceFieldsComponents = ({pages}) => {
   const {
     setValue,
   } = useFormContext();
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleDrop = useCallback(
-    async (acceptedFiles) => {
-      const file = acceptedFiles[0];
+  // const handleDrop = useCallback(
+  //   async (acceptedFiles) => {
+  //     const file = acceptedFiles[0];
 
-      if (file) {
-        const formData = new FormData();
-        formData.append('file', file);
+  //     if (file) {
+  //       const formData = new FormData();
+  //       formData.append('file', file);
 
-        try {
-          const response = await axiosInstance.post('/files', formData);
-          const imageFile = response.data?.files[0];
+  //       try {
+  //         const response = await axiosInstance.post('/files', formData);
+  //         const imageFile = response.data?.files[0];
 
-          if (imageFile) {
-            setValue('productData.thumbnail', imageFile, { shouldValidate: true });
-          } else {
-            enqueueSnackbar('Image upload failed: No URL returned.', { variant: 'error' });
-          }
-        } catch (error) {
-          console.error(error);
-          enqueueSnackbar('Image upload failed.', { variant: 'error' });
-        }
-      }
-    },
-    [enqueueSnackbar, setValue]
-  );
+  //         if (imageFile) {
+  //           setValue('productData.thumbnail', imageFile, { shouldValidate: true });
+  //         } else {
+  //           enqueueSnackbar('Image upload failed: No URL returned.', { variant: 'error' });
+  //         }
+  //       } catch (error) {
+  //         console.error(error);
+  //         enqueueSnackbar('Image upload failed.', { variant: 'error' });
+  //       }
+  //     }
+  //   },
+  //   [enqueueSnackbar, setValue]
+  // );
 
-  const handleRemoveFile = useCallback(() => {
-    setValue('thumbnail', null);
-  }, [setValue]);
+  // const handleRemoveFile = useCallback(() => {
+  //   setValue('thumbnail', null);
+  // }, [setValue]);
   return (
     <>
       <RHFTextField name="productData.serviceName" label="Service Name" type="string" />
       <Box width="200%">
         <Stack spacing={1.5}>
-          <RHFTextField name="productData.description" label="Description" multiline rows={3} fullWidth />
+         <RHFEditor simple name="description" sx={{ height: 200 }} />
         </Stack>
         <Stack sx={{my:2}} spacing={1.5}>
           <RHFAutocomplete
@@ -85,17 +88,41 @@ const ServiceFieldsComponents = () => {
           />
         </Stack>
         <Box sx={{ gridColumn: 'span 2' }}>
-          <Typography variant="subtitle2">thumbnail</Typography>
-          <RHFUploadBox
-            name="productData.thumbnail"
-            maxSize={3145728}
-            onDrop={handleDrop}
-            onDelete={handleRemoveFile}
-          />
+          
+                <RHFAutocomplete
+                  name="productData.page"
+                  label="Pages"
+                  placeholder="+ page"
+                  multiple
+                  options={pages}
+                  getOptionLabel={(option) => option.label || ''}
+              
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.value}>
+                      {option.label}
+                    </li>
+                  )}
+                  renderTags={(selected, getTagProps) =>
+                    selected.map((option, index) => (
+                      <Chip
+                        {...getTagProps({ index })}
+                        key={option.value}
+                        label={option.label}
+                        size="small"
+                        color="info"
+                        variant="soft"
+                      />
+                    ))
+                  }
+                />
          </Box>
       </Box>
     </>
   )
 }
 
-export default ServiceFieldsComponents
+export default ServiceFieldsComponents;
+
+ServiceFieldsComponents.propTypes = {
+  pages: PropTypes.array
+}

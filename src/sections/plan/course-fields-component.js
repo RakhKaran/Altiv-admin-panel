@@ -60,6 +60,7 @@ const CourseFieldsComponents = ({format}) => {
     <>
       <RHFTextField name="productData.courseName" label="Course Name" type="string" />
       <RHFTextField name="productData.heading" label="Course heading" type="string" />
+      <RHFTextField name="productData.courseType" label="Course type" type="string" />
       <RHFTextField name="productData.lmsId" label="lmsId" type="string" />
       <RHFTextField name="productData.courseDuration" label="Course Duration" type="string" />
       <RHFAutocomplete

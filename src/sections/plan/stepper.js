@@ -12,29 +12,65 @@ const steps = ['Plan Details', 'Key Outcomes', 'Program Modules', 'Tools', 'FAQ'
 
 
 
-export default function PlanStepper({currentPlan} ) {
+export default function PlanStepper({ currentPlan }) {
   const [activeStep, setActiveStep] = useState(0);
   const [courseId, setCourseId] = useState(null);
+  const [planGroup, setPlanGroup] = useState(currentPlan?.planGroup || 0); 
 
-  useEffect(()=>{
-    if(currentPlan){
+  useEffect(() => {
+    if (currentPlan) {
       setCourseId(currentPlan?.courses?.id);
+      setPlanGroup(currentPlan?.planGroup || 0);
     }
-  }, [currentPlan])
+  }, [currentPlan]);
 
-  // Render the form for the current step
   const renderForm = () => {
     switch (activeStep) {
       case 0:
-        return <PlanNewEditForm currentPlan={currentPlan || null} setCourseId={setCourseId} setActiveStep={setActiveStep}  />;
+        return (
+          <PlanNewEditForm
+            currentPlan={currentPlan || null}
+            setCourseId={setCourseId}
+            setActiveStep={setActiveStep}
+            setPlanGroup={setPlanGroup} 
+          />
+        );
       case 1:
-        return <KeyOutcomes courseId={courseId} activeStep={activeStep} setActiveStep={setActiveStep}  currentOutcomes={currentPlan?.courses?.keyOutComes}/>;
+        return (
+          <KeyOutcomes
+            courseId={courseId}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            currentOutcomes={currentPlan?.courses?.keyOutComes}
+          />
+        );
       case 2:
-        return <ProgramModule courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentModules={currentPlan?.courses?.programModules}/>;
-        case 3:
-        return <Tools courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentTools={currentPlan?.courses?.tools}/>;
-         case 4:
-        return <Faq courseId={courseId}  activeStep={activeStep} setActiveStep={setActiveStep}  currentplansFaqs={currentPlan?.courses?.plansFaqs}/>;
+        return (
+          <ProgramModule
+            courseId={courseId}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            currentModules={currentPlan?.courses?.programModules}
+          />
+        );
+      case 3:
+        return (
+          <Tools
+            courseId={courseId}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            currentTools={currentPlan?.courses?.tools}
+          />
+        );
+      case 4:
+        return (
+          <Faq
+            courseId={courseId}
+            activeStep={activeStep}
+            setActiveStep={setActiveStep}
+            currentplansFaqs={currentPlan?.courses?.plansFaqs}
+          />
+        );
       default:
         return (
           <Box sx={{ p: 3 }}>
@@ -46,14 +82,16 @@ export default function PlanStepper({currentPlan} ) {
 
   return (
     <Card sx={{ p: 3, boxShadow: 'none' }}>
-      <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-
+    
+      {Number(planGroup) === 0 && (
+        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 3 }}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      )}
       <Stack spacing={3}>{renderForm()}</Stack>
     </Card>
   );
@@ -61,4 +99,5 @@ export default function PlanStepper({currentPlan} ) {
 
 PlanStepper.propTypes ={
   currentPlan: PropTypes.object,
+  planGroup: PropTypes.number,
 }
