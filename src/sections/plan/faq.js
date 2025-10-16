@@ -50,9 +50,9 @@ function RenderProgramModule({ name }) {
                             mb: 2,
                         }}
                     >
-                        <Grid container spacing={6} alignItems="flex-start">
+                        <Grid container spacing={2} alignItems="flex-start">
 
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} >
                                 <RHFTextField
                                     name={`planFaqs[${index}].question`}
                                     label="Question"
@@ -61,10 +61,12 @@ function RenderProgramModule({ name }) {
                             </Grid>
 
                             {/* Modules Description */}
-                            <Grid item xs={12} sm={4}>
+                            <Grid item xs={12} >
                                 <RHFTextField
                                     name={`planFaqs[${index}].answer`}
                                     label="Answer"
+                                    multiline
+                                    minRows={3}
                                     fullWidth
                                 />
                             </Grid>
