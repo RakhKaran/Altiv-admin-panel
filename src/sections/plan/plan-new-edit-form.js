@@ -56,7 +56,7 @@ const format = [
 
 ];
 
-const pages =[
+const pages = [
 
   { value: 'fobo-pro', label: 'Fobo Pro' },
 ]
@@ -88,12 +88,15 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
     planGroup: Yup.number().required('Plan group are required'),
     description: Yup.string().required('Description is required'),
     productData: Yup.object().when('planGroup', {
-     is: (val) => val === '1' || val === 1,
+      is: (val) => val === '1' || val === 1,
       then: (schema) =>
         schema.shape({
           serviceName: Yup.string().required('Service name is required'),
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
-          page: Yup.array().of(Yup.object().required('Features are required')).min(1, 'At least One Feature is required'),
+          page: Yup.object()
+            .nullable()
+            .required('Page is required'),
+
         }),
       otherwise: (schema) =>
         schema.shape({
@@ -140,11 +143,8 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           : {
             serviceName: currentPlan?.services?.serviceName || '',
             features: currentPlan?.services?.features || [],
-            page: currentPlan?.services?.page?.length > 0
-              ? currentPlan.services.page
-                .map((opt) => pages.find((f) => f.value === opt))
-                .filter(Boolean)
-              : [],
+            page: currentPlan?.services?.page ? pages.find((f) => f.value === currentPlan.services.page): null,
+
             description: currentPlan?.services?.description || '',
           },
     }),
@@ -159,7 +159,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
   const { reset, watch, setValue, handleSubmit, formState: { isSubmitting, errors } } = methods;
   const values = watch();
 
-    useEffect(() => {
+  useEffect(() => {
     if (setPlanGroup) {
       setPlanGroup(Number(values.planGroup));
     }
@@ -206,7 +206,8 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
               serviceName: data?.productData?.serviceName || '',
               features: data?.productData?.features || '',
               description: data?.description || '',
-              page: data?.productData?.page?.length > 0 ? data?.productData?.page?.map((opt) => opt.value) : [],
+              page: data?.productData?.page?.value || '',
+
             },
       };
 
@@ -230,11 +231,12 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
       }
     } catch (error) {
       console.error(error);
-      enqueueSnackbar(typeof error === 'string' ? error : error?.message || 'Something went wrong', {
+      enqueueSnackbar(typeof error === 'string' ? error : error?.error?.message || 'Something went wrong', {
         variant: 'error',
       });
     }
   });
+  
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -250,6 +252,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
                 sm: 'repeat(2, 1fr)',
               }}
             >
+              
               <RHFSelect name="planGroup" label="Plan Group">
                 {planGroupOption.map((option) => (
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
@@ -286,8 +289,8 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </RHFSelect>
-
-              {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents pages={pages} />}
+                
+              {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents pages={pages} disablePageField={currentPlan} />}
             </Box>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>

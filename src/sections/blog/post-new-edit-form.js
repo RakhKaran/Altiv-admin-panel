@@ -14,7 +14,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Box, createFilterOptions, IconButton, InputAdornment } from '@mui/material';
+import { Box, createFilterOptions, IconButton, InputAdornment, MenuItem } from '@mui/material';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useResponsive } from 'src/hooks/use-responsive';
@@ -30,11 +30,19 @@ import FormProvider, {
   RHFUpload,
   RHFTextField,
   RHFAutocomplete,
+  RHFSelect,
 } from 'src/components/hook-form';
 import axiosInstance from 'src/utils/axios';
 import { useGetCategories } from 'src/api/category';
 import Iconify from 'src/components/iconify';
 import PostDetailsPreview from './post-details-preview';
+
+
+const blogTypes = [
+  { value: 'blog ', label: 'Blog ' },
+  { value: 'company-fobo', label: 'Comapny Fobo' },
+
+];
 
 export default function PostNewEditForm({ currentPost }) {
   const { categories, categoriesEmpty } = useGetCategories();
@@ -57,6 +65,18 @@ export default function PostNewEditForm({ currentPost }) {
     tags: Yup.array().min(2, 'Must have at least 2 tags'),
     publish: Yup.string().required('Status is required i.e(publish or draft or unpublish)'),
     categories: Yup.array().of(Yup.object()).min(1, 'Atleast one category is required'),
+    blogType: Yup.string().required('Blog type must be required'),
+    companyUrl: Yup.string().when('blogType', {
+      is: (val) => val === 'company-fobo',
+      then: (schema) =>
+        schema
+          .required('Company URL is required for Company Fobo type')
+          .matches(
+            /^(https?:\/\/)(localhost|\d{1,3}(\.\d{1,3}){3}|[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(:\d+)?(\/.*)?$/,
+            'Enter a valid URL'
+          ),
+      otherwise: (schema) => schema.notRequired().nullable(),
+    }),
     authorName: Yup.string(),
     designation: Yup.string(),
     authorImage: Yup.mixed().nullable(),
@@ -75,6 +95,8 @@ export default function PostNewEditForm({ currentPost }) {
     () => ({
       title: currentPost?.title || '',
       slug: currentPost?.slug || '',
+      blogType: currentPost?.blogType || '',
+      companyUrl: currentPost?.companyUrl || '',
       description: currentPost?.description || '',
       content: currentPost?.content || '',
       coverUrl: currentPost?.coverUrl || null,
@@ -171,6 +193,8 @@ export default function PostNewEditForm({ currentPost }) {
       const inputData = {
         title: data.title,
         slug: data.slug,
+        blogType: data.blogType,
+        companyUrl: data.companyUrl,
         description: data.description,
         content: data.content,
         coverUrl: data.coverUrl,
@@ -260,6 +284,26 @@ export default function PostNewEditForm({ currentPost }) {
           <Card>
             {!mdUp && <CardHeader title="Details" />}
             <Stack spacing={3} sx={{ p: 3 }}>
+              <RHFSelect
+                fullWidth
+                name="blogType"
+                label="Blog Type"
+                InputLabelProps={{ shrink: true }}
+                PaperPropsSx={{ textTransform: 'capitalize' }}
+              >
+                {blogTypes.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </RHFSelect>
+
+              {watchedValues.blogType === 'company-fobo' && (
+                <RHFTextField name="companyUrl" label="Company URL" />
+              )}
+
+
+              <RHFTextField name="title" label="Post Title" />
               <Stack direction="row" justifyContent="space-between" spacing={4}>
                 <RHFTextField name="title" label="Post Title" />
 

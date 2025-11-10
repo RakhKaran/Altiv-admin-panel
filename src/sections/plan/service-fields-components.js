@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 
 
 
-const ServiceFieldsComponents = ({pages}) => {
+const ServiceFieldsComponents = ({pages, disablePageField}) => {
   const {
     setValue,
   } = useFormContext();
@@ -55,10 +55,10 @@ const ServiceFieldsComponents = ({pages}) => {
   return (
     <>
       <RHFTextField name="productData.serviceName" label="Service Name" type="string" />
-      <Box width="200%">
-        <Stack spacing={1.5}>
-         <RHFEditor simple name="description" sx={{ height: 200 }} />
-        </Stack>
+  
+         <Box sx={{ gridColumn: 'span 2' }}>
+        <RHFEditor simple name="description" sx={{ height: 200 }} />
+      </Box>
         <Stack sx={{my:2}} spacing={1.5}>
           <RHFAutocomplete
             name="productData.features"
@@ -87,14 +87,15 @@ const ServiceFieldsComponents = ({pages}) => {
             }
           />
         </Stack>
-        <Box sx={{ gridColumn: 'span 2' }}>
-          
+      
+             <Stack sx={{my:2}} spacing={1.5}>
                 <RHFAutocomplete
                   name="productData.page"
                   label="Pages"
                   placeholder="+ page"
-                  multiple
+                  multiple={false}
                   options={pages}
+                  disabled={disablePageField}
                   getOptionLabel={(option) => option.label || ''}
               
                   renderOption={(props, option) => (
@@ -115,8 +116,7 @@ const ServiceFieldsComponents = ({pages}) => {
                     ))
                   }
                 />
-         </Box>
-      </Box>
+                </Stack>
     </>
   )
 }
@@ -124,5 +124,6 @@ const ServiceFieldsComponents = ({pages}) => {
 export default ServiceFieldsComponents;
 
 ServiceFieldsComponents.propTypes = {
-  pages: PropTypes.array
+  pages: PropTypes.array,
+  disablePageField: PropTypes.bool
 }
