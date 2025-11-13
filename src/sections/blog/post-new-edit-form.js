@@ -39,7 +39,7 @@ import PostDetailsPreview from './post-details-preview';
 
 
 const blogTypes = [
-  { value: 'blog ', label: 'Blog ' },
+  { value: 'blog', label: 'Blog' },
   { value: 'company-fobo', label: 'Comapny Fobo' },
 
 ];
