@@ -95,7 +95,7 @@ const ServiceFieldsComponents = ({pages, disablePageField}) => {
                   placeholder="+ page"
                   multiple={false}
                   options={pages}
-                  disabled={disablePageField}
+                  disabled={!!disablePageField}
                   getOptionLabel={(option) => option.label || ''}
               
                   renderOption={(props, option) => (

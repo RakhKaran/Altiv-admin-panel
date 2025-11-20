@@ -95,7 +95,11 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           features: Yup.array().of(Yup.string().required('Features are required')).min(1, 'At least One Feature is required'),
           page: Yup.object()
             .nullable()
-            .required('Page is required'),
+            .when('$isEdit', {
+              is: true,
+              then: (s) => s.nullable(),         // not required on edit
+              otherwise: (s) => s.required('Page is required'),
+            }),
 
         }),
       otherwise: (schema) =>
@@ -143,7 +147,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
           : {
             serviceName: currentPlan?.services?.serviceName || '',
             features: currentPlan?.services?.features || [],
-            page: currentPlan?.services?.page ? pages.find((f) => f.value === currentPlan.services.page): null,
+            page: currentPlan?.services?.page ? pages.find((f) => f.value === currentPlan.services.page) : null,
 
             description: currentPlan?.services?.description || '',
           },
@@ -154,6 +158,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
   const methods = useForm({
     resolver: yupResolver(PlanSchema),
     defaultValues,
+    context: { isEdit: !!currentPlan },
   });
 
   const { reset, watch, setValue, handleSubmit, formState: { isSubmitting, errors } } = methods;
@@ -168,11 +173,24 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
   console.log({ errors });
 
   // ⚡ Fix: Reset form whenever currentPlan changes
+
+
+  useEffect(() => {
+    if (currentPlan && currentPlan.planGroup === 1) {
+      setValue(
+        "productData.page",
+        pages.find((p) => p.value === currentPlan?.services?.page) || null,
+        { shouldValidate: false }
+      );
+    }
+  }, [currentPlan, setValue]);
+
   useEffect(() => {
     if (currentPlan) {
       reset(defaultValues);
     }
   }, [currentPlan, reset, defaultValues]);
+
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -236,7 +254,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
       });
     }
   });
-  
+
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -252,7 +270,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              
+
               <RHFSelect name="planGroup" label="Plan Group">
                 {planGroupOption.map((option) => (
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
@@ -289,7 +307,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
                   <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
                 ))}
               </RHFSelect>
-                
+
               {Number(values.planGroup) === 0 ? <CourseFieldsComponents format={format} /> : <ServiceFieldsComponents pages={pages} disablePageField={currentPlan} />}
             </Box>
 
