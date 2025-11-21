@@ -48,7 +48,7 @@ export default function JwtForgotPasswordView() {
       const inputData = {
         email: data.email,
       };
-      const { data: response } = await axiosInstance.post('/admin/sendResetPasswordLink', inputData);
+      const { data: response } = await axiosInstance.post('/sendResetPasswordLink', inputData);
       console.log(response);
       enqueueSnackbar(response?.message, { variant: 'success' });
       router.push(paths.auth.jwt.login);
