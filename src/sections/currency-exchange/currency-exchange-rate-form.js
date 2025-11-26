@@ -75,12 +75,21 @@ export default function CurrentCurrencyExchangeRateForm({ currentCurrencyExchang
       if (currentCurrencyExchangeRate?.length > 0) {
         await axiosInstance.patch(
           `/currency-exchange-rates/${currentCurrencyExchangeRate[0].id}`,
-          { ...currentCurrencyExchangeRate[0], ...formData }
+          {
+            ...currentCurrencyExchangeRate[0],
+            baseCurrency: formData.baseCurrency,
+            targetCurrency: formData.targetCurrency,
+            rate: formData.rate
+          }
         );
         enqueueSnackbar("Exchange Rate Updated", { variant: "success" });
 
       } else {
-        await axiosInstance.post(`/currency-exchange-rates`, formData);
+        await axiosInstance.post(`/currency-exchange-rates`, {
+          baseCurrency: formData.baseCurrency,
+          targetCurrency: formData.targetCurrency,
+          rate: formData.rate
+        });
         enqueueSnackbar("Exchange Rate Created", { variant: "success" });
       }
     } catch (error) {
