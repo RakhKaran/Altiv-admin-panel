@@ -1,0 +1,1 @@
+export {default as CurrencyExchangeRateView} from './currency-exchange-rate-view';
