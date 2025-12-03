@@ -34,7 +34,7 @@ import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
 import { IconButton, InputAdornment, MenuItem, TextField } from '@mui/material';
 import axiosInstance, { endpoints } from 'src/utils/axios';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { useGetPlans } from 'src/api/plan';
+import { useFilterPlans } from 'src/api/plan';
 
 // import { _fullNames } from 'src/_mock';
 const status = [
@@ -44,15 +44,26 @@ const status = [
 
 export default function BatchesNewEditForm({ currentBatches }) {
   const [plansData, setPlansData] = useState([]);
-  const { plans, plansLoading } = useGetPlans();
+
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-
-  useEffect(() => {
-    if (plans && !plansLoading) {
-      setPlansData(plans);
+  const filter = {
+    where: {
+      planGroup: 0
     }
-  }, [plans, plansLoading])
+  };
+
+  const filterString = encodeURIComponent(JSON.stringify(filter))
+  const { filteredPlans, filterLoading } = useFilterPlans(filterString);
+  console.log('filter plans', filteredPlans)
+  useEffect(() => {
+    if (filteredPlans && !filterLoading) {
+      setPlansData(filteredPlans);
+    }
+  }, [filteredPlans, filterLoading]);
+
+
+
 
   const BatchSchema = Yup.object().shape({
     startDate: Yup.date().required('Start date is required'),
@@ -116,7 +127,7 @@ export default function BatchesNewEditForm({ currentBatches }) {
   });
 
 
-console.log({defaultValues})
+  console.log({ defaultValues })
   useEffect(() => {
     if (currentBatches) {
       console.log('currentBatches', currentBatches.isActive);
@@ -154,6 +165,7 @@ console.log({defaultValues})
                   </li>
                 )}
               />
+
               <Controller
                 name="startDate"
                 control={control}
