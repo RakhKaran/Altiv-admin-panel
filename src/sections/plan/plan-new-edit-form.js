@@ -285,7 +285,7 @@ export default function PlanNewEditForm({ currentPlan, setActiveStep, setCourseI
 
               {!values.isFreePlan && (
                 <>
-                  <RHFTextField name="price" label="Price" type="number" />
+                  <RHFTextField name="price" label="Price in INR" type="number" />
                   <RHFSelect name="paymentType" label="Payment Type">
                     {PAYMENT_TYPE_OPTIONS.map((option) => (
                       <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>

@@ -18,6 +18,8 @@ const OverviewAnalyticsPage = lazy(() => import('src/pages/dashboard/analytics')
 const OverviewBankingPage = lazy(() => import('src/pages/dashboard/banking'));
 const OverviewBookingPage = lazy(() => import('src/pages/dashboard/booking'));
 const OverviewFilePage = lazy(() => import('src/pages/dashboard/file'));
+// CURRENCY EXCHANGE
+const CurrencyExchangeRateFormPage = lazy(() => import('src/pages/dashboard/currency-exchange-rate/form'));
 // PRODUCT
 const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/details'));
 const ProductListPage = lazy(() => import('src/pages/dashboard/product/list'));
@@ -38,7 +40,7 @@ const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
 const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
 const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
 const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
-const UserEventPage = lazy(() => import ('src/pages/dashboard/user/View'))
+const UserEventPage = lazy(() => import('src/pages/dashboard/user/View'))
 
 // CATEGORY
 const CategoryListPage = lazy(() => import('src/pages/dashboard/category/list'));
@@ -56,14 +58,14 @@ const FaqCategoryViewPage = lazy(() => import('src/pages/dashboard/faqCategory/v
 const FaqListPage = lazy(() => import('src/pages/dashboard/faq/list'));
 const FaqCreatePage = lazy(() => import('src/pages/dashboard/faq/new'));
 const FaqEditPage = lazy(() => import('src/pages/dashboard/faq/edit'));
-const FaqViewPage = lazy(() => import('src/pages/dashboard/faq/view')); 
+const FaqViewPage = lazy(() => import('src/pages/dashboard/faq/view'));
 
 // BATCHES
 
-const BatchesNewPage = lazy(()=> import('src/pages/dashboard/batches/new'));
-const BatchesListPage = lazy(()=> import('src/pages/dashboard/batches/list'));
-const BatchesEditPage = lazy(()=> import('src/pages/dashboard/batches/edit'))
- 
+const BatchesNewPage = lazy(() => import('src/pages/dashboard/batches/new'));
+const BatchesListPage = lazy(() => import('src/pages/dashboard/batches/list'));
+const BatchesEditPage = lazy(() => import('src/pages/dashboard/batches/edit'))
+
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -137,10 +139,11 @@ export const dashboardRoutes = [
           { path: 'new', element: <UserCreatePage /> },
           { path: ':id/edit', element: <UserEditPage /> },
           { path: 'account', element: <UserAccountPage /> },
-          {path:':id/events', element:<UserEventPage/>}
-          
+          { path: ':id/events', element: <UserEventPage /> }
+
         ],
       },
+      { path: 'currency-exchange', element: <CurrencyExchangeRateFormPage /> },
       {
         path: 'product',
         children: [
@@ -151,7 +154,7 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <ProductEditPage /> },
         ],
       },
-         {
+      {
         path: 'batches',
         children: [
           { element: <BatchesListPage />, index: true },
@@ -199,7 +202,7 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <JobEditPage /> },
         ],
       },
-       {
+      {
         path: 'category',
         children: [
           { element: <CategoryListPage />, index: true },
@@ -209,7 +212,7 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <CategoryEditPage /> },
         ],
       },
-       {
+      {
         path: 'faqCategory',
         children: [
           { element: <FaqCategoryListPage />, index: true },
@@ -219,7 +222,7 @@ export const dashboardRoutes = [
           { path: ':id/edit', element: <FaqCategoryEditPage /> },
         ],
       },
-       {
+      {
         path: 'faq',
         children: [
           { element: <FaqListPage />, index: true },
@@ -234,8 +237,8 @@ export const dashboardRoutes = [
         children: [
           { element: <PlanListPage />, index: true },
           { path: 'list', element: <PlanListPage /> },
-          {path: 'courseList', element:<CourseListPage/>},
-         { path: 'serviceList', element: <ServiceListPage /> },
+          { path: 'courseList', element: <CourseListPage /> },
+          { path: 'serviceList', element: <ServiceListPage /> },
           { path: 'new', element: <PlanCreatePage /> },
           { path: ':id/edit', element: <PlanEditPage /> },
         ],

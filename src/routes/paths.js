@@ -125,6 +125,9 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    currencyExchange: {
+      root: `${ROOTS.DASHBOARD}/currency-exchange`
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
@@ -196,7 +199,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/category/${MOCK_ID}/edit`,
       },
     },
-        faqCategory: {
+    faqCategory: {
       root: `${ROOTS.DASHBOARD}/faqCategory`,
       new: `${ROOTS.DASHBOARD}/faqCategory/new`,
       list: `${ROOTS.DASHBOARD}/faqCategory/list`,
@@ -207,7 +210,7 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/faqCategory/${MOCK_ID}/edit`,
       },
     },
-        faq: {
+    faq: {
       root: `${ROOTS.DASHBOARD}/faq`,
       new: `${ROOTS.DASHBOARD}/faq/new`,
       list: `${ROOTS.DASHBOARD}/faq/list`,

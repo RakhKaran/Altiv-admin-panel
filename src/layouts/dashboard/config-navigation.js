@@ -34,7 +34,7 @@ const ICONS = {
   batch: icon('ic_batch'),
   faqCategory: icon('ic_faqCategory'),
   faq: icon('ic_faq'),
-
+  conversion: icon('ic_conversion'),
 };
 
 // ----------------------------------------------------------------------
@@ -66,6 +66,13 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.user.new },
             ],
           },
+          // CURRENCY EXCHANGE
+          {
+            title: t('Currency Exchange'),
+            path: paths.dashboard.currencyExchange.root,
+            icon: ICONS.conversion,
+          },
+
           {
             title: t('Products'),
             path: paths.dashboard.plan.root,
@@ -78,7 +85,7 @@ export function useNavData() {
               { title: t('create'), path: paths.dashboard.plan.new },
             ],
           },
-           {
+          {
             title: t('Batches'),
             path: paths.dashboard.batches.root,
             icon: ICONS.batch,
@@ -103,7 +110,7 @@ export function useNavData() {
             { title: t('create'), path: paths.dashboard.category.new }
             ],
           },
-            {
+          {
             title: t('Faq Category'),
             path: paths.dashboard.faqCategory.root,
             icon: ICONS.faqCategory,
@@ -111,7 +118,7 @@ export function useNavData() {
             { title: t('create'), path: paths.dashboard.faqCategory.new }
             ],
           },
-            {
+          {
             title: t('Faq'),
             path: paths.dashboard.faq.root,
             icon: ICONS.faq,
@@ -119,12 +126,12 @@ export function useNavData() {
             { title: t('create'), path: paths.dashboard.faq.new }
             ],
           },
-            {
+          {
             title: t('jobs'),
             path: paths.dashboard.job.root,
             icon: ICONS.job,
             children: [{ title: t('list'), path: paths.dashboard.job.list },
-            // { title: t('create'), path: paths.dashboard.category.new }
+              // { title: t('create'), path: paths.dashboard.category.new }
             ],
           },
           {

@@ -45,6 +45,9 @@ export const endpoints = {
     filterList: (filter) => `/blogs?filter=${filter}`,
     details: (slug) => `/blogs/slug/${slug}`,
   },
+  currencyExchangeRates: {
+    list: '/currency-exchange-rates'
+  },
   product: {
     list: '/api/product/list',
     details: '/api/product/details',
