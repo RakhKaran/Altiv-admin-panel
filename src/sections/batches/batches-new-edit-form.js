@@ -69,7 +69,8 @@ export default function BatchesNewEditForm({ currentBatches }) {
     startDate: Yup.date().required('Start date is required'),
     endDate: Yup.date().required('End date is required'),
     plan: Yup.object().required('Plan is required'),
-    isActive: Yup.boolean().required('Value is required')
+    isActive: Yup.boolean().required('Value is required'),
+    isRegistrationStarted: Yup.boolean().required('Value is required')
   });
 
   const defaultValues = useMemo(
@@ -78,6 +79,7 @@ export default function BatchesNewEditForm({ currentBatches }) {
       endDate: currentBatches?.endDate || '',
       plan: currentBatches?.plan || null,
       isActive: currentBatches?.isActive ?? true,
+      isRegistrationStarted: currentBatches?.isRegistrationStarted ?? false,
     }),
     [currentBatches]
   );
@@ -107,6 +109,7 @@ export default function BatchesNewEditForm({ currentBatches }) {
         endDate: data.endDate,
         planId: data.plan.id,
         isActive: data.isActive,
+        isRegistrationStarted: data.isRegistrationStarted,
       };
 
       if (!currentBatches) {
@@ -207,6 +210,12 @@ export default function BatchesNewEditForm({ currentBatches }) {
                   />
                 )}
               />
+
+              <RHFSwitch
+                name="isRegistrationStarted"
+                label="Allow for payment(Registration Started)"
+              />
+
             </Stack>
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
