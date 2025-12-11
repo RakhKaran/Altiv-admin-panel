@@ -128,6 +128,10 @@ export const paths = {
     currencyExchange: {
       root: `${ROOTS.DASHBOARD}/currency-exchange`
     },
+    profileAnalytics: {
+      root: `${ROOTS.DASHBOARD}/profile-analytics`,
+      list: `${ROOTS.DASHBOARD}/profile-analytics`
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,

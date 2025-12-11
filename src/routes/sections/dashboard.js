@@ -54,6 +54,8 @@ const FaqCategoryCreatePage = lazy(() => import('src/pages/dashboard/faqCategory
 const FaqCategoryEditPage = lazy(() => import('src/pages/dashboard/faqCategory/edit'));
 const FaqCategoryViewPage = lazy(() => import('src/pages/dashboard/faqCategory/view'));
 
+// PROFILE ANALYTICS
+const ProfileAnalyticsListPage = lazy(()=> import('src/pages/dashboard/profile-analytics/list'))
 // FAQ
 const FaqListPage = lazy(() => import('src/pages/dashboard/faq/list'));
 const FaqCreatePage = lazy(() => import('src/pages/dashboard/faq/new'));
@@ -159,6 +161,16 @@ export const dashboardRoutes = [
         children: [
           { element: <BatchesListPage />, index: true },
           { path: 'list', element: <BatchesListPage /> },
+          // { path: ':id', element: <CategoryViewPage /> },
+          { path: 'new', element: <BatchesNewPage /> },
+          { path: ':id/edit', element: <BatchesEditPage /> },
+        ],
+      },
+         {
+        path: 'profile-analytics',
+        children: [
+          { element: <ProfileAnalyticsListPage />, index: true },
+          { path: 'list', element: <ProfileAnalyticsListPage /> },
           // { path: ':id', element: <CategoryViewPage /> },
           { path: 'new', element: <BatchesNewPage /> },
           { path: ':id/edit', element: <BatchesEditPage /> },

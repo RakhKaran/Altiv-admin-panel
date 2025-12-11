@@ -72,6 +72,15 @@ export function useNavData() {
             path: paths.dashboard.currencyExchange.root,
             icon: ICONS.conversion,
           },
+          {
+            title: t('Fobo Pro Analytics'),
+            path: paths.dashboard.profileAnalytics.root,
+            icon: ICONS.analytics,
+            children: [
+              // { title: t('list'), path: paths.dashboard.plan.list },
+              { title: t('list'), path: paths.dashboard.profileAnalytics.list },
+            ],
+          },
 
           {
             title: t('Products'),

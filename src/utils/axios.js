@@ -40,7 +40,7 @@ export const endpoints = {
     details: '/api/mail/details',
     labels: '/api/mail/labels',
   },
-  post: {   
+  post: {
     list: '/blogs',
     filterList: (filter) => `/blogs?filter=${filter}`,
     details: (slug) => `/blogs/slug/${slug}`,
@@ -60,14 +60,21 @@ export const endpoints = {
     details: (id) => `/plans/${id}`,
   },
 
-   batch: {
+  profileAnalytics: {
+    list: '/running-analytics/list',
+    filterList: (filter) => `/running-analytics/list?filter=${filter}`,
+    details: (id) => `/running-analytics/list/${id}`,
+  },
+
+
+  batch: {
     list: '/batches',
     filterList: (filter) => `/batches?filter=${filter}`,
     details: (id) => `/batches/${id}`,
   },
 
-  dashboard:{
-    count:'/analytics/cards',
+  dashboard: {
+    count: '/analytics/cards',
   },
 
   subscriptions: {
@@ -81,17 +88,17 @@ export const endpoints = {
     filterList: (filter) => `/wait-lists?${filter}`,
     details: (id) => `/wait-lists/${id}`,
   },
-    category: {
+  category: {
     list: '/categories',
     filterList: (filter) => `/categories?${filter}`,
     details: (id) => `/categories/${id}`,
   },
-   faqCategory: {
+  faqCategory: {
     list: '/faq-categories',
     filterList: (filter) => `/faq-categories?filter=${filter}`,
     details: (id) => `/faq-categories/${id}`,
   },
-   faq: {
+  faq: {
     list: '/faqs',
     filterList: (filter) => `/faqs?filter=${filter}`,
     details: (id) => `/faqs/${id}`,
@@ -107,20 +114,20 @@ export const endpoints = {
     details: (id) => `/api/users/${id}`, // patch
     search: '/api/user/search',
     delete: (id) => `/user/${id}`,
-    events:(userId)=>`/user/events/${userId}`
+    events: (userId) => `/user/events/${userId}`
   },
   resume: {
-    details:(userId)=>`/resumes/resume-by-id/${userId}`
+    details: (userId) => `/resumes/resume-by-id/${userId}`
   },
   comments: {
     list: '/comments',
     filterList: (filter) => `/comments/${filter}`,
-  details: (blogId) => `/comments/${ blogId }`,
-},
-  jobs:{
-   list: '/jobs',
+    details: (blogId) => `/comments/${blogId}`,
+  },
+  jobs: {
+    list: '/jobs',
     filterList: (filter) => `/jobs?filter=${filter}`,
-  details: (id) => `/jobs/${ id }`,
+    details: (id) => `/jobs/${id}`,
   }
 
 };
