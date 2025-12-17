@@ -12,6 +12,7 @@ import axiosInstance from 'src/utils/axios';
 import { enqueueSnackbar } from 'notistack';
 import { color } from 'framer-motion';
 import { useGetProfiles } from 'src/api/profileAnalytics';
+import { format } from 'date-fns';
 
 // ----------------------------------------------------------------------
 const STATUS_UI_MAP = {
@@ -90,6 +91,18 @@ export default function ProfileAnalyticsTableRow({ row, selected, onSelectRow, o
           ) : (
             'NA'
           )}
+        </TableCell>
+        <TableCell>
+          <ListItemText
+            primary={format(new Date(createdAt), 'dd MMM yyyy')}
+            secondary={format(new Date(createdAt), 'p')}
+            primaryTypographyProps={{ typography: 'body2', noWrap: true }}
+            secondaryTypographyProps={{
+              mt: 0.5,
+              component: 'span',
+              typography: 'caption',
+            }}
+          />
         </TableCell>
 
         {/* STATUS CELL */}

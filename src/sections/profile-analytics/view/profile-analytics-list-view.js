@@ -56,6 +56,7 @@ const TABLE_HEAD = [
   { id: 'userName', label: 'User Name' },
   { id: 'trialCount', label: 'Trial Count' },
   { id: 'resume', label: 'Uploaded Resume' },
+  {id: 'createdAt', label: 'Created At' },
   { id: 'isActive', label: 'Status' },
   { id: '', label: 'Actions' },
 ];
