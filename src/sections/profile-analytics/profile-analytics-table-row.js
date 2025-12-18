@@ -24,7 +24,7 @@ const STATUS_UI_MAP = {
 
 
 export default function ProfileAnalyticsTableRow({ row, selected, onSelectRow, onViewRow, onEditRow, refreshProfiles }) {
-  const { trialCount, createdAt, resume, error, isActive, status } = row;
+  const { trialCount, createdAt, resume, error, isActive, status , linkedInUrl } = row;
 
   const statusInfo = STATUS_UI_MAP[status];
 
@@ -78,6 +78,24 @@ export default function ProfileAnalyticsTableRow({ row, selected, onSelectRow, o
           {resume?.fileDetails?.fileUrl ? (
             <Typography
               onClick={() => window.open(resume.fileDetails.fileUrl, '_blank')}
+              sx={{
+                fontSize: '0.875rem',
+                cursor: 'pointer',
+                color: '#1976d2',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+              }}
+            >
+              View
+            </Typography>
+          ) : (
+            'NA'
+          )}
+        </TableCell>
+         <TableCell>
+          {linkedInUrl ? (
+            <Typography
+              onClick={() => window.open(linkedInUrl, '_blank')}
               sx={{
                 fontSize: '0.875rem',
                 cursor: 'pointer',

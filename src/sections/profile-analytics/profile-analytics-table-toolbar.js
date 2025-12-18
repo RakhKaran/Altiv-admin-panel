@@ -41,7 +41,7 @@ export default function ProfileAnalyticsTableToolbar({ filters, onFilters }) {
             fullWidth
             value={filters.name}
             onChange={handleFilterName}
-            placeholder="Search by Batches..."
+            placeholder="Search ..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
