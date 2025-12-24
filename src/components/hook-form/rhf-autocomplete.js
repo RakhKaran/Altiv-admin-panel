@@ -7,7 +7,9 @@ import Autocomplete from '@mui/material/Autocomplete';
 // ----------------------------------------------------------------------
 
 export default function RHFAutocomplete({ name, label, placeholder, helperText, ...other }) {
+  
   const { control, setValue } = useFormContext();
+console.log("WWWWWWWWWWWWWWWWWW",control);
 
   return (
     <Controller

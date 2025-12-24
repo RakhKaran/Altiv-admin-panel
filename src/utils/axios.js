@@ -5,7 +5,7 @@ import UserTableFiltersResult from 'src/sections/user/user-table-filters-result'
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: HOST_API });
+const axiosInstance = axios.create({ baseURL: "https://api.altiv.ai" });
 
 axiosInstance.interceptors.response.use(
   (res) => res,
@@ -18,13 +18,9 @@ export default axiosInstance;
 
 export const fetcher = async (args) => {
   const [url, config] = Array.isArray(args) ? args : [args];
-
   const res = await axiosInstance.get(url, { ...config });
-
   return res.data;
 };
-
-// ----------------------------------------------------------------------
 
 export const endpoints = {
   chat: '/api/chat',

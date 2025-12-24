@@ -7,7 +7,6 @@ import { fetcher, endpoints } from 'src/utils/axios';
 
 export function useGetPlans() {
   const URL = endpoints.plan.list;
-
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 
   const memoizedValue = useMemo(

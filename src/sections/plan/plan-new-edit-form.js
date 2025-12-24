@@ -53,6 +53,7 @@ const FREE_PLAN_OPTIONS = [
 const format = [
   { value: 'Live ', label: 'Live ' },
   { value: 'Self-paced', label: 'Self-paced' },
+  { value: 'Hybrid', label: 'Hybrid' },
 
 ];
 
