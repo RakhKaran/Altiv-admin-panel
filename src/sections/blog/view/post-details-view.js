@@ -46,9 +46,14 @@ export default function PostDetailsView() {
 
   const handleChangePublish = useCallback(async (newValue) => {
     try {
-      await axiosInstance.patch(`/blogs/${post.id}`, {
+      const inputData = {
+        title: post?.title,
+        slug: post?.slug,
+        categories: post?.categories?.map((cat) => cat.id) || [],
         publish: newValue,
-      });
+      };
+
+      await axiosInstance.patch(`/blogs/${post.id}`, inputData);
       setPublish(newValue);
 
     } catch (error) {
