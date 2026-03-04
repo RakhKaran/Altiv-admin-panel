@@ -5,7 +5,7 @@ import UserTableFiltersResult from 'src/sections/user/user-table-filters-result'
 
 // ----------------------------------------------------------------------
 
-const axiosInstance = axios.create({ baseURL: "https://api.altiv.ai" });
+const axiosInstance = axios.create({ baseURL: HOST_API});
 
 axiosInstance.interceptors.response.use(
   (res) => res,
