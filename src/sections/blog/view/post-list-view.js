@@ -49,9 +49,11 @@ export default function PostListView() {
   const itemsPerPage = 10;
 
   const filter = useMemo(() => ({
-    where: {
-      title: { like : `%${debouncedQuery || ''}%` }
-    },
+    ...(searchQuery !== '' && {
+      where: {
+        title: { like: `%${debouncedQuery || ''}%` }
+      }
+    }),
     limit: itemsPerPage,
     skip: (currentPage - 1) * itemsPerPage
   }), [currentPage, debouncedQuery]);
